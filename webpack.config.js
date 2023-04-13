@@ -128,6 +128,14 @@ module.exports = (env) => {
                 },
             },
         },
-
+              resolve:{
+          extensions:['.js','.vue','json','.css','.less'],
+          alias:{
+            '@':resolve('src'),
+            'assets':resolve('src/assets'),
+            'pages':resolve('src/pages'),
+            'dashboard':resolve('src/pages/dashboard')
+          }
+        }
     }
 }
