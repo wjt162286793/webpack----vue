@@ -33,7 +33,7 @@ module.exports = (env) => {
                 //css的编译loader,这里记得把vue-style-loader写到前面
                 {
                     test: /\.css$/,
-                    use: ['vue-style-loader', 'style-loader', 'css-loader'],
+                    use: ['style-loader', 'css-loader'],
                 },
                 //各类图片的loader
                 {
