@@ -1,18 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div>实体</div>
 </template>
 
 <script>
 export default {
-  name: "Main",
-  data() {
-    return {};
-  },
+  name: "entiry",
 };
 </script>
 
 <style lang="less" scoped>
-.box {
-  color: red;
-}
 </style>

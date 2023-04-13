@@ -1,18 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div>登录</div>
 </template>
 
 <script>
 export default {
-  name: "Main",
-  data() {
-    return {};
-  },
+  name: "login",
 };
 </script>
 
 <style lang="less" scoped>
-.box {
-  color: red;
-}
 </style>

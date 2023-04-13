@@ -18,6 +18,7 @@
     "json5": "^2.2.3",
     "style-loader": "^3.3.2",
     "toml": "^3.0.0",
+    "vue-router": "^4.1.6",
     "webpack-cli": "^5.0.1",
     "webpack-dev-middleware": "^6.0.2",
     "yamljs": "^0.3.0"

@@ -1,18 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div>注册</div>
 </template>
 
 <script>
 export default {
-  name: "Main",
-  data() {
-    return {};
-  },
+  name: "register",
 };
 </script>
 
 <style lang="less" scoped>
-.box {
-  color: red;
-}
 </style>

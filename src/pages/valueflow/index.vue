@@ -1,18 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div>价值流</div>
 </template>
 
 <script>
 export default {
-  name: "Main",
-  data() {
-    return {};
-  },
+  name: "valueflow",
 };
 </script>
 
 <style lang="less" scoped>
-.box {
-  color: red;
-}
 </style>

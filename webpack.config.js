@@ -32,7 +32,7 @@ module.exports = (env) => {
                 },
                 //css的编译loader,这里记得把vue-style-loader写到前面
                 {
-                    test: /\.css$/i,
+                    test: /\.css$/,
                     use: ['vue-style-loader', 'style-loader', 'css-loader'],
                 },
                 //各类图片的loader
@@ -155,14 +155,14 @@ module.exports = (env) => {
             },
         },
         //配置路径的快捷引用
-              resolve:{
-          extensions:['.js','.vue','json','.css','.less'],
-          alias:{
-            '@':resolve('src'),
-            'assets':resolve('src/assets'),
-            'pages':resolve('src/pages'),
-            'dashboard':resolve('src/pages/dashboard')
-          }
+        resolve: {
+            extensions: ['.js', '.vue', 'json'],
+            alias: {
+                '@': path.resolve('src'),
+                'assets': path.resolve('src/assets'),
+                'pages': path.resolve('src/pages'),
+                'dashboard': path.resolve('src/pages/dashboard')
+            }
         }
     }
 }
