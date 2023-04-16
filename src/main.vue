@@ -7,6 +7,9 @@
 <script>
 export default {
   name: "Main",
+  created() {
+    document.body.dataset.theme = "red";
+  },
   data() {
     return {};
   },
@@ -14,7 +17,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.box {
-  color: red;
-}
 </style>

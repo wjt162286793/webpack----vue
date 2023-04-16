@@ -5,7 +5,8 @@ const globalRoutes = [
         path: '/brochure',
         name: 'brochure',
         meta: {
-            name: '导览'
+            name: '导览',
+            noAuth: true
         },
         component: () => import('pages/brochure/index.vue')
 
@@ -14,21 +15,17 @@ const globalRoutes = [
         path: '/login',
         name: 'login',
         meta: {
-            name: '登录'
+            name: '登录',
+            noAuth: true
         },
         component: () => import('pages/login/index.vue')
     },
     {
-        path: '/register',
-        name: 'register',
-        meta: {
-            name: '注册'
-        },
-        component: () => import('pages/register/index.vue')
-    },
-    {
         path: '/',
-        redirect: '/brochure'
+        component: () => import('pages/brochure/index.vue'),
+        meta: {
+            noAuth: true
+        }
     },
     // {
     //     path: '*',

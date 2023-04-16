@@ -32,8 +32,8 @@ module.exports = (env) => {
                 },
                 //css的编译loader,这里记得把vue-style-loader写到前面
                 {
-                    test: /\.css$/,
-                    use: ['style-loader', 'css-loader'],
+                    test: /\.css$/i,
+                    use: ['style-loader', 'css-loader', 'postcss-loader'],
                 },
                 //各类图片的loader
                 {
@@ -123,12 +123,10 @@ module.exports = (env) => {
             //这里是html的配置,目标指向public下面的index.html,也可以在这里配置里面一些东西
             new HtmlWebpackPlugin({
                 // title: 'webpack搭建vue脚手架',
+                favicon: path.resolve('./src/assets/favicon.ico'),
                 minify: {
-
                     removeAttributeQuotes: true
-
                 },
-
                 hash: true,
 
                 template: './public/index.html'
@@ -139,6 +137,16 @@ module.exports = (env) => {
         //开发服务器
         devServer: {
             static: './dist',
+            open: true,
+            proxy: {
+                '/app': 'http://127.0.0.1:3000',
+                ws: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/app': ''
+                }
+
+            }
         },
         //依赖包的抽取,减少大量的冗余代码,可以去看看
         optimization: {

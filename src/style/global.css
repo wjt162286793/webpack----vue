@@ -1,3 +1,24 @@
-body{
-    margin: 0px;
+.box {
+  position: relative;
+}
+.box .brochureHeader {
+  position: fixed;
+  height: 100px;
+  width: 100%;
+  background-color: var(--background-color1);
+  display: flex;
+}
+.box .brochureHeader .logo {
+  height: 100px;
+  padding: 10px;
+  background: #fff;
+}
+.box .brochureHeader .headerTitle {
+  display: flex;
+}
+.box .brochureHeader .headerTitle li {
+  font-size: 24px;
+  margin-right: 50px;
+  margin-left: 50px;
+  line-height: 100px;
 }
