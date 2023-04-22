@@ -6,18 +6,17 @@ const url = require('url');
 const util = require('util');
 const { v4: uuidv4 } = require('uuid');
 
-const userRoutes = [
+const businessRoutes = [
     {
-        //用户注册
-        path: '/app/register/query',
+        //新建业务领域
+        path: '/app/business/new',
         done: function (req, res) {
             let oldData = []
             //读取文件
-            fs.readFile(path.join(__dirname, '../file/user.json'), 'utf8', (err, data) => {
+            fs.readFile(path.join(__dirname, '../file/business.json'), 'utf8', (err, data) => {
                 if (err) {
                     console.log(err, '读取报错')
                 } else {
-                    console.log(data.toString, '嗯嗯')
                     oldData = JSON.parse(data.toString())
                     console.log(oldData, '当前文件数据');
                 }
@@ -36,25 +35,79 @@ const userRoutes = [
                         console.log(list.findIndex(item => reqData.name === item.name), '查询匹配')
                         if (list.findIndex(item => reqData.name == item.name) != -1) {
                             //匹配到相同账号名
-                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号已被注册')
+                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该资产已被注册')
                             return
                         } else {
-                            reqData.token = uuidv4()
                             //未匹配到相同相同账号名
+                            reqData.uuid = uuidv4()
                             list.push(reqData)
                         }
                     } else {
                         //数据本身为空
-                        reqData.token = uuidv4()
+                        reqData.uuid = uuidv4()
                         list.push(reqData)
                     }
+                    list.map((item, index) => { item.id = index + 1 })
                     list = JSON.stringify(list)
-                    fs.writeFile(path.join(__dirname, '../file/user.json'), list, function (err) {
+                    fs.writeFile(path.join(__dirname, '../file/business.json'), list, function (err) {
                         if (err) {
                             return console.error(err)
                         }
                         callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, [], 'success')
                     })
+                })
+            })
+
+        }
+    },
+    {
+        //列表查询
+        path: '/app/business/list',
+        done: function (req, res) {
+            let fileData = []
+            //读取文件
+            fs.readFile(path.join(__dirname, '../file/business.json'), 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err, '读取报错')
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], 'error')
+                    return
+                } else {
+                    fileData = JSON.parse(data.toString())
+                }
+
+                let postData = ''
+                //请求流
+                req.on('data', function (chunk) {
+                    postData += chunk
+                })
+                //请求结束
+                req.on('end', function () {
+                    reqData = JSON.parse(postData)
+                    let list = fileData
+                    // list.push(JSON.parse(postData))
+                    // if (list.length > 0) {
+                    //     let flag = list.find(item => reqData.name === item.name)
+                    //     if (flag) {
+                    //         if (reqData.password === flag.password) {
+                    //             flag.token = uuidv4();
+                    //             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, flag, 'success')
+                    //         } else {
+                    //             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '密码输入错误')
+                    //         }
+
+                    //     } else {
+                    //         callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
+                    //     }
+
+                    // } else {
+                    //     //空数据
+                    //     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
+                    // }
+                    let resData = {
+                        total: list.length,
+                        list
+                    }
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, resData, 'success')
                 })
             })
 
@@ -89,6 +142,7 @@ const userRoutes = [
                         let flag = list.find(item => reqData.name === item.name)
                         if (flag) {
                             if (reqData.password === flag.password) {
+                                flag.token = uuidv4();
                                 callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, flag, 'success')
                             } else {
                                 callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '密码输入错误')
@@ -204,4 +258,4 @@ function callBack(res, type, headers, code, data, message) {
         message
     }))
 }
-module.exports.userRoutes = userRoutes
+module.exports.businessRoutes = businessRoutes

@@ -22,3 +22,14 @@
   margin-left: 50px;
   line-height: 100px;
 }
+.modeBox {
+  height: 100%;
+  background: var(--backround-color5);
+}
+/* .el-table__fixed {
+  height:auto !important; 
+  bottom:17px;
+} */
+.el-table--scrollable-x .el-table__body-wrapper {
+  z-index: 1;
+}

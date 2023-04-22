@@ -52,7 +52,25 @@ const asyncRoutes = [
                 meta: {
                     name: '业务领域'
                 },
-                component: () => import('pages/business/index.vue')
+                component: () => import('pages/business/index.vue'),
+                children: [
+                    {
+                        path: '/dashboard/business/businessList',
+                        name: 'businessList',
+                        meta: {
+                            name: '列表'
+                        },
+                        component: () => import('pages/business/components/businessList.vue')
+                    },
+                    {
+                        path: '/dashboard/business/newBusiness',
+                        name: 'newBusiness',
+                        meta: {
+                            name: '新增'
+                        },
+                        component: () => import('pages/business/components/newBusiness.vue')
+                    },
+                ]
             },
             {
                 path: '/dashboard/entiry',

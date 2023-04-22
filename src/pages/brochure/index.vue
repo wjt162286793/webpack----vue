@@ -34,30 +34,36 @@
         </el-carousel>
       </div>
       <div class="introduce">
-        <div class="contentLeft">
-          <h2 style="font-size: 50px; font-weight: 700">IAM架构资产管理系统</h2>
-          <p class="text">帮助企业对其IT架构资产进行全面管理和控制。</p>
-          <p class="text">
-            通过对资产的全面了解，可以更好地评估IT资本价值和成本效益，
-          </p>
-          <p class="text">并确保其IT环境符合法规和行业标准。</p>
-          <p class="text">降低运营成本,也可提高安全性和可靠性</p>
-          <p class="text">帮助企业制定和实施关键决策,更好地管理其IT资产,</p>
-          <p class="text">为企业的持续发展提供坚实的基础。</p>
+        <div class="contentMoudle">
+          <div class="contentLeft">
+            <h2 style="font-size: 50px; font-weight: 700">
+              IAM架构资产管理系统
+            </h2>
+            <p class="text">帮助企业对其IT架构资产进行全面管理和控制。</p>
+            <p class="text">
+              通过对资产的全面了解，可以更好地评估IT资本价值和成本效益，
+            </p>
+            <p class="text">并确保其IT环境符合法规和行业标准。</p>
+            <p class="text">降低运营成本,也可提高安全性和可靠性</p>
+            <p class="text">帮助企业制定和实施关键决策,更好地管理其IT资产,</p>
+            <p class="text">为企业的持续发展提供坚实的基础。</p>
+          </div>
+          <div class="contentRight">
+            <img src="@/assets/img2.png" alt="" />
+          </div>
         </div>
-        <div class="contentRight">
-          <img src="@/assets/img2.png" alt="" />
-        </div>
-        <div class="activeImg">
-          <img src="@/assets/img.gif" alt="" />
-        </div>
-        <div class="activeRight">
-          <p class="text">员工自主查看与管理资产状态</p>
-          <p class="text">对所负责资产进行直接管理</p>
-          <p class="text">各层级员工拥有不同的权限</p>
-          <p class="text">对资产的创建,审批,评估的一体化管理</p>
-          <p class="text">具有流程追踪和申办记录的能力</p>
-          <img src="@/assets/img.png" style="margin-top: 10px" alt="" />
+        <div class="activeMoudle">
+          <div class="activeImg">
+            <img src="@/assets/img.gif" alt="" />
+          </div>
+          <div class="activeRight">
+            <p class="text">员工自主查看与管理资产状态</p>
+            <p class="text">对所负责资产进行直接管理</p>
+            <p class="text">各层级员工拥有不同的权限</p>
+            <p class="text">对资产的创建,审批,评估的一体化管理</p>
+            <p class="text">具有流程追踪和申办记录的能力</p>
+            <img src="@/assets/img.png" style="margin-top: 10px" alt="" />
+          </div>
         </div>
       </div>
     </div>
@@ -79,7 +85,13 @@ export default {
   name: "brochure",
   methods: {
     jumpLogin() {
-      this.$router.push("/login");
+      let token = localStorage.getItem("token");
+      if (token) {
+        console.log(token, "token值???");
+        this.$router.push({ path: "/dashboard" });
+      } else {
+        this.$router.push({ path: "/login" });
+      }
     },
   },
 };
@@ -91,14 +103,13 @@ export default {
   position: relative;
   .brochureHeader {
     box-sizing: border-box;
-    border-bottom: 2px solid var(--border-color1);
     position: fixed;
     z-index: 10;
     height: 100px;
     width: 100%;
-    background-color: var(--background-color1);
+    background-color: #fff;
     display: flex;
-    .logo {
+    justify-content:flex-start .logo {
       height: 100px;
       padding: 10px;
       // background: #fff;
@@ -110,7 +121,7 @@ export default {
         margin-right: 30px;
         margin-left: 30px;
         line-height: 100px;
-        color: var(--text-color1);
+        color: var(--text-color2);
         cursor: pointer;
       }
     }
@@ -121,8 +132,18 @@ export default {
     width: 100%;
     position: absolute;
     top: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 20px;
     .imgSwiper {
-      padding: 10px 220px 50px;
+      width: 800px;
+      // padding: 10px 10vw 50px;
+      img {
+        width: 800px;
+        // width: 80vw;
+        // height: 70vh;
+      }
     }
     .introduce {
       // display: flex;
@@ -130,25 +151,38 @@ export default {
       width: 100%;
       height: 1300px;
       padding: 50px 100px 50px;
+      // display: flex;
       .text {
         font-size: 20px;
         margin: 10px;
       }
-      .contentLeft {
-        float: left;
+      .contentMoudle {
+        display: flex;
+        // width: 800px;
+        height: 500px;
+        justify-content: center;
+        // .contentLeft {
+        //   float: left;
+        // }
+        // .contentRight {
+        //   float: left;
+        //   margin-top: 10px;
+        // }
       }
-      .contentRight {
-        float: left;
-        margin-top: 10px;
-      }
-      .activeImg {
-        float: left;
-        margin-top: 100px;
-      }
-      .activeRight {
-        float: left;
-        margin-top: 100px;
-        margin-left: 20px;
+      .activeMoudle {
+        display: flex;
+        // width: 800px;
+        height: 500px;
+        justify-content: center;
+        // .activeImg {
+        //   float: left;
+        //   margin-top: 100px;
+        // }
+        // .activeRight {
+        //   float: left;
+        //   margin-top: 100px;
+        //   margin-left: 20px;
+        // }
       }
     }
   }
@@ -159,21 +193,28 @@ export default {
     width: 100%;
     height: 100px;
     background: var(--backround-color4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
     li {
-      float: left;
-      margin: 40px 50px 10px;
+      // float: left;
+      // margin: 40px 50px 10px;
       color: var(--text-color1);
     }
   }
 }
 .jumpLogin {
+  position: absolute;
+  right: 0px;
+  top: 0px;
   font-size: 24px;
   margin-left: 100px;
   padding: 0 50px 0;
   line-height: 100px;
-  color: var(--text-color2);
-  border-radius: 50%;
-  background: var(--backround-color5);
+  color: var(--text-color1);
+  // border-radius: 50%;
+  background: var(--background-color1);
   // background: var(--background-color0);
   cursor: pointer;
 }
@@ -198,5 +239,8 @@ export default {
 }
 /deep/ .el-carousel__container {
   height: 480px;
+}
+/deep/ .el-carousel__container {
+  height: 440px !important;
 }
 </style>

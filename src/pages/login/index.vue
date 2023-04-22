@@ -190,7 +190,7 @@ export default {
       } else if (this.doneFlag === "change") {
         url = `/app/user/updatePassword`;
       }
-      this.$refs.ruleFormRef.validate((valid, fields) => {
+      this.$refs.dialogForm.validate((valid, fields) => {
         if (valid) {
           if (this.form.password !== this.form.verifyPassword) {
             this.$message.warning("密码和确认密码不一致,请重新输入");
