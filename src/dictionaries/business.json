@@ -1,0 +1,62 @@
+{
+    "status": [
+        {
+            "value": "1",
+            "label": "运营"
+        },
+        {
+            "value": "2",
+            "label": "审核"
+        },
+        {
+            "value": "3",
+            "label": "冻结"
+        }
+    ],
+    "user": [
+        {
+            "label": "王惊涛",
+            "value": "wjt"
+        },
+        {
+            "label": "马师",
+            "value": "ms"
+        }
+    ],
+    "entiry": [
+        {
+            "label": "长城汽车",
+            "value": "1"
+        },
+        {
+            "label": "富士康",
+            "value": "2"
+        }
+    ],
+    "type": [
+        {
+            "label": "金融资产",
+            "value": "1"
+        },
+        {
+            "label": "不动产",
+            "value": "2"
+        },
+        {
+            "label": "移动资产",
+            "value": "3"
+        },
+        {
+            "label": "知识产权",
+            "value": "4"
+        },
+        {
+            "label": "文艺资产",
+            "value": "5"
+        },
+        {
+            "label": "公共基础设施",
+            "value": "6"
+        }
+    ]
+}

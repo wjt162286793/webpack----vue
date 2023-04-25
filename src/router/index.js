@@ -70,6 +70,14 @@ const asyncRoutes = [
                         },
                         component: () => import('pages/business/components/newBusiness.vue')
                     },
+                    {
+                        path: '/dashboard/business/editBusiness',
+                        name: 'editBusiness',
+                        meta: {
+                            name: '编辑'
+                        },
+                        component: () => import('pages/business/components/editBusiness.vue')
+                    },
                 ]
             },
             {

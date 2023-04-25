@@ -12,6 +12,7 @@
         <el-col :span="12">
           <el-form-item label="英文名称" prop="name">
             <el-input
+              disabled
               v-model="ruleForm.name"
               class="formItem"
               placeholder="请输入业务领域英文名称"
@@ -88,7 +89,7 @@
       </el-row>
       <div class="footer">
         <el-button type="primary" @click="submitForm(ruleFormRef)">
-          创建
+          提交
         </el-button>
         <el-button @click="goBack">返回</el-button>
       </div>
@@ -101,7 +102,7 @@ import { reactive, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
-const ruleForm = reactive({
+let ruleForm = reactive({
   name: "",
   cname: "",
   user: "",
@@ -152,10 +153,10 @@ const submitForm = (formEl) => {
   formEl.validate((valid, fields) => {
     if (valid) {
       console.log(ruleForm, "结果");
-      request.post("app/business/new", ruleForm).then((res) => {
+      request.post("/app/business/change", ruleForm).then((res) => {
         if (res.code === 200) {
           ElMessage({
-            message: "新建成功",
+            message: "修改成功",
             type: "success",
           });
           goBack();
@@ -183,10 +184,25 @@ const goBack = () => {
   });
 };
 
-const options = Array.from({ length: 10000 }).map((_, idx) => ({
-  value: `${idx + 1}`,
-  label: `${idx + 1}`,
-}));
+const getInfo = () => {
+  request.post("/app/business/Info", { id: route.query.id }).then((res) => {
+    // console.log(res, "获取到资产具体信息");
+    // ruleForm = res.data;
+    // console.log(ruleForm, "具体信息");
+    if (res.message === "success") {
+      ruleForm.name = res.data.name;
+      ruleForm.cname = res.data.cname;
+      ruleForm.user = res.data.user;
+      ruleForm.region = res.data.region;
+      ruleForm.entiry = res.data.entiry;
+      ruleForm.dsc = res.data.dsc;
+      ruleForm.type = res.data.type;
+      ruleForm.status = res.data.status;
+      ruleForm.id = res.data.id;
+    }
+  });
+};
+getInfo();
 </script>
 
 <style lang="less" scoped>

@@ -38,9 +38,21 @@
           </template>
         </el-table-column>
         <el-table-column prop="cname" label="中文名称" width="240" />
-        <el-table-column prop="user" label="负责人" width="180" />
-        <el-table-column prop="status" label="状态" width="120" />
-        <el-table-column prop="entiry" label="关联实体" width="240" />
+        <el-table-column prop="user" label="负责人" width="180">
+          <template #default="scope">
+            <span>{{ filterUtils(scope.row.user, "user") }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" width="120">
+          <template #default="scope">
+            <span>{{ filterUtils(scope.row.status, "status") }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="entiry" label="关联实体" width="240">
+          <template #default="scope">
+            <span>{{ filterUtils(scope.row.entiry, "entiry") }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="time" label="最后操作时间" width="240" />
         <el-table-column label="Operations" fixed="right" width="120">
           <template #default="scope">
@@ -50,7 +62,7 @@
               content="编辑"
               placement="top"
             >
-              <Edit class="operaIcon" />
+              <Edit class="operaIcon" @click="jumpEdit(scope.row)" />
             </el-tooltip>
             <el-tooltip
               class="box-item"
@@ -58,7 +70,7 @@
               content="删除"
               placement="top"
             >
-              <Delete class="operaIcon" />
+              <Delete class="operaIcon" @click="deleteDialog(scope.row)" />
             </el-tooltip>
             <span></span>
           </template>
@@ -79,16 +91,30 @@
       </el-pagination>
     </div>
   </div>
+  <el-dialog v-model="dialogVisible" title="删除" width="30%">
+    <span>确定要删除这条资产吗?</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="sure">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup>
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import request from "@/utils/requestUtils";
+import dirct from "@/dictionaries/business.json";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const tableData = ref([]);
 const total = ref(0);
+console.log(dirct, "值");
+const dialogVisible = ref(false);
+const activeRowid = ref(null);
 const form = reactive({
   name: "",
   region: "",
@@ -104,6 +130,9 @@ const query = reactive({
   user: "",
   status: "",
 });
+const filterUtils = (value, flag) => {
+  return dirct[flag].find((item) => item.value == value).label;
+};
 const options = [
   {
     value: "1",
@@ -135,6 +164,35 @@ const reqList = () => {
       total.value = res.data.total;
     }
   });
+};
+const jumpEdit = (value) => {
+  router.push({
+    name: "editBusiness",
+    query: {
+      id: value.id,
+    },
+  });
+};
+const deleteDialog = (row) => {
+  activeRowid.value = row.id;
+  dialogVisible.value = true;
+};
+const sure = () => {
+  request
+    .post("/app/business/delete", { id: activeRowid.value })
+    .then((res) => {
+      if (res.message === "success") {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        cancel();
+      }
+    });
+};
+const cancel = () => {
+  dialogVisible.value = false;
+  reqList();
 };
 reqList();
 </script>

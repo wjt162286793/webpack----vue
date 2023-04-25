@@ -84,25 +84,6 @@ const businessRoutes = [
                 req.on('end', function () {
                     reqData = JSON.parse(postData)
                     let list = fileData
-                    // list.push(JSON.parse(postData))
-                    // if (list.length > 0) {
-                    //     let flag = list.find(item => reqData.name === item.name)
-                    //     if (flag) {
-                    //         if (reqData.password === flag.password) {
-                    //             flag.token = uuidv4();
-                    //             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, flag, 'success')
-                    //         } else {
-                    //             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '密码输入错误')
-                    //         }
-
-                    //     } else {
-                    //         callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
-                    //     }
-
-                    // } else {
-                    //     //空数据
-                    //     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
-                    // }
                     let resData = {
                         total: list.length,
                         list
@@ -114,15 +95,46 @@ const businessRoutes = [
         }
     },
     {
-        //用户登录
-        path: '/app/user/login',
+        //查询详情
+        path: '/app/business/Info',
         done: function (req, res) {
             let fileData = []
             //读取文件
-            fs.readFile(path.join(__dirname, '../file/user.json'), 'utf8', (err, data) => {
+            fs.readFile(path.join(__dirname, '../file/business.json'), 'utf8', (err, data) => {
                 if (err) {
                     console.log(err, '读取报错')
-                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], 'error')
+                    return
+                } else {
+                    fileData = JSON.parse(data.toString())
+                }
+
+                let postData = ''
+                //请求流
+                req.on('data', function (chunk) {
+                    postData += chunk
+                })
+                //请求结束
+                req.on('end', function () {
+                    console.log(postData.id, fileData, '具体资产数据')
+                    reqData = JSON.parse(postData)
+                    let Info = fileData.find(v => v.id == reqData.id)
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, Info, 'success')
+                })
+            })
+
+        }
+    },
+    {
+        //修改资产
+        path: '/app/business/change',
+        done: function (req, res) {
+            let fileData = []
+            //读取文件
+            fs.readFile(path.join(__dirname, '../file/business.json'), 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err, '读取报错')
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], 'error')
                     return
                 } else {
                     fileData = JSON.parse(data.toString())
@@ -136,44 +148,37 @@ const businessRoutes = [
                 //请求结束
                 req.on('end', function () {
                     reqData = JSON.parse(postData)
-                    let list = fileData
-                    // list.push(JSON.parse(postData))
-                    if (list.length > 0) {
-                        let flag = list.find(item => reqData.name === item.name)
-                        if (flag) {
-                            if (reqData.password === flag.password) {
-                                flag.token = uuidv4();
-                                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, flag, 'success')
-                            } else {
-                                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '密码输入错误')
-                            }
+                    console.log(reqData, '请求数据')
+                    let Index = fileData.findIndex(v => v.id == reqData.id)
+                    fileData[Index] = reqData
+                    console.log(fileData, '虞姬发送数据')
+                    let list = JSON.stringify(fileData)
+                    fs.writeFile(path.join(__dirname, '../file/business.json'), list, (error) => {
+                        if (error) {
 
-                        } else {
-                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
                         }
+                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, {}, 'success')
 
-                    } else {
-                        //空数据
-                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
-                    }
+                    })
+
                 })
             })
 
         }
     },
     {
-        path: '/app/user/updatePassword',
-        //修改密码
+        //资产修改
+        path: '/app/business/delete',
         done: function (req, res) {
-            let oldData = []
+            let fileData = []
             //读取文件
-            fs.readFile(path.join(__dirname, '../file/user.json'), 'utf8', (err, data) => {
+            fs.readFile(path.join(__dirname, '../file/business.json'), 'utf8', (err, data) => {
                 if (err) {
                     console.log(err, '读取报错')
-                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], 'error')
+                    return
                 } else {
-                    oldData = JSON.parse(data.toString())
-                    console.log(oldData, '当前文件数据');
+                    fileData = JSON.parse(data.toString())
                 }
 
                 let postData = ''
@@ -184,31 +189,19 @@ const businessRoutes = [
                 //请求结束
                 req.on('end', function () {
                     reqData = JSON.parse(postData)
-                    let list = oldData
-                    // list.push(JSON.parse(postData))
-                    if (oldData.length > 0) {
-                        console.log(list.findIndex(item => reqData.name === item.name), '查询匹配')
-                        let Index = list.findIndex(item => reqData.name == item.name)
-                        if (Index != -1) {
-                            //匹配到相同账号名
-                            console.log(list[Index], '修改对象')
-                            list[1] = reqData
-                            list = JSON.stringify(list)
-                            fs.writeFile(path.join(__dirname, '../file/user.json'), list, function (err) {
-                                if (err) {
-                                    return console.error(err)
-                                }
-                                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, [], '密码修改成功')
-                            })
-                            return
-                        } else {
-                            //未匹配到相同相同账号名
-                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
+                    console.log(reqData, '数据')
+                    let Index = fileData.findIndex(v => v.id == reqData.id)
+                    console.log(Index, '排名第几')
+                    fileData.splice(Index, 1)
+                    let list = JSON.stringify(fileData)
+                    fs.writeFile(path.join(__dirname, '../file/business.json'), list, (error) => {
+                        if (error) {
+
                         }
-                    } else {
-                        //数据本身为空
-                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号未注册')
-                    }
+                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, {}, 'success')
+
+                    })
+
                 })
             })
 
