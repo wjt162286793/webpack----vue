@@ -96,6 +96,73 @@ const asyncRoutes = [
                 },
                 component: () => import('pages/valueflow/index.vue')
             },
+            {
+                path: '/dashboard/graph',
+                name: 'graph',
+                meta: {
+                    name: '统计图表'
+                },
+                component: () => import('pages/graph/index.vue'),
+                redirect: '/dashboard/graph/list',
+                children: [
+                    {
+                        path: '/dashboard/graph/list',
+                        name: 'list',
+                        meta: {
+                            name: '列表'
+                        },
+                        component: () => import('pages/graph/components/list.vue'),
+                    },
+                    {
+                        path: '/dashboard/graph/financeStatic',
+                        name: 'financeStatic',
+                        meta: {
+                            name: '财务统计'
+                        },
+                        component: () => import('pages/graph/components/finance.vue'),
+                    },
+                    {
+                        path: '/dashboard/graph/personStatic',
+                        name: 'personStatic',
+                        meta: {
+                            name: '人员统计'
+                        },
+                        component: () => import('pages/graph/components/person.vue'),
+                    },
+                    {
+                        path: '/dashboard/graph/entiryStatic',
+                        name: 'entiryStatic',
+                        meta: {
+                            name: '实体统计'
+                        },
+                        component: () => import('pages/graph/components/entiry.vue'),
+                    },
+                    {
+                        path: '/dashboard/graph/dataStatic',
+                        name: 'dataStatic',
+                        meta: {
+                            name: '数据统计'
+                        },
+                        component: () => import('pages/graph/components/data.vue'),
+                    },
+                    {
+                        path: '/dashboard/graph/commutationStatic',
+                        name: 'commutationStatic',
+                        meta: {
+                            name: '通信统计'
+                        },
+                        component: () => import('pages/graph/components/commutation.vue'),
+                    },
+                    {
+                        path: '/dashboard/graph/materialStorage',
+                        name: 'materialStorage',
+                        meta: {
+                            name: '物资仓库'
+                        },
+                        component: () => import('pages/graph/components/material.vue'),
+                    },
+                ]
+            },
         ]
     },
 ]

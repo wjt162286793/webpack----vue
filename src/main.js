@@ -4,7 +4,11 @@
 // main.className = 'main'
 
 //主题模块
-document.body.dataset.theme = 'purple'
+// import 'element-plus/theme-chalk/dark/css-vars.css'
+// const htmlNode = document.querySelector('html')
+// htmlNode.className = 'dark'
+document.body.dataset.theme = 'blue'
+
 import './style/global.css'
 import './style/reset.css'
 import './style/theme.css'

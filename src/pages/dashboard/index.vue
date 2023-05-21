@@ -250,7 +250,8 @@ onMounted(() => {
       height: 100px;
       line-height: 100px;
       text-align: center;
-      background: var(--backround-color4);
+      color: var(--text-color3);
+      background: var(--backround-color5);
     }
     .headerMenu {
       flex: 1;
@@ -307,7 +308,8 @@ onMounted(() => {
 //   position: relative;
 // }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
+  min-width: 200px;
+  width: 200px !important;
   min-height: 400px;
 }
 /deep/ .el-menu {

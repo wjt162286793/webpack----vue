@@ -1,4 +1,4 @@
-.el-button{
+/* .el-button{
     color:#000 !important;
     --el-button-border-color:#000 !important;
     --el-button-hover-border-color:var(--border-color2) !important;
@@ -23,7 +23,7 @@
     --el-checkbox-checked-text-color:var(--primary-color) !important;
     --el-checkbox-checked-input-border-color:var(--primary-color) !important;
     --el-checkbox-checked-bg-color:var(--primary-color) !important;
-    /* --el-checkbox-checked-icon-color:var(--primary-color) !important; */
+    --el-checkbox-checked-icon-color:var(--primary-color) !important;
     --el-checkbox-input-border-color-hover:var(--primary-color) !important;
 
-}
+} */

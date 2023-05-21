@@ -1,17 +1,17 @@
-[data-theme="red"]{
-    --background-color1:#e93131;  /*大主题色*/
-    --background-color2:#d4301a;  /*二级主题色*/
+[data-theme="blue"]{
+    --background-color1:#409eff;  /*大主题色*/
+    --background-color2:#198ae7;  /*二级主题色*/
     --background-color3:#e5e2e5;  /*收尾渐变色*/
     --backround-color4:#1f1f1f;  /*底部颜色*/
     --backround-color5:#fff;  /*通白背景*/
-    --backround-color6:#545c64; /*左菜单*/
+    --backround-color6:#d9e4ee; /*左菜单*/
     --text-color1:#fff;  /*大背景色下直属文字*/
-    --text-color2:#e93131;  /*主题色文字*/
-    --text-color3:#f3300d;  /*二级主题色文字*/
-    --border-color1:#f808b0;  /*主边框*/
-    --border-color2:#e93131;  /*二级边框*/
-    --primary-color:#e93131;  /*主色调,主要给elment-plus配置*/
-    --primary-border:#e93131; /*主边框*/
+    --text-color2:#409eff;  /*主题色文字*/
+    --text-color3:#0a559b;  /*二级主题色文字*/
+    --border-color1:#1b4be9;  /*主边框*/
+    --border-color2:#409eff;  /*二级边框*/
+    --primary-color:#409eff;  /*主色调,主要给elment-plus配置*/
+    --primary-border:#409eff; /*主边框*/
 }
 [data-theme="purple"]{
     --background-color0:#583cd8;

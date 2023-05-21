@@ -8,7 +8,7 @@
 export default {
   name: "Main",
   created() {
-    document.body.dataset.theme = "red";
+    document.body.dataset.theme = "blue";
   },
   data() {
     return {};
