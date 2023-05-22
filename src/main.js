@@ -20,6 +20,9 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+//echarts模块
+import echarts from './javascript/chart';
+
 //路由
 import router from './router/index'
 import './router/guardRouter'
@@ -43,6 +46,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 mainVue.use(store)
 mainVue.config.globalProperties.$axios = request;
+mainVue.config.globalProperties.$echarts = echarts
 mainVue.mount('.main')
 
 
