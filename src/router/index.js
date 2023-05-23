@@ -133,7 +133,7 @@ const asyncRoutes = [
                         path: '/dashboard/graph/entiryStatic',
                         name: 'entiryStatic',
                         meta: {
-                            name: '实体统计'
+                            name: '实体分布'
                         },
                         component: () => import('pages/graph/components/entiry.vue'),
                     },

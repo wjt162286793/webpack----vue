@@ -14,8 +14,8 @@
     </el-col>
     <el-col :span="8">
       <div class="box" @click="jump('entiryStatic')">
-        <img src="@/assets/img/实体统计.png" alt="" />
-        <h4>实体统计</h4>
+        <img src="@/assets/img/实体分布.png" alt="" />
+        <h4>实体分布</h4>
       </div>
     </el-col>
   </el-row>
