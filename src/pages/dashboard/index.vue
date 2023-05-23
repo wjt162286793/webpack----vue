@@ -282,6 +282,7 @@ onMounted(() => {
     //   }
     // }
     .content {
+      overflow: auto;
       flex-grow: 1; /* 右侧内容区自适应宽度 */
       padding: 20px;
       padding-top: 60px;
