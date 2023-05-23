@@ -1,9 +1,7 @@
 <template>
-  <div>人员统计</div>
+  结构
 </template>
-
-<script>
+<script setup>
 </script>
-
-<style lang="less" scoped>
+<style lang="less">
 </style>

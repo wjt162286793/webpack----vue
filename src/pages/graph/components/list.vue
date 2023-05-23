@@ -8,8 +8,8 @@
     </el-col>
     <el-col :span="8">
       <div class="box" @click="jump('personStatic')">
-        <img src="@/assets/img/人员统计.png" alt="" />
-        <h4>人员统计</h4>
+        <img src="@/assets/img/组织结构.png" alt="" />
+        <h4>组织结构</h4>
       </div>
     </el-col>
     <el-col :span="8">

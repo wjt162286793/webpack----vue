@@ -18,7 +18,7 @@
           v-for="item in options"
           :key="item.value"
           :label="item.label"
-          :value="query.status"
+          :value="item.value"
         />
       </el-select>
       <el-button type="primary" @click="reqList">查询</el-button>
@@ -28,7 +28,7 @@
       <el-table
         :data="tableData"
         style="width: 100%"
-        border
+        :border="true"
         max-height="400"
         stripe
       >
@@ -48,7 +48,7 @@
             <span>{{ filterUtils(scope.row.status, "status") }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="entiry" label="关联实体" width="240">
+        <el-table-column prop="entiry" label="关联实体">
           <template #default="scope">
             <span>{{ filterUtils(scope.row.entiry, "entiry") }}</span>
           </template>

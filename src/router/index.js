@@ -125,7 +125,7 @@ const asyncRoutes = [
                         path: '/dashboard/graph/personStatic',
                         name: 'personStatic',
                         meta: {
-                            name: '人员统计'
+                            name: '组织结构'
                         },
                         component: () => import('pages/graph/components/person.vue'),
                     },

@@ -23,6 +23,12 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //echarts模块
 import echarts from './javascript/chart';
 
+//graph图谱
+import RelationGraph from 'relation-graph/vue3'
+
+//vue3TreeOrg关系图库
+
+
 //路由
 import router from './router/index'
 import './router/guardRouter'
@@ -45,6 +51,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     mainVue.component(key, component)
 }
 mainVue.use(store)
+mainVue.use(RelationGraph)
 mainVue.config.globalProperties.$axios = request;
 mainVue.config.globalProperties.$echarts = echarts
 mainVue.mount('.main')
