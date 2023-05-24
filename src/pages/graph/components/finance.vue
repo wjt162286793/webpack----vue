@@ -16,7 +16,6 @@
 </template>
  
 <script setup>
-import { ref, inject, onMounted } from "vue";
 let echarts = inject("echarts");
 function chart1Fn() {
   let echart1 = echarts.init(document.querySelector("#chartBox1"));

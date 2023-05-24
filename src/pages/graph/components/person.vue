@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
 let seeksRelationGraph = ref(null);
 const userGraphOptions = {
   backgrounImage: "",

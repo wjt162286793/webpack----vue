@@ -2,7 +2,7 @@
   <div>物资仓库</div>
 </template>
 
-<script>
+<script setup>
 </script>
 
 <style lang="less" scoped>

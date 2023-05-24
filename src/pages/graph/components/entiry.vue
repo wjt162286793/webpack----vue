@@ -3,11 +3,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import "@/javascript/china.js";
 const echartsRef = ref(null);
 let myChart = null;
+//地图上出发圆点
 var points = [
   { value: [118.8062, 31.9208], itemStyle: { color: "#4ab2e5" } },
   { value: [127.9688, 45.368], itemStyle: { color: "#4fb6d2" } },
@@ -26,26 +26,28 @@ var points = [
   { value: [108.384366, 30.439702], itemStyle: { color: "#b9be23" } },
   { value: [113.0823, 28.2568], itemStyle: { color: "#a6c62c" } },
   { value: [102.9199, 25.46639], itemStyle: { color: "#96cc34" } },
-  { value: [119.4543, 25.9222] },
+  { value: [119.4543, 25.9222]},
 ];
 
 onMounted(() => {
   initChart();
 });
 
+//chart里面的map地图配置地址:  https://echarts.apache.org/zh/option.html#geo.map
+//参考博客:   https://blog.csdn.net/sleepwalker_1992/article/details/126959198
 let initChart = () => {
   if (!myChart) {
     myChart = echarts.init(echartsRef.value);
   }
   myChart.hideLoading();
   let option = {
-    backgroundColor: "#013954",
+    backgroundColor: "#013954", //大背景
 
     geo: {
       map: "china",
       aspectScale: 0.75, //长宽比
-      zoom: 1.1,
-      roam: false,
+      zoom: 1.0, //图形在画布上缩放比例
+      roam: false,  //是否开启缩放平移,
       itemStyle: {
         normal: {
           areaColor: {
@@ -65,10 +67,11 @@ let initChart = () => {
             ],
             globalCoord: true, // 缺省为 false
           },
-          shadowColor: "rgb(58,115,192)",
-          shadowOffsetX: 10,
-          shadowOffsetY: 11,
+          shadowColor: "rgb(58,115,192)",  //阴影的背景色
+          shadowOffsetX: 10, //水平方向的偏移
+          shadowOffsetY: 11, //垂直方向偏移
         },
+        //高亮状态下的多边形和标签形式
         emphasis: {
           areaColor: "#2AB8FF",
           borderWidth: 0,
@@ -78,6 +81,7 @@ let initChart = () => {
           },
         },
       },
+      //特定区域的配置
       regions: [
         {
           name: "南海诸岛",
@@ -199,11 +203,12 @@ let initChart = () => {
             curveness: 0.3, //尾迹线条曲直度
           },
         },
+        //连线的数据
         data: [
           {
             coords: [
-              [118.8062, 31.9208],
-              [119.4543, 25.9222],
+              [118.8062, 31.9208],  //起点坐标
+              [119.4543, 25.9222],  //中点坐标
             ],
             lineStyle: { color: "#4ab2e5" },
           },
@@ -333,6 +338,15 @@ let initChart = () => {
 .transportMonitoringMap {
   width: 100%;
   height: 100%;
+  /deep/ div{
+     width: 100% !important;
+     height: 100% !important;
+     overflow: auto !important;
+  }
+  /deep/ canvas{
+   width: 100% !important;
+   height: 100% !important;
+  }
   // width: 855px;
   // height: 746px;
 }

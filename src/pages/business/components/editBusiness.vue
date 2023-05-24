@@ -98,7 +98,6 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";

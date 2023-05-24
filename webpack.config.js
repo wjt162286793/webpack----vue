@@ -132,7 +132,13 @@ module.exports = (env) => {
                 template: './public/index.html'
             }),
             //vue的插件
-            new VueLoaderPlugin()
+            new VueLoaderPlugin(),
+
+    //自动导入vue的组合式api        
+      require('unplugin-auto-import/webpack')({
+        // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+        imports: ['vue', 'vue-router'],
+      })
         ],
         //开发服务器
         devServer: {

@@ -1,11 +1,9 @@
 <template>
-  <div>实体</div>
+  <div>{{val}}</div>
 </template>
 
-<script>
-export default {
-  name: "entiry",
-};
+<script setup>
+const val = ref('实体')
 </script>
 
 <style lang="less" scoped>
