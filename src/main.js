@@ -28,6 +28,9 @@ import RelationGraph from 'relation-graph/vue3'
 
 //vue3TreeOrg关系图库
 
+//富文本编辑器
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css' 
 
 //路由
 import router from './router/index'
@@ -52,6 +55,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 mainVue.use(store)
 mainVue.use(RelationGraph)
+mainVue.use(Editor)
+mainVue.use(Toolbar)
 mainVue.config.globalProperties.$axios = request;
 mainVue.config.globalProperties.$echarts = echarts
 mainVue.mount('.main')

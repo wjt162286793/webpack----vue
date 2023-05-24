@@ -5,14 +5,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
-import axios from "axios";
-import geoJson from "@/javascript/china.js";
-
+import "@/javascript/china.js";
 const echartsRef = ref(null);
 let myChart = null;
-
-// var uploadedDataURL = "./data-1528971808162-BkOXf61WX.json";
-var uploadedDataURL = "./china.json";
 var points = [
   { value: [118.8062, 31.9208], itemStyle: { color: "#4ab2e5" } },
   { value: [127.9688, 45.368], itemStyle: { color: "#4fb6d2" } },
@@ -42,10 +37,6 @@ let initChart = () => {
   if (!myChart) {
     myChart = echarts.init(echartsRef.value);
   }
-  //     myChart.showLoading();
-  // axios.get(uploadedDataURL).then((geoJson) => {
-  echarts.registerMap("china", geoJson);
-
   myChart.hideLoading();
   let option = {
     backgroundColor: "#013954",
@@ -340,8 +331,8 @@ let initChart = () => {
 
 <style lang="less" scoped>
 .transportMonitoringMap {
-  width: 1400px;
-  height: 600px;
+  width: 100%;
+  height: 100%;
   // width: 855px;
   // height: 746px;
 }

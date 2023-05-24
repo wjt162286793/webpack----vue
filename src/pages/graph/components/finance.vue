@@ -1,15 +1,17 @@
 <template>
   <div class="chartBox">
     <el-row>
-      <el-col :span="12">
+      <el-col :span="12" class="colBox">
         <div id="chartBox1"></div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="12" class="colBox">
         <div id="chartBox2"></div>
       </el-col>
     </el-row>
-
-    <div id="chartBox3"></div>
+    <el-row>
+      <el-col :span="24" class="colBox"><div id="chartBox3"></div></el-col>
+    </el-row>
+    
   </div>
 </template>
  
@@ -134,7 +136,7 @@ function chart3Fn() {
     title: {
       text: "各月份主要资产净收益",
       top: "30px",
-      left: "750px",
+      left: "600px",
       textStyle: {
         color: "#2f7cee",
         fontSize: 20,
@@ -225,13 +227,19 @@ onMounted(() => {
   // display: flex;
   // flex-wrap: wrap;
 }
+.colBox{
+  display: flex;
+  justify-content: center;
+}
 #chartBox1 {
   width: 700px;
   height: 300px;
+  margin-top: 20px;
 }
 #chartBox2 {
   width: 700px;
   height: 300px;
+  margin-top: 20px;
 }
 #chartBox3 {
   margin-top: 50px;
