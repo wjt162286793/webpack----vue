@@ -163,6 +163,22 @@ const asyncRoutes = [
                     },
                 ]
             },
+            {
+                path: '/dashboard/task',
+                name: 'task',
+                meta: {
+                    name: '任务管理'
+                },
+                component: () => import('pages/task/index.vue')
+            },
+            {
+                path: '/dashboard/risk',
+                name: 'risk',
+                meta: {
+                    name: '风险管理'
+                },
+                component: () => import('pages/risk/index.vue')
+            },
         ]
     },
 ]

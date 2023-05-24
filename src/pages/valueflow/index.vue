@@ -18,9 +18,10 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 
     // 模拟 ajax 异步获取内容
     onMounted(() => {
-      setTimeout(() => {
+      //error2 使用延迟渲染
+      nextTick(()=>{
         valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-      }, 1500)
+      })
     })
 
     const toolbarConfig = reactive({})

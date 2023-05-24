@@ -38,6 +38,7 @@ ui组件 ----    element-plus
 加密解密 ---- crypto.js
 唯一标识 ---- uuid
 时间相关 ---- Moment.js
-
-
+全屏 ---- screenfull
+桌面应用 ---- electron
+人脸识别 ---- tracking.js
 

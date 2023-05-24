@@ -83,10 +83,14 @@ const businessRoutes = [
                 //请求结束
                 req.on('end', function () {
                     reqData = JSON.parse(postData)
+                    console.log(reqData,'请求数据')
                     let list = fileData
+                    let {name,user,status} = reqData
+                    let trueList = list.filter(item=>item.name === name)
+                    console.log(trueList,'符合条件的数据')
                     let resData = {
-                        total: list.length,
-                        list
+                        total: trueList.length,
+                        list:trueList
                     }
                     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, resData, 'success')
                 })

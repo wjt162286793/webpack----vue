@@ -5,3 +5,8 @@
 翻译: 超出了ResizeObserver循环限制
 原因: element-plus的问题
 解决: error1
+
+###Can not get editor instance
+翻译: 无法获取编辑器实例
+原因: 富文本组件wangeditor没有获取到具体的容器元素
+解决: error2

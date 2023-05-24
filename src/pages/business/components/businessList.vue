@@ -13,7 +13,7 @@
         label="相关负责人"
         clearable
       />
-      <el-select v-model="query.value" class="m-2" placeholder="选择资产状态">
+      <el-select v-model="query.status" class="m-2" placeholder="选择资产状态">
         <el-option
           v-for="item in options"
           :key="item.value"

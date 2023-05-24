@@ -66,6 +66,7 @@
 
 <script setup>
 import { useRouter, useRoute } from "vue-router";
+import screenfull from 'screenfull'
 import {
   Document,
   Menu as IconMenu,
@@ -124,6 +125,10 @@ const isCollapse = ref(false);
 //顶部菜单
 const headerMenuList = reactive([
   {
+    name:"全屏",
+    value:"full"
+  },
+  {
     name: "邮件",
     value: "email",
   },
@@ -169,6 +174,8 @@ const Iconto = (val) => {
     case "out":
       outLogin();
       break;
+    case "full":
+    screenfull.toggle()
   }
 };
 const breadJump = (breadName) => {
