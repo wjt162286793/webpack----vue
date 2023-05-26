@@ -27,6 +27,7 @@ npm run build
 项目计划将vue2和vue3的两种写法都展示出来,但主要使用vue3,所以请阅读者不要感觉怪异.
 
 ##使用库
+依赖包版本 ----  16版本以上,本人在开发阶段用的是16.17.0
 构建工具 ----    webpack && webpack-cli
 开发框架 ----    vue 3.x && vue-router && vuex
 css预编译 ----    less

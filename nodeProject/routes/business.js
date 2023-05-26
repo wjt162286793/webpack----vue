@@ -5,7 +5,7 @@ const querystring = require('querystring');
 const url = require('url');
 const util = require('util');
 const { v4: uuidv4 } = require('uuid');
-
+const moment  = require('moment')
 const businessRoutes = [
     {
         //新建业务领域
@@ -32,7 +32,6 @@ const businessRoutes = [
                     let list = oldData
                     // list.push(JSON.parse(postData))
                     if (oldData.length > 0) {
-                        console.log(list.findIndex(item => reqData.name === item.name), '查询匹配')
                         if (list.findIndex(item => reqData.name == item.name) != -1) {
                             //匹配到相同账号名
                             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该资产已被注册')
@@ -40,11 +39,15 @@ const businessRoutes = [
                         } else {
                             //未匹配到相同相同账号名
                             reqData.uuid = uuidv4()
+                            let time  = moment().format('YYYY-MM-DD hh:mm:ss')
+                            reqData.time = time
                             list.push(reqData)
                         }
                     } else {
                         //数据本身为空
                         reqData.uuid = uuidv4()
+                        let time  = moment().format('YYYY-MM-DD hh:mm:ss')
+                        reqData.time = time
                         list.push(reqData)
                     }
                     list.map((item, index) => { item.id = index + 1 })
@@ -82,15 +85,39 @@ const businessRoutes = [
                 })
                 //请求结束
                 req.on('end', function () {
-                    reqData = JSON.parse(postData)
-                    console.log(reqData,'请求数据')
-                    let list = fileData
-                    let {name,user,status} = reqData
-                    let trueList = list.filter(item=>item.name === name)
-                    console.log(trueList,'符合条件的数据')
+                    let reqData = JSON.parse(postData)
+                    let queryData = reqData.queryData
+                    let {pageSize,currentPage} = reqData
+                    // console.log(reqData,'请求数据')
+                    // console.log(fileData,'文件数据')
+                    let arr = []
+                    for(let val in queryData){
+                        console.log(val,'每一项的键')
+                        console.log(queryData[val],'每一项的值')
+                        if(queryData[val].toString()&&queryData[val].toString().length>0){
+                            arr.push([val,queryData[val]])
+                        }
+                    }
+                    console.log(arr,'符合的数据')
+                    let list = []
+                    if(arr.length === 0){
+                        list = fileData
+                    }else{
+                        list = []
+                        fileData.forEach(item=>{
+                           let flag = arr.every(n=>
+                            item[n[0]].toString() === n[1].toString()
+                           )
+                           if(flag){
+                            list.push(item)
+                           }
+                        })
+                    }
+                    let filterData = list.slice((currentPage-1)*pageSize,currentPage*pageSize)
+                    console.log((currentPage-1)+(currentPage-1)*pageSize,currentPage*pageSize,'截取值')
                     let resData = {
-                        total: trueList.length,
-                        list:trueList
+                        total: list.length,
+                        list:filterData
                     }
                     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, resData, 'success')
                 })
@@ -152,10 +179,12 @@ const businessRoutes = [
                 //请求结束
                 req.on('end', function () {
                     reqData = JSON.parse(postData)
+                    let time  = moment().format('YYYY-MM-DD hh:mm:ss')
+                    reqData.time = time
                     console.log(reqData, '请求数据')
                     let Index = fileData.findIndex(v => v.id == reqData.id)
                     fileData[Index] = reqData
-                    console.log(fileData, '虞姬发送数据')
+                    console.log(fileData, '预计发送数据')
                     let list = JSON.stringify(fileData)
                     fs.writeFile(path.join(__dirname, '../file/business.json'), list, (error) => {
                         if (error) {
@@ -171,7 +200,7 @@ const businessRoutes = [
         }
     },
     {
-        //资产修改
+        //资产删除
         path: '/app/business/delete',
         done: function (req, res) {
             let fileData = []

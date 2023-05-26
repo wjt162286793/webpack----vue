@@ -220,7 +220,7 @@ function setGraphData() {
   seeksRelationGraph.value.setJsonData(graphData, (graphInstance) => {});
 }
 onMounted(() => {
-  console.log(seeksRelationGraph, "??相关设置");
+  // console.log(seeksRelationGraph, "??相关设置");
   seeksRelationGraph.value.setOptions.defaultLineShape = 1;
   setGraphData();
 });

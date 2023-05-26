@@ -150,10 +150,10 @@ const headerMenuList = reactive([
   },
 ]);
 const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath);
+  // console.log(key, keyPath);
 };
 const handleClose = (key, keyPath) => {
-  console.log(key, keyPath);
+  // console.log(key, keyPath);
 };
 const unfold = () => {
   isCollapse.value = !isCollapse.value;
@@ -218,8 +218,9 @@ onMounted(() => {
   }
   getBreadList(route.path, router.options.routes[3].children);
   watch(
-    () => route.fullPath,
+    () => route.path,
     (newVal, oldVal) => {
+      console.log(newVal,'全的')
       getBreadList(newVal, router.options.routes[3].children);
       if (newVal === "/dashboard") {
         router.push({ path: "/dashboard/business" });

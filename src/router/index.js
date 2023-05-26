@@ -179,6 +179,14 @@ const asyncRoutes = [
                 },
                 component: () => import('pages/risk/index.vue')
             },
+            {
+                path: '/dashboard/editor',
+                name: 'editor',
+                meta: {
+                    name: '文本编辑'
+                },
+                component: () => import('pages/editor/index.vue')
+            },
         ]
     },
 ]

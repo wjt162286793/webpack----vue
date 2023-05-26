@@ -38,8 +38,8 @@
               class="formItem"
               clearable
             >
-              <el-option label="王惊涛" value="wjt" />
-              <el-option label="马师" value="ms" />
+              <el-option label="王惊涛" value="王惊涛" />
+              <el-option label="马师" value="马师" />
             </el-select> </el-form-item
         ></el-col>
         <el-col :span="12">
@@ -101,6 +101,7 @@
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
+import { cloneDeep } from "lodash";
 let ruleForm = reactive({
   name: "",
   cname: "",
@@ -189,6 +190,7 @@ const getInfo = () => {
     // ruleForm = res.data;
     // console.log(ruleForm, "具体信息");
     if (res.message === "success") {
+      // ruleForm = cloneDeep(res.data)
       ruleForm.name = res.data.name;
       ruleForm.cname = res.data.cname;
       ruleForm.user = res.data.user;

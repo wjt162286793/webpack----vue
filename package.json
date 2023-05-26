@@ -28,6 +28,7 @@
     "express": "^4.18.2",
     "html-webpack-plugin": "^5.5.0",
     "json5": "^2.2.3",
+    "moment": "^2.29.4",
     "nodemon": "^2.0.22",
     "postcss-calc": "^8.2.4",
     "postcss-custom-properties": "^13.1.5",

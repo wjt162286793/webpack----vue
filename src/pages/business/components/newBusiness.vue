@@ -37,8 +37,8 @@
               class="formItem"
               clearable
             >
-              <el-option label="王惊涛" value="wjt" />
-              <el-option label="马师" value="ms" />
+              <el-option label="王惊涛" value="王惊涛" />
+              <el-option label="马师" value="马师" />
             </el-select> </el-form-item
         ></el-col>
         <el-col :span="12">
@@ -150,7 +150,7 @@ const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate((valid, fields) => {
     if (valid) {
-      console.log(ruleForm, "结果");
+      // console.log(ruleForm, "结果");
       request.post("app/business/new", ruleForm).then((res) => {
         if (res.code === 200) {
           ElMessage({

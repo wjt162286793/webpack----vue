@@ -2,18 +2,20 @@
   <div class="exhibition">
     <div class="search">
       <el-input
-        v-model="query.name"
+        v-model.trim="query.name"
         placeholder="输入业务领域名称"
         label="业务领域名称"
         clearable
+        @change="reqList"
       />
       <el-input
-        v-model="query.user"
+        v-model.trim="query.user"
         placeholder="输入相关负责人"
         label="相关负责人"
         clearable
+        @change="reqList"
       />
-      <el-select v-model="query.status" class="m-2" placeholder="选择资产状态">
+      <el-select v-model="query.status" class="m-2" placeholder="选择资产状态" @change="reqList" clearable>
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -29,7 +31,6 @@
         :data="tableData"
         style="width: 100%"
         :border="true"
-        max-height="400"
         stripe
       >
         <el-table-column label="英文名称" width="240" fixed="left">
@@ -39,9 +40,9 @@
         </el-table-column>
         <el-table-column prop="cname" label="中文名称" width="240" />
         <el-table-column prop="user" label="负责人" width="180">
-          <template #default="scope">
+          <!-- <template #default="scope">
             <span>{{ filterUtils(scope.row.user, "user") }}</span>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="status" label="状态" width="120">
           <template #default="scope">
@@ -84,6 +85,12 @@
         layout="prev, pager, next, jumper, ->, total"
         :total="total"
         class="mt-4"
+        v-model:page-size="pageSize"
+        v-model:current-page="currentPage"
+        @size-change="reqList"
+        @current-change="reqList"
+        @prev-click="reqList"
+        @next-click="reqList"
       >
         <template #pager-text>
           <span>共 {{ total }} 条数据</span>
@@ -111,7 +118,7 @@ const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const tableData = ref([]);
 const total = ref(0);
-console.log(dirct, "值");
+// console.log(dirct, "值");
 const dialogVisible = ref(false);
 const activeRowid = ref(null);
 const form = reactive({
@@ -124,25 +131,27 @@ const form = reactive({
   resource: "",
   desc: "",
 });
-const query = reactive({
+let query = reactive({
   name: "",
   user: "",
   status: "",
 });
+let pageSize = 10
+let currentPage = ref(1)
 const filterUtils = (value, flag) => {
   return dirct[flag].find((item) => item.value == value).label;
 };
 const options = [
   {
-    value: "1",
-    label: "通过",
+    value: 1,
+    label: "运营",
   },
   {
-    value: "2",
+    value: 2,
     label: "审批",
   },
   {
-    value: "3",
+    value: 3,
     label: "冻结",
   },
 ];
@@ -157,7 +166,12 @@ const buttons = [
   { type: "", text: "删除", value: "delete" },
 ];
 const reqList = () => {
-  request.post("/app/business/list", query).then((res) => {
+  let postData = {
+    queryData:toRaw(query),
+    pageSize,
+    currentPage:currentPage.value
+  }
+  request.post("/app/business/list", postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
@@ -213,7 +227,7 @@ reqList();
 
 .table {
   padding: 10px;
-  max-height: 400px;
+  // max-height: 400px;
   display: grid;
 }
 .pagination {

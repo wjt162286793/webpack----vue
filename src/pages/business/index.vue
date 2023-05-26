@@ -13,7 +13,7 @@ if (route.name === "business") {
 }
 
 watch(route, (newVal, oldVal) => {
-  console.log(newVal, oldVal, "路由值变化");
+  // console.log(newVal, oldVal, "路由值变化");
   if (newVal.name === "business") {
     router.push({
       name: "businessList",
