@@ -178,6 +178,13 @@ const asyncRoutes = [
                     name: '风险管理'
                 },
                 component: () => import('pages/risk/index.vue')
+            },            {
+                path: '/dashboard/permission',
+                name: 'permission',
+                meta: {
+                    name: '权限管理'
+                },
+                component: () => import('pages/permission/index.vue')
             },
             {
                 path: '/dashboard/editor',
