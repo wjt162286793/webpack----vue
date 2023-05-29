@@ -1,5 +1,6 @@
 <template>
   <div class="formBox">
+    <h4>基本信息</h4>
     <el-form
       ref="ruleFormRef"
       :model="ruleForm"
@@ -94,6 +95,7 @@
         <el-button @click="goBack">返回</el-button>
       </div>
     </el-form>
+    <h4>模型图</h4>
   </div>
 </template>
 
@@ -207,6 +209,11 @@ getInfo();
 </script>
 
 <style lang="less" scoped>
+h4{
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
 .formBox {
   padding: 20px;
   position: relative;

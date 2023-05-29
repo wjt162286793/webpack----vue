@@ -1,5 +1,6 @@
 <template>
   <div class="formBox">
+    <h4>基本信息</h4>
     <el-form
       ref="ruleFormRef"
       :model="ruleForm"
@@ -86,20 +87,56 @@
             /> </el-form-item
         ></el-col>
       </el-row>
-      <div class="footer">
+    </el-form>
+    <h4>模型图</h4>
+    <div class="btnList">
+    <el-button type="primary" @click="openDrawer('new')">创建模型图方案</el-button>
+    <el-button type="danger">删除模型图方案</el-button>
+    </div>
+    <el-table
+    ref="multipleTableRef"
+    :data="tableData"
+    style="width: 100%"
+    @selection-change="handleSelectionChange"
+  >
+    <el-table-column type="selection" width="55" />
+    <el-table-column label="Date" width="120">
+      <template #default="scope">{{ scope.row.date }}</template>
+    </el-table-column>
+    <el-table-column property="name" label="Name" width="120" />
+    <el-table-column property="address" label="Address" show-overflow-tooltip />
+  </el-table>
+  <div class="footer">
         <el-button type="primary" @click="submitForm(ruleFormRef)">
           创建
         </el-button>
         <el-button @click="goBack">返回</el-button>
       </div>
-    </el-form>
   </div>
+  <el-drawer v-model="drawer" direction="rtl" size="80%" destroy-on-close>
+    <template #header>
+      <h4 style="margin-bottom: 0px;">{{drawerTitle}}</h4>
+    </template>
+    <template #default>
+      <div class="nameContent">
+        方案名称:<el-input v-model="scenario_name" style="width:400px;margin-left: 30px;"></el-input>
+      </div>
+      <Visual></Visual>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="cancelClick">取消</el-button>
+        <el-button type="primary" @click="confirmClick">保存</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup>
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
+import Visual from './visual.vue'
 const ruleForm = reactive({
   name: "",
   cname: "",
@@ -113,6 +150,10 @@ const ruleForm = reactive({
 const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
+let drawerTitle = ref('新建模型方案')
+let scenario_name = ref('')
+let drawer = ref(false)
+
 const rules = reactive({
   name: [
     {
@@ -145,6 +186,23 @@ const rules = reactive({
     },
   ],
 });
+const tableData = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+]
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val
+}
+const multipleSelection = ref([])
 
 const submitForm = (formEl) => {
   if (!formEl) return;
@@ -186,16 +244,35 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
   value: `${idx + 1}`,
   label: `${idx + 1}`,
 }));
+const openDrawer = (flag)=>{
+  
+  drawer.value = true
+}
+const cancelClick = ()=>{
+  drawer.value = false
+}
+const confirmClick  = ()=>{
+
+}
 </script>
 
 <style lang="less" scoped>
+h4{
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
 .formBox {
   padding: 20px;
   position: relative;
+  overflow: auto;
   height: 100%;
   padding-bottom: 40px;
   .formItem {
     width: 300px;
+  }
+  .btnList{
+    margin-bottom: 20px;
   }
   .footer {
     height: 40px;
@@ -207,5 +284,9 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
     padding-right: 20px;
     justify-content: flex-end;
   }
+}
+.nameContent{
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eee;
 }
 </style>
