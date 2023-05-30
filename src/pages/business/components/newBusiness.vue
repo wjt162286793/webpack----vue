@@ -113,7 +113,7 @@
         <el-button @click="goBack">返回</el-button>
       </div>
   </div>
-  <el-drawer v-model="drawer" direction="rtl" size="80%" destroy-on-close>
+  <el-drawer v-model="drawer" direction="rtl" size="85%" destroy-on-close>
     <template #header>
       <h4 style="margin-bottom: 0px;">{{drawerTitle}}</h4>
     </template>
@@ -121,7 +121,7 @@
       <div class="nameContent">
         方案名称:<el-input v-model="scenario_name" style="width:400px;margin-left: 30px;"></el-input>
       </div>
-      <Visual></Visual>
+      <Visual ref="VisualCom"></Visual>
     </template>
     <template #footer>
       <div style="flex: auto">
@@ -150,9 +150,12 @@ const ruleForm = reactive({
 const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
+let VisualCom = ref(null)
 let drawerTitle = ref('新建模型方案')
 let scenario_name = ref('')
+let attr = useAttrs()
 let drawer = ref(false)
+
 
 const rules = reactive({
   name: [
@@ -252,7 +255,7 @@ const cancelClick = ()=>{
   drawer.value = false
 }
 const confirmClick  = ()=>{
-
+console.log(VisualCom.value.plumbList,'属性???')
 }
 </script>
 
