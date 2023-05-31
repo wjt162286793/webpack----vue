@@ -4,14 +4,15 @@
             <h3>选择节点</h3>
             <el-collapse>
                 <el-collapse-item :title="item1.name" v-for="(item1, index) in leftMenuData">
-                    <div v-for="(item2, n) in item1.children" class="content">{{ item2.context }}</div>
+                
+                        <draggable @start="moveStart" @end="moveEnd" v-model="item1.children" :options="options">
+                        <div v-for="(item2, n) in item1.children" class="content" :divOption="JSON.stringify(item2)" @mousedown="mouseDownFun">{{ item2.context }}</div>
+                       </draggable>
+                 
+
+                    
                 </el-collapse-item>
             </el-collapse>
-            <!-- <div v-for="(item1,index) in leftMenuData" class="leftMenuItem">
-            <h3>{{item1.name}}</h3>
-            <hr>
-            <el-button v-for="(item2,n) in item1.children" class="leftBtn">{{item2.context}}</el-button>
-        </div> -->
         </li>
         <li class="plumbBox">
             <div v-for="(item, index) in info" :key="item.name" :id="item.name" :style="getStyle(item)">
@@ -36,8 +37,23 @@
 <script setup>
 //引入jsPlumb
 import { jsPlumb } from 'jsplumb'
+import {VueDraggableNext} from 'vue-draggable-next'
+import { ElMessage } from 'element-plus';
+const draggable = VueDraggableNext
+let plumbBox = null
+let plumbBoxPositionInfo = reactive({})
+//鼠标和节点的内部差距,为了让节点更精准的判断区域
+let nodePositionDiff = reactive({})
 //后面需要回传给父组件的值
 let plumbList = ref([])
+const options = { 
+                    preventOnFilter: false,
+                    sort: false,
+                    disabled: false,
+                    ghostClass: 'tt',
+                    // 不使用H5原生的配置
+                    forceFallback: true
+}
 //默认配置
 let globalConfig = {
     anchor: ['Bottom', 'Top', 'Left', 'Right'],
@@ -56,16 +72,16 @@ let leftMenuData = ref([
             {
                 name: 'div11',
                 to: [],
-                top: 800,
-                left: 700,
+                top: 0,
+                left: 0,
                 context: '起始节点1',
                 status: 'loadding'
             },
             {
                 name: 'div12',
                 to: [],
-                top: 800,
-                left: 1000,
+                top: 0,
+                left: 0,
                 context: '起始节点2',
                 status: 'loadding'
             }
@@ -77,16 +93,16 @@ let leftMenuData = ref([
             {
                 name: 'div21',
                 to: [],
-                top: 800,
-                left: 700,
+                top: 0,
+                left: 0,
                 context: '完结节点1',
                 status: 'loadding'
             },
             {
                 name: 'div12',
                 to: [],
-                top: 800,
-                left: 1000,
+                top: 0,
+                left: 0,
                 context: '完结节点2',
                 status: 'loadding'
             }
@@ -144,16 +160,8 @@ let info = ref([
 info.value.map(item => item = Object.assign(item, globalConfig))
 
 //新增一个节点
-const addNode = () => {
-    info.value.push({
-        name: 'div6',
-        to: [],
-        top: 400,
-        left: 1200,
-        color: 'blue',
-        context: '新增节点3',
-        status: 'loading'
-    })
+const addNode = (newInfo) => {
+   info.value.push(newInfo)
     renderNode()
 }
 
@@ -162,11 +170,70 @@ const addLine = () => {
     info.value[3].to = ['div6']
     renderNode()
 }
+const mouseDownFun = (event)=>{
+console.log('点击???',event)
+//具体位置鼠标信息
+let mousedownPositionInfo = {x:event.clientX,y:event.clientY}
+//被拖拽节点初始的位置信息
+let moveBoxBeforePosition = {x:event.target.getBoundingClientRect().x,y:event.target.getBoundingClientRect().y}
+console.log(mousedownPositionInfo,moveBoxBeforePosition,'拖动前的信息')
+nodePositionDiff = {leftDiff:mousedownPositionInfo.x - moveBoxBeforePosition.x,topDiff:mousedownPositionInfo.y - moveBoxBeforePosition.y}
 
+}
+//开始拖动
+const moveStart = (el)=>{
+ console.log(el,'开始拖动')
+}
+//停止拖动
+const moveEnd = (el)=>{
+    refreshPlumbPostionInfo()
+ console.log(el,'停止拖动')
+ console.log(el.originalEvent.x,el.originalEvent.y,'左侧节点拖到的位置')
+ console.log(el.item.style,'小盒子拖动完的位置信息')
+ let dragNodeInfo = JSON.parse(el.item.attributes.divOption.nodeValue)
+ console.log(dragNodeInfo,'选中节点的信息')
+ judgePosition(dragNodeInfo,plumbBoxPositionInfo,el.originalEvent.x,el.originalEvent.y)
+}
+//判断拖动区域
+const judgePosition = (dragNodeInfo,plumbBoxPositionInfo,x,y)=>{
+  console.log(dragNodeInfo,plumbBoxPositionInfo,'拖动结束信息和画布信息')
+  console.log(nodePositionDiff,'上下差')
+  if((x - nodePositionDiff.leftDiff<plumbBoxPositionInfo.left)||(x + 200-nodePositionDiff.leftDiff>plumbBoxPositionInfo.right)||(y- nodePositionDiff.topDiff<plumbBoxPositionInfo.top)||(y+ 40-nodePositionDiff.topDiff>plumbBoxPositionInfo.bottom)){
+    ElMessage({
+        message:'节点不能拖拽至画布之外',
+        type:'error'
+    })
+  }else{
+    ElMessage({
+        message:'在画布之内',
+        type:'success'
+    })
+    dragNodeInfo.left = x - plumbBoxPositionInfo.left - nodePositionDiff.leftDiff
+    dragNodeInfo.top = y - plumbBoxPositionInfo.top - nodePositionDiff.topDiff
+    console.log(dragNodeInfo,"????放进去的节点信息???")
+    addNode(dragNodeInfo)
+  }
+}
+//刷新画布区域信息
+const refreshPlumbPostionInfo = ()=>{
+    plumbBox = document.querySelector('.plumbBox')
+        console.log(plumbBox.getBoundingClientRect(),'画布节点位置信息')
+        let positionInfo = plumbBox.getBoundingClientRect()
+        plumbBoxPositionInfo = positionInfo
+}
 //渲染节点
 const renderNode = () => {
     //这里需要等所依赖的DOM节点全部渲染完毕,才能进行图形渲染
     nextTick(() => {
+        //获取画布的位置和区域信息
+        refreshPlumbPostionInfo()
+
+        // plumbBoxPositionInfo.left = positionInfo.left
+        // plumbBoxPositionInfo.top = positionInfo.top
+        // plumbBoxPositionInfo.width = positionInfo.width
+        // plumbBoxPositionInfo.height = positionInfo.height
+        
+        //渲染画布中的信息节点
         let renderList = []
         info.value.forEach(item => {
             if (item.to.length > 0) {
@@ -259,6 +326,7 @@ defineExpose({
     text-align: center;
    }
     .content {
+        width: 200px;
         height: 40px;
         border: dashed 1px #030303;
         text-align: center;
