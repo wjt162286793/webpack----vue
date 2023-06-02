@@ -44,6 +44,7 @@ import { jsPlumb } from 'jsplumb'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { ElMessage } from 'element-plus';
 import lodash from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
 const draggable = VueDraggableNext
 let plumbBox = null
 let plumbBoxPositionInfo = reactive({})
@@ -51,7 +52,8 @@ let plumbBoxPositionInfo = reactive({})
 let nodePositionDiff = reactive({})
 //后面需要回传给父组件的值
 let plumbList = ref([])
-
+//绘制标识
+let renderFlag = ref(undefined)
 
 /*
 ----------------------------------------------
@@ -107,7 +109,6 @@ let leftMenuData = ref([
     name: '起始列表',
     children: [
       {
-        name: 'div11',
         to: [],
         top: 0,
         left: 0,
@@ -117,7 +118,6 @@ let leftMenuData = ref([
         isTarget: false
       },
       {
-        name: 'div12',
         to: [],
         top: 0,
         left: 0,
@@ -132,7 +132,6 @@ let leftMenuData = ref([
     name: '完结列表',
     children: [
       {
-        name: 'div21',
         to: [],
         top: 0,
         left: 0,
@@ -143,7 +142,6 @@ let leftMenuData = ref([
         isTarget: false
       },
       {
-        name: 'div22',
         to: [],
         top: 0,
         left: 0,
@@ -156,72 +154,20 @@ let leftMenuData = ref([
   },
 ])
 //渲染节点信息(默认是后台传过来的)
-let info = ref([
-  {
-    name: "div1",
-    to: ["div2", "div3"],
-    top: 300,
-    left: 100,
-    color: "red",
-    context: "开始运行",
-    status: "success",
-    isSource: true,
-    isTarget: false,
-  },
-  {
-    name: "div2",
-    to: ["div4"],
-    top: 200,
-    left: 500,
-    color: "green",
-    context: "构建任务1",
-    status: "success",
-    isSource: true,
-    isTarget: true,
-  },
-  {
-    name: "div3",
-    to: ["div5"],
-    top: 400,
-    left: 500,
-    color: "green",
-    context: "构建任务2",
-    status: "error",
-    isSource: true,
-    isTarget: true,
-  },
-  {
-    name: "div4",
-    to: [],
-    top: 200,
-    left: 900,
-    color: "blue",
-    context: "完成部署1",
-    status: "success",
-    isSource: false,
-    isTarget: true,
-  },
-  {
-    name: "div5",
-    to: [],
-    top: 400,
-    left: 900,
-    color: "blue",
-    context: "完成部署2",
-    status: "loading",
-    isSource: false,
-    isTarget: true,
-  },
-]);
-//合并节点信息和配置
-info.value.map((item) => (item = Object.assign(item, globalConfig)));
-
+let info = ref([]);
 //新增一个节点
 const addNode = (newInfo) => {
+  newInfo.name = uuidv4()
+  newInfo = Object.assign(newInfo, globalConfig)
   info.value.push(newInfo)
   console.log(newInfo, '???新增节点的信息')
-  renderNode()
   // makeFun(newInfo)
+  nextTick(() => { 
+    renderFlag.value = 'new'
+    makeFun(newInfo)
+   })
+  
+
 }
 
 //新增一条连线
@@ -269,13 +215,16 @@ const refreshPlumbPostionInfo = () => {
 }
 //渲染节点
 const renderNode = () => {
+  //合并节点信息和配置
+info.value.map((item) => (item = Object.assign(item, globalConfig)));
   //这里需要等所依赖的DOM节点全部渲染完毕,才能进行图形渲染
-  plumbInit.deleteEveryConnection()
-  plumbInit.deleteEveryEndpoint()
   nextTick(() => {
+    plumbInit.deleteEveryConnection()
+  plumbInit.deleteEveryEndpoint()
     refreshPlumbPostionInfo()
     //渲染画布中的信息节点
     let renderList = []
+    // if(info.value.length<1){return}
     info.value.forEach(item => {
       if (item.to.length > 0) {
         item.to.forEach(v => {
@@ -301,55 +250,8 @@ const renderNode = () => {
         plumbInit.connect(item)
       });
       info.value.forEach((item) => {
-        // plumbInit.makeSource(item.name,lodash.merge(jsplumbSourceOptions,{}))
         makeFun(item)
-      });
-
-    });
-  });
-};
-
-const makeFun = (item)=>{
-          
-  console.log(item, '每一项?')
-        plumbInit.setSourceEnabled(item.name, item.isSource)
-        plumbInit.setTargetEnabled(item.name, item.isTarget)
-        plumbInit.setDraggable(item.name, true)
-
-        plumbInit.makeSource(item.name, {
-          filter: '.plumbNode',
-          filterExclude: false,
-          anchor: item.anchor,
-          allowLoopback: true,
-          maxConnections: 3,
-          anchor: ["Bottom", "Top", "Left", "Right"],
-          connector: "Bezier",
-          endpoint: "Blank",
-          paintStyle: { stroke: "#364249", strokeWidth: 1 },
-          overlays: [["Arrow", { width: 15, length: 15, location: 1 }]],
-          endpointStyle: {
-            fill: "lightgray",
-            outlineStroke: "darkgray",
-            outlineWidth: 2,
-          },
-        })
-        plumbInit.makeTarget(item.name, {
-          filter: '.plumbNode',
-          filterExclude: false,
-          anchor: item.anchor,
-          allowLoopback: true,
-          maxConnections: -1,
-          anchor: ["Bottom", "Top", "Left", "Right"],
-          connector: "Bezier",
-          endpoint: "Blank",
-          paintStyle: { stroke: "#364249", strokeWidth: 1 },
-          overlays: [["Arrow", { width: 15, length: 15, location: 1 }]],
-          endpointStyle: {
-            fill: "lightgray",
-            outlineStroke: "darkgray",
-            outlineWidth: 2,
-          },
-        })
+        // plumbInit.makeSource(item.name,lodash.merge(jsplumbSourceOptions,{}))
         plumbInit.draggable(item.name, {
           containment: "parent",
           stop: function (el) {
@@ -357,6 +259,50 @@ const makeFun = (item)=>{
             item.top = el.pos[1]
           },
         });
+      });
+
+    });
+  });
+};
+
+const makeFun = (item) => {
+
+  plumbInit.setSourceEnabled(item.name, item.isSource)
+  plumbInit.setTargetEnabled(item.name, item.isTarget)
+  plumbInit.setDraggable(item.name, true)
+  plumbInit.makeSource(item.name, {
+    filter: '.plumbNode',
+    filterExclude: false,
+    allowLoopback: true,
+    maxConnections: -1,
+    Container: 'plumbBox',
+    anchor: item.anchor,
+    connector: item.connector,
+    endpoint: item.endpoint,
+    overlays: item.overlays,
+    paintStyle: item.paintStyle,
+    endpointStyle: item.endpointStyle
+  })
+  plumbInit.makeTarget(item.name, {
+    filter: '.plumbNode',
+    filterExclude: false,
+    allowLoopback: true,
+    maxConnections: 1,
+    Container: 'plumbBox',
+    anchor: item.anchor,
+    connector: item.connector,
+    endpoint: item.endpoint,
+    overlays: item.overlays,
+    paintStyle: item.paintStyle,
+    endpointStyle: item.endpointStyle
+  })
+  plumbInit.draggable(item.name, {
+    containment: "parent",
+    stop: function (el) {
+      item.left = el.pos[0]
+      item.top = el.pos[1]
+    },
+  });
 }
 
 // 给元素设置渲染样式
@@ -380,14 +326,89 @@ const getStyle = function (item) {
 //初始化jsplumb实例
 let plumbInit = jsPlumb.getInstance();
 plumbInit.bind('click', (conn, originalEvent) => {
-        console.log('点击了', coon, originalEvent)
-        plumbInit.deleteConnection(conn)
-      })
-      plumbInit.bind('connection', (event) => {
-        console.log(event, '连线事件触发')
-      })
+  console.log('点击了', coon, originalEvent)
+  plumbInit.deleteConnection(conn)
+})
+plumbInit.bind('connection', (event) => {
+  console.log(event,'新的连线事件触发')
+  let sourceNode = info.value.find(item=>item.name === event.sourceId)
+  console.log(sourceNode.to,event.targetId,'???')
+  if(sourceNode.to.findIndex(v=>v === event.targetId) === -1){
+    sourceNode.to.push(event.targetId)
+  }
+  plumbInit.repaint()
+  if(renderFlag.value === 'new'){
+    renderFlag.value = 'once'
+    renderNode()
+  }
+  // console.log(info.value,'所有节点')
+  // renderNode()
+})
 onMounted(() => {
-  renderNode();
+  setTimeout(()=>{
+//     info.value = [
+//   {
+//     name: "div1",
+//     to: ["div2", "div3"],
+//     top: 300,
+//     left: 100,
+//     color: "red",
+//     context: "开始运行",
+//     status: "success",
+//     isSource: true,
+//     isTarget: false,
+//   },
+//   {
+//     name: "div2",
+//     to: ["div4"],
+//     top: 200,
+//     left: 500,
+//     color: "green",
+//     context: "构建任务1",
+//     status: "success",
+//     isSource: true,
+//     isTarget: true,
+//   },
+//   {
+//     name: "div3",
+//     to: ["div5"],
+//     top: 400,
+//     left: 500,
+//     color: "green",
+//     context: "构建任务2",
+//     status: "error",
+//     isSource: true,
+//     isTarget: true,
+//   },
+//   {
+//     name: "div4",
+//     to: [],
+//     top: 200,
+//     left: 900,
+//     color: "blue",
+//     context: "完成部署1",
+//     status: "success",
+//     isSource: false,
+//     isTarget: true,
+//   },
+//   {
+//     name: "div5",
+//     to: [],
+//     top: 400,
+//     left: 900,
+//     color: "blue",
+//     context: "完成部署2",
+//     status: "loading",
+//     isSource: false,
+//     isTarget: true,
+//   },
+// ]
+renderNode();
+nextTick(()=>{
+    console.log('页面初次渲染完毕')
+    renderFlag.value = 'render'
+  })
+  },2000)
   // info.value.forEach(item=>{
   //   plumbInit.makeSource(item.name,lodash.merge(jsplumbSourceOptions,{}))
   // })

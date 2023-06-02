@@ -255,7 +255,7 @@ const cancelClick = ()=>{
   drawer.value = false
 }
 const confirmClick  = ()=>{
-console.log(VisualCom.value.plumbList,'属性???')
+console.log(VisualCom.value.info,'属性???')
 }
 </script>
 
