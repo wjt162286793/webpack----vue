@@ -90,36 +90,57 @@
     </el-form>
     <h4>模型图</h4>
     <div class="btnList">
-    <el-button type="primary" @click="openDrawer('new')">创建模型图方案</el-button>
-    <el-button type="danger">删除模型图方案</el-button>
+      <el-button type="primary" @click="openDrawer('new')"
+        >创建模型图方案</el-button
+      >
+      <el-button type="danger">删除模型图方案</el-button>
     </div>
     <el-table
-    ref="multipleTableRef"
-    :data="tableData"
-    style="width: 100%"
-    @selection-change="handleSelectionChange"
-  >
-    <el-table-column type="selection" width="55" />
-    <el-table-column label="Date" width="120">
-      <template #default="scope">{{ scope.row.date }}</template>
-    </el-table-column>
-    <el-table-column property="name" label="Name" width="120" />
-    <el-table-column property="address" label="Address" show-overflow-tooltip />
-  </el-table>
-  <div class="footer">
-        <el-button type="primary" @click="submitForm(ruleFormRef)">
-          创建
-        </el-button>
-        <el-button @click="goBack">返回</el-button>
-      </div>
+      ref="multipleTableRef"
+      :data="tableData"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="最近操作日期" width="240">
+        <template #default="scope">{{ scope.row.date }}</template>
+      </el-table-column>
+      <el-table-column property="name" label="模型图名称" width="240" />
+      <el-table-column
+        property="address"
+        label="模型规范"
+        show-overflow-tooltip
+      />
+    </el-table>
+    <div class="footer">
+      <el-button type="primary" @click="submitForm(ruleFormRef)">
+        创建
+      </el-button>
+      <el-button @click="goBack">返回</el-button>
+    </div>
   </div>
   <el-drawer v-model="drawer" direction="rtl" size="85%" destroy-on-close>
     <template #header>
-      <h4 style="margin-bottom: 0px;">{{drawerTitle}}</h4>
+      <h4 style="margin-bottom: 0px">{{ drawerTitle }}</h4>
     </template>
     <template #default>
       <div class="nameContent">
-        方案名称:<el-input v-model="scenario_name" style="width:400px;margin-left: 30px;"></el-input>
+        方案名称:&nbsp;&nbsp;<el-input
+          v-model="scenario_name"
+          style="width: 200px; margin-left: 30px';margin-right:20px;"
+        ></el-input>
+        模型规范:&nbsp;&nbsp;<el-select
+          v-model="mode_type"
+          style="width: 200px; margin-left: 30px';margin-right:20px;"
+        >
+          <el-option
+            v-for="(item, index) in typeOptions"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
       </div>
       <Visual ref="VisualCom"></Visual>
     </template>
@@ -136,7 +157,7 @@
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
-import Visual from './visual.vue'
+import Visual from "./visual.vue";
 const ruleForm = reactive({
   name: "",
   cname: "",
@@ -150,12 +171,26 @@ const ruleForm = reactive({
 const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
-let VisualCom = ref(null)
-let drawerTitle = ref('新建模型方案')
-let scenario_name = ref('')
-let attr = useAttrs()
-let drawer = ref(false)
-
+let VisualCom = ref(null);
+let drawerTitle = ref("新建模型方案");
+let scenario_name = ref("");
+let mode_type = ref("");
+let typeOptions = ref([
+  {
+    value: 1,
+    label: "精品",
+  },
+  {
+    value: 2,
+    label: "标准",
+  },
+  {
+    value: 3,
+    label: "草稿",
+  },
+]);
+let attr = useAttrs();
+let drawer = ref(false);
 
 const rules = reactive({
   name: [
@@ -189,23 +224,12 @@ const rules = reactive({
     },
   ],
 });
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+const tableData = [];
 
 const handleSelectionChange = (val) => {
-  multipleSelection.value = val
-}
-const multipleSelection = ref([])
+  multipleSelection.value = val;
+};
+const multipleSelection = ref([]);
 
 const submitForm = (formEl) => {
   if (!formEl) return;
@@ -247,20 +271,20 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
   value: `${idx + 1}`,
   label: `${idx + 1}`,
 }));
-const openDrawer = (flag)=>{
-  
-  drawer.value = true
-}
-const cancelClick = ()=>{
-  drawer.value = false
-}
-const confirmClick  = ()=>{
-console.log(VisualCom.value.info,'属性???')
-}
+const openDrawer = (flag) => {
+  drawer.value = true;
+};
+const cancelClick = () => {
+  drawer.value = false;
+};
+const confirmClick = () => {
+  console.log(VisualCom.value.info, "属性???");
+  console.log(scenario_name.value, mode_type.value, "上面");
+};
 </script>
 
 <style lang="less" scoped>
-h4{
+h4 {
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 20px;
@@ -274,7 +298,7 @@ h4{
   .formItem {
     width: 300px;
   }
-  .btnList{
+  .btnList {
     margin-bottom: 20px;
   }
   .footer {
@@ -288,7 +312,7 @@ h4{
     justify-content: flex-end;
   }
 }
-.nameContent{
+.nameContent {
   padding-bottom: 14px;
   border-bottom: 1px solid #eee;
 }

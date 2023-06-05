@@ -33,7 +33,7 @@
         :key="index"
         :id="item.id"
         :style="getStyle(item)"
-        :class="item.id === activeNode.id?'activeNode':'normalNode'"
+        :class="item.id === activeNode.id ? 'activeNode' : 'normalNode'"
         @click="sendActive(item)"
       >
         <div class="plumbNode" :id="item.id + 'plumbNode'">
@@ -61,7 +61,12 @@
     <li class="rightContent">
       <h3>节点操作</h3>
       <div style="padding-left: 10px">
-        <RightForm ref="rightForm" @changeActiveNodeInfo="changeActiveNodeInfo" @deleteLine="deleteLine"></RightForm>
+        <RightForm
+          ref="rightForm"
+          @changeActiveNodeInfo="changeActiveNodeInfo"
+          @deleteLine="deleteLine"
+          @deleteNode="deleteNode"
+        ></RightForm>
       </div>
     </li>
   </ul>
@@ -127,8 +132,13 @@ let globalConfig = {
   anchor: ["Bottom", "Top", "Left", "Right"],
   connector: "Bezier",
   endpoint: "Blank",
-  paintStyle: { stroke: "#364249", strokeWidth: 1,outlineStroke: 'transparent',outlineWidth: 10},
-  hoverPaintStyle:{stroke: '#000', strokeWidth: 1.3},
+  paintStyle: {
+    stroke: "#364249",
+    strokeWidth: 1,
+    outlineStroke: "transparent",
+    outlineWidth: 10,
+  },
+  hoverPaintStyle: { stroke: "#000", strokeWidth: 1.3 },
   overlays: [["Arrow", { width: 5, length: 5, location: 1 }]],
   endpointStyle: {
     fill: "lightgray",
@@ -394,7 +404,7 @@ const renderNode = (flag) => {
             endpoint: item.endpoint,
             overlays: item.overlays,
             paintStyle: item.paintStyle,
-            hoverPaintStyle:item.hoverPaintStyle,
+            hoverPaintStyle: item.hoverPaintStyle,
             endpointStyle: item.endpointStyle,
           });
         });
@@ -436,7 +446,7 @@ const makeFun = (item) => {
     endpoint: item.endpoint,
     overlays: item.overlays,
     paintStyle: item.paintStyle,
-    hoverPaintStyle:item.hoverPaintStyle,
+    hoverPaintStyle: item.hoverPaintStyle,
     endpointStyle: item.endpointStyle,
   });
   plumbInit.makeTarget(item.id, {
@@ -450,7 +460,7 @@ const makeFun = (item) => {
     endpoint: item.endpoint,
     overlays: item.overlays,
     paintStyle: item.paintStyle,
-    hoverPaintStyle:item.hoverPaintStyle,
+    hoverPaintStyle: item.hoverPaintStyle,
     endpointStyle: item.endpointStyle,
   });
   plumbInit.draggable(item.id, {
@@ -484,15 +494,15 @@ const getStyle = function (item) {
 let plumbInit = jsPlumb.getInstance();
 //
 plumbInit.bind("click", (conn, originalEvent) => {
-  console.log(conn,'点击连线')
-  let lineInfo = {}
-  console.log(info.value,'整体信息')
-  let sourceInfo = info.value.find(v=>v.id === conn.sourceId)
-  let targetInfo = info.value.find(v=>v.id === conn.targetId)
+  console.log(conn, "点击连线");
+  let lineInfo = {};
+  console.log(info.value, "整体信息");
+  let sourceInfo = info.value.find((v) => v.id === conn.sourceId);
+  let targetInfo = info.value.find((v) => v.id === conn.targetId);
   lineInfo = {
     sourceInfo,
-    targetInfo
-  }
+    targetInfo,
+  };
   rightForm.value.getLineInfo(lineInfo);
   // console.log("点击了", coon, originalEvent);
   // plumbInit.deleteConnection(conn);
@@ -593,24 +603,46 @@ onMounted(() => {
   }, 2000);
 });
 //右侧保存值
-const changeActiveNodeInfo = (info) =>{
-  console.log(info,'保存后的新值')
-  activeNode.value.config = info
+const changeActiveNodeInfo = (info) => {
+  console.log(info, "保存后的新值");
+  activeNode.value.config = info;
   nextTick(() => {
     renderFlag.value = "new";
     makeFun(activeNode.value);
   });
-}
+};
 //删除线
-const deleteLine = (deleteLineInfo)=>{
-  console.log(deleteLineInfo,'要删除的连线信息')
-  console.log(info.value,'全量信息')
-  let sourceIndex = info.value.findIndex(item => item.id === deleteLineInfo.sourceInfo.id)
-  let deleteTargetId = deleteLineInfo.targetInfo.id
-  let deleteTargetIndex = info.value[sourceIndex].to.findIndex(v=>v === deleteTargetId)
-  info.value[sourceIndex].to.splice(deleteTargetIndex,1)
-  renderNode()
-}
+const deleteLine = (deleteLineInfo) => {
+  console.log(deleteLineInfo, "要删除的连线信息");
+  console.log(info.value, "全量信息");
+  let sourceIndex = info.value.findIndex(
+    (item) => item.id === deleteLineInfo.sourceInfo.id
+  );
+  let deleteTargetId = deleteLineInfo.targetInfo.id;
+  let deleteTargetIndex = info.value[sourceIndex].to.findIndex(
+    (v) => v === deleteTargetId
+  );
+  info.value[sourceIndex].to.splice(deleteTargetIndex, 1);
+  renderNode();
+};
+//删除节点
+const deleteNode = (nodeInfo) => {
+  console.log(activeNode.value);
+  let nodeIndex = info.value.findIndex(
+    (item) => item.id === activeNode.value.id
+  );
+  info.value.splice(nodeIndex, 1);
+  info.value.forEach((item) => {
+    let flagIndex = item.to.findIndex((v) => v === activeNode.value.id);
+    if (flagIndex !== -1) {
+      item.to.splice(flagIndex, 1);
+    }
+  });
+  console.log(info.value, "节点列表");
+  renderNode();
+  activeNode.value = {};
+  rightForm.value.changeFormData([]);
+};
 //暴露给父组件的值,需要父组件发送请求
 defineExpose({
   plumbList,
@@ -670,15 +702,15 @@ defineExpose({
   float: left;
   line-height: 45px;
 }
-.activePlumbNode{
+.activePlumbNode {
   float: left;
   line-height: 45px;
   background: #0bcfe9;
 }
-.normalNode{
+.normalNode {
   background-color: #fff;
 }
-.activeNode{
+.activeNode {
   background-color: #80eaf8;
 }
 </style>
