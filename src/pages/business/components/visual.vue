@@ -33,6 +33,7 @@
         :key="index"
         :id="item.id"
         :style="getStyle(item)"
+        :class="item.id === activeNode.id?'activeNode':'normalNode'"
         @click="sendActive(item)"
       >
         <div class="plumbNode" :id="item.id + 'plumbNode'">
@@ -58,9 +59,9 @@
     </li>
 
     <li class="rightContent">
-      <h3>节点配置</h3>
+      <h3>节点操作</h3>
       <div style="padding-left: 10px">
-        <RightForm ref="rightForm"></RightForm>
+        <RightForm ref="rightForm" @changeActiveNodeInfo="changeActiveNodeInfo" @deleteLine="deleteLine"></RightForm>
       </div>
     </li>
   </ul>
@@ -126,7 +127,8 @@ let globalConfig = {
   anchor: ["Bottom", "Top", "Left", "Right"],
   connector: "Bezier",
   endpoint: "Blank",
-  paintStyle: { stroke: "#364249", strokeWidth: 1 },
+  paintStyle: { stroke: "#364249", strokeWidth: 1,outlineStroke: 'transparent',outlineWidth: 10},
+  hoverPaintStyle:{stroke: '#000', strokeWidth: 1.3},
   overlays: [["Arrow", { width: 5, length: 5, location: 1 }]],
   endpointStyle: {
     fill: "lightgray",
@@ -165,7 +167,7 @@ let leftMenuData = ref([
             label: "归属",
             name: "affiliation",
             type: "select",
-            value: "",
+            value: "check",
             require: true,
             options: [
               { label: "审核信息", value: "check" },
@@ -201,7 +203,7 @@ let leftMenuData = ref([
             label: "归属",
             name: "affiliation",
             type: "select",
-            value: "",
+            value: "check",
             require: true,
             options: [
               { label: "审核信息", value: "check" },
@@ -236,7 +238,7 @@ let leftMenuData = ref([
             label: "描述",
             name: "description",
             type: "textarea",
-            value: "",
+            value: "check",
             require: false,
           },
           {
@@ -279,7 +281,7 @@ let leftMenuData = ref([
             label: "归属",
             name: "affiliation",
             type: "select",
-            value: "",
+            value: "check",
             require: true,
             options: [
               { label: "审核信息", value: "check" },
@@ -392,6 +394,7 @@ const renderNode = (flag) => {
             endpoint: item.endpoint,
             overlays: item.overlays,
             paintStyle: item.paintStyle,
+            hoverPaintStyle:item.hoverPaintStyle,
             endpointStyle: item.endpointStyle,
           });
         });
@@ -433,6 +436,7 @@ const makeFun = (item) => {
     endpoint: item.endpoint,
     overlays: item.overlays,
     paintStyle: item.paintStyle,
+    hoverPaintStyle:item.hoverPaintStyle,
     endpointStyle: item.endpointStyle,
   });
   plumbInit.makeTarget(item.id, {
@@ -446,6 +450,7 @@ const makeFun = (item) => {
     endpoint: item.endpoint,
     overlays: item.overlays,
     paintStyle: item.paintStyle,
+    hoverPaintStyle:item.hoverPaintStyle,
     endpointStyle: item.endpointStyle,
   });
   plumbInit.draggable(item.id, {
@@ -479,8 +484,18 @@ const getStyle = function (item) {
 let plumbInit = jsPlumb.getInstance();
 //
 plumbInit.bind("click", (conn, originalEvent) => {
-  console.log("点击了", coon, originalEvent);
-  plumbInit.deleteConnection(conn);
+  console.log(conn,'点击连线')
+  let lineInfo = {}
+  console.log(info.value,'整体信息')
+  let sourceInfo = info.value.find(v=>v.id === conn.sourceId)
+  let targetInfo = info.value.find(v=>v.id === conn.targetId)
+  lineInfo = {
+    sourceInfo,
+    targetInfo
+  }
+  rightForm.value.getLineInfo(lineInfo);
+  // console.log("点击了", coon, originalEvent);
+  // plumbInit.deleteConnection(conn);
 });
 //连线触发事件
 plumbInit.bind("connection", (event) => {
@@ -506,9 +521,9 @@ plumbInit.bind("connection", (event) => {
 
 //切换动态节点
 function sendActive(node) {
-  activeNode = node;
-  console.log(activeNode, "动态节点");
-  rightForm.value.changeFormData(activeNode.config);
+  activeNode.value = node;
+  console.log(activeNode.value, "动态节点");
+  rightForm.value.changeFormData(activeNode.value.config);
 }
 
 onMounted(() => {
@@ -577,7 +592,25 @@ onMounted(() => {
     });
   }, 2000);
 });
-
+//右侧保存值
+const changeActiveNodeInfo = (info) =>{
+  console.log(info,'保存后的新值')
+  activeNode.value.config = info
+  nextTick(() => {
+    renderFlag.value = "new";
+    makeFun(activeNode.value);
+  });
+}
+//删除线
+const deleteLine = (deleteLineInfo)=>{
+  console.log(deleteLineInfo,'要删除的连线信息')
+  console.log(info.value,'全量信息')
+  let sourceIndex = info.value.findIndex(item => item.id === deleteLineInfo.sourceInfo.id)
+  let deleteTargetId = deleteLineInfo.targetInfo.id
+  let deleteTargetIndex = info.value[sourceIndex].to.findIndex(v=>v === deleteTargetId)
+  info.value[sourceIndex].to.splice(deleteTargetIndex,1)
+  renderNode()
+}
 //暴露给父组件的值,需要父组件发送请求
 defineExpose({
   plumbList,
@@ -636,6 +669,17 @@ defineExpose({
 .plumbNode {
   float: left;
   line-height: 45px;
+}
+.activePlumbNode{
+  float: left;
+  line-height: 45px;
+  background: #0bcfe9;
+}
+.normalNode{
+  background-color: #fff;
+}
+.activeNode{
+  background-color: #80eaf8;
 }
 </style>
 

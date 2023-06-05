@@ -1,5 +1,6 @@
 <template>
   <el-form
+  v-if="infoType === 'node'"
     ref="ruleFormRef"
     :model="ruleForm"
     :rules="rules"
@@ -15,13 +16,13 @@
       v-for="(item, index) in formData"
       :key="index"
     >
-      <el-input v-model="item.value" v-if="item.type === 'text'" />
+      <el-input v-model="ruleForm[item.name]" v-if="item.type === 'text'" />
       <el-input
-        v-model="item.value"
+        v-model="ruleForm[item.name]"
         type="textarea"
         v-else-if="item.type === 'textarea'"
       />
-      <el-select v-model="item.value" v-else-if="item.type === 'select'">
+      <el-select v-model="ruleForm[item.name]" v-else-if="item.type === 'select'">
         <el-option
           :label="m.label"
           :value="m.value"
@@ -30,99 +31,56 @@
         />
       </el-select>
     </el-form-item>
-    <!-- <el-form-item label="Activity name" prop="name">
-      <el-input v-model="ruleForm.name" />
-    </el-form-item>
-    <el-form-item label="Activity zone" prop="region">
-      <el-select v-model="ruleForm.region" placeholder="Activity zone">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="Activity form" prop="desc">
-      <el-input v-model="ruleForm.desc" type="textarea" />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">
-        Create
-      </el-button>
-    </el-form-item> -->
   </el-form>
+  <div v-if="infoType === 'line'">
+    <h6>起始节点:</h6>
+    <p>{{ lineData.sourceInfo.config[0].value }}</p>
+    <h6>目标节点:</h6>
+    <p>{{ lineData.targetInfo.config[0].value }}</p>
+  </div>
+  <div class="btnBox" v-show="listShow">
+    <el-button type="primary" @click="submitForm(ruleFormRef)" v-show="infoType === 'node'">
+        保存节点
+    </el-button>
+    <el-button type="primary" v-show="infoType === 'node'" @click="delteNodeFun">
+        删除节点
+    </el-button>
+    <el-button type="primary" v-show="infoType === 'line'" @click="deleteLineFun">
+        删除连线
+    </el-button>
+  </div>
 </template>
 <script setup>
 let formData = ref([]);
+let lineData = ref({})
 const formSize = ref("default");
 const ruleFormRef = ref();
-const ruleForm = reactive({
-  name: "Hello",
-  region: "",
-  count: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
-});
+const listShow = ref(false)
+let ruleForm = reactive({});
+const infoType = ref('node')
+const emit = defineEmits(['changeActiveNodeInfo','deleteLine'])
 const rules = reactive({
-  name: [
-    { required: true, message: "Please input Activity name", trigger: "blur" },
-    { min: 3, max: 5, message: "Length should be 3 to 5", trigger: "blur" },
+  label: [
+    { required: true, message: "节点名称为必输项", trigger: "blur" },
+    { min: 4, max: 8, message: "请输入4至8之间的字符", trigger: "blur" },
   ],
-  region: [
+  affiliation: [
     {
       required: true,
-      message: "Please select Activity zone",
+      message: "请选择归属项",
       trigger: "change",
     },
-  ],
-  count: [
-    {
-      required: true,
-      message: "Please select Activity count",
-      trigger: "change",
-    },
-  ],
-  date1: [
-    {
-      type: "date",
-      required: true,
-      message: "Please pick a date",
-      trigger: "change",
-    },
-  ],
-  date2: [
-    {
-      type: "date",
-      required: true,
-      message: "Please pick a time",
-      trigger: "change",
-    },
-  ],
-  type: [
-    {
-      type: "array",
-      required: true,
-      message: "Please select at least one activity type",
-      trigger: "change",
-    },
-  ],
-  resource: [
-    {
-      required: true,
-      message: "Please select activity resource",
-      trigger: "change",
-    },
-  ],
-  desc: [
-    { required: true, message: "Please input activity form", trigger: "blur" },
   ],
 });
 const submitForm = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      console.log("submit!");
+      console.log(valid,ruleForm);
+      formData.value.forEach(item=>{
+      item.value = ruleForm[item.name]
+      })
+      emit('changeActiveNodeInfo',formData.value)
     } else {
       console.log("error submit!", fields);
     }
@@ -141,13 +99,38 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
 const getFormData = () => {
   console.log(formData, "信息");
 };
+//父节点传递信息函数
 const changeFormData = (val) => {
+  infoType.value = 'node'
+  listShow.value = true 
   console.log(val);
   formData.value = val;
+  formData.value.forEach(item=>{
+    console.log(item,'遍历')
+    ruleForm[item.name] = item.value
+  })
+  console.log(ruleForm,'???')
 };
+//父节点传递连线信息
+const getLineInfo = (lineInfo)=>{
+  listShow.value = true 
+console.log(lineInfo,'连线信息')
+infoType.value = 'line'
+lineData.value = lineInfo
+}
+//删除连线信息
+const deleteLineFun = ()=>{
+ emit('deleteLine',lineData.value)
+ infoType.value = null
+}
+//删除节点
+const delteNodeFun = ()=>{
+  emit('deleteNode',formData.value)
+}
 onMounted(() => {});
 defineExpose({
   changeFormData,
+  getLineInfo,
   formData,
 });
 </script>
@@ -156,4 +139,15 @@ defineExpose({
   display: flex;
   flex-direction: column !important;
 }
+h6{
+  font-size: 14px;
+  font-weight: 500;
+  margin:5px;
+  overflow: hidden;
+}
+p{
+  margin:20px;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+} 
 </style>
