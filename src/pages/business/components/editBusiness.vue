@@ -96,7 +96,57 @@
       </div>
     </el-form>
     <h4>模型图</h4>
+    <div class="btnList">
+      <el-button type="primary" @click="openDrawer('new')"
+        >创建模型图方案</el-button
+      >
+      <el-button type="danger">删除模型图方案</el-button>
+    </div>
+    <el-table
+      ref="multipleTableRef"
+      :data="ruleForm.modelList"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column property="scenarioName" label="模型图名称" width="240" />
+      <el-table-column
+        property="modeType"
+        label="模型规范"
+        show-overflow-tooltip
+      />
+      <el-table-column label="操作" width="240">
+        <template #default="scope">
+          <el-button
+            type="primary"
+            :icon="Edit"
+            circle
+            @click="openDrawer(scope)"
+          />
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="footer">
+      <el-button type="primary" @click="submitForm(ruleFormRef)">
+        保存
+      </el-button>
+      <el-button @click="goBack">返回</el-button>
+    </div>
   </div>
+  <el-drawer v-model="drawer" direction="rtl" size="85%" destroy-on-close>
+    <template #header>
+      <h4 style="margin-bottom: 0px">{{ drawerTitle }}</h4>
+    </template>
+    <template #default>
+      <Visual ref="VisualCom"></Visual>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="cancelClick">取消</el-button>
+        <el-button type="primary" @click="confirmClick">保存</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup>
@@ -104,6 +154,9 @@ import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash";
+import Visual from "./visual.vue";
+import { v4 as uuidv4 } from "uuid";
+import { Delete, Edit } from "@element-plus/icons-vue";
 let ruleForm = reactive({
   name: "",
   cname: "",
@@ -117,6 +170,11 @@ let ruleForm = reactive({
 const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
+let VisualCom = ref(null);
+const openFlag = ref("new");
+let drawer = ref(false);
+let drawerTitle = ref("新建模型方案");
+let rowIndex = ref(0);
 const rules = reactive({
   name: [
     {
@@ -202,16 +260,82 @@ const getInfo = () => {
       ruleForm.type = res.data.type;
       ruleForm.status = res.data.status;
       ruleForm.id = res.data.id;
+      ruleForm.modelList = res.data.modelList;
     }
   });
+};
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val;
+};
+const multipleSelection = ref([]);
+
+const openDrawer = (flag) => {
+  openFlag.value = flag;
+  drawer.value = true;
+  nextTick(() => {
+    if (flag === "new") {
+      VisualCom.value.doneType("new");
+      if (ruleForm.modelList.length >= 3) {
+        ElMessage({
+          type: "warning",
+          message: "最多可有三套模型方案",
+        });
+        drawer.value = false;
+      }
+    } else {
+      console.log(flag, "什么???");
+      rowIndex.value = flag.$index;
+      VisualCom.value.doneType("change", flag.row);
+    }
+  });
+};
+
+const cancelClick = () => {
+  drawer.value = false;
+};
+const confirmClick = () => {
+  console.log(VisualCom.value.info, "属性???");
+  console.log(VisualCom.value.scenario_name, VisualCom.value.mode_type, "上面");
+  if (VisualCom.value.scenario_name === "") {
+    ElMessage({
+      type: "warning",
+      message: "请输入模型名称",
+    });
+    return;
+  }
+  if (VisualCom.value.mode_type === "") {
+    ElMessage({
+      type: "warning",
+      message: "请选择模型规范",
+    });
+    return;
+  }
+
+  let modelParam = {
+    flowInfo: VisualCom.value.info,
+    scenarioName: VisualCom.value.scenario_name,
+    modeType: VisualCom.value.mode_type,
+  };
+  if (openFlag.value === "new") {
+    modelParam.id = uuidv4();
+    ruleForm.modelList.push(modelParam);
+  } else {
+    console.log(ruleForm.modelList, rowIndex.value, modelParam, "插入");
+    ruleForm.modelList[rowIndex.value] = modelParam;
+  }
+  cancelClick();
 };
 getInfo();
 </script>
 
 <style lang="less" scoped>
-h4{
+h4 {
   font-size: 18px;
   font-weight: 500;
+  margin-bottom: 20px;
+}
+.btnList {
   margin-bottom: 20px;
 }
 .formBox {

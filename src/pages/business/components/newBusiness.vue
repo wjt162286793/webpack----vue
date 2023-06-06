@@ -1,63 +1,123 @@
 <template>
   <div class="formBox">
     <h4>基本信息</h4>
-    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon>
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      :rules="rules"
+      label-width="120px"
+      class="demo-ruleForm"
+      status-icon
+    >
       <el-row>
         <el-col :span="12">
           <el-form-item label="英文名称" prop="name">
-            <el-input v-model="ruleForm.name" class="formItem" placeholder="请输入业务领域英文名称" clearable />
-          </el-form-item></el-col>
+            <el-input
+              v-model="ruleForm.name"
+              class="formItem"
+              placeholder="请输入业务领域英文名称"
+              clearable
+            /> </el-form-item
+        ></el-col>
         <el-col :span="12">
           <el-form-item label="中文名称" prop="cname">
-            <el-input v-model="ruleForm.cname" class="formItem" placeholder="请输入业务领域中文名" clearable />
-          </el-form-item></el-col>
+            <el-input
+              v-model="ruleForm.cname"
+              class="formItem"
+              placeholder="请输入业务领域中文名"
+              clearable
+            /> </el-form-item
+        ></el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="指定负责人" prop="user">
-            <el-select v-model="ruleForm.user" placeholder="请选择资产负责人" class="formItem" clearable>
+            <el-select
+              v-model="ruleForm.user"
+              placeholder="请选择资产负责人"
+              class="formItem"
+              clearable
+            >
               <el-option label="王惊涛" value="王惊涛" />
               <el-option label="马师" value="马师" />
-            </el-select> </el-form-item></el-col>
+            </el-select> </el-form-item
+        ></el-col>
         <el-col :span="12">
           <el-form-item label="资产类型" prop="type">
-            <el-select v-model="ruleForm.type" placeholder="请选择资产类型" class="formItem" clearable>
+            <el-select
+              v-model="ruleForm.type"
+              placeholder="请选择资产类型"
+              class="formItem"
+              clearable
+            >
               <el-option label="金融资产" value="1" />
               <el-option label="不动产" value="2" />
               <el-option label="移动资产" value="3" />
               <el-option label="知识产权" value="4" />
               <el-option label="文艺资产" value="5" />
               <el-option label="公共基础设施" value="6" />
-              <el-option label="自然资源" value="7" /> </el-select></el-form-item></el-col>
+              <el-option
+                label="自然资源"
+                value="7"
+              /> </el-select></el-form-item
+        ></el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="关联实体" prop="entiry">
-            <el-select v-model="ruleForm.entiry" placeholder="请选择资产负责人" class="formItem" clearable>
+            <el-select
+              v-model="ruleForm.entiry"
+              placeholder="请选择资产负责人"
+              class="formItem"
+              clearable
+            >
               <el-option label="长城汽车" value="1" />
               <el-option label="富士康" value="2" />
-            </el-select> </el-form-item></el-col>
+            </el-select> </el-form-item
+        ></el-col>
         <el-col :span="12">
           <el-form-item label="资产描述" prop="dsc">
-            <el-input v-model="ruleForm.dsc" :rows="4" type="textarea" placeholder="请输入资产描述" class="formItem" clearable />
-          </el-form-item></el-col>
+            <el-input
+              v-model="ruleForm.dsc"
+              :rows="4"
+              type="textarea"
+              placeholder="请输入资产描述"
+              class="formItem"
+              clearable
+            /> </el-form-item
+        ></el-col>
       </el-row>
     </el-form>
     <h4>模型图</h4>
     <div class="btnList">
-      <el-button type="primary" @click="openDrawer('new')">创建模型图方案</el-button>
+      <el-button type="primary" @click="openDrawer('new')"
+        >创建模型图方案</el-button
+      >
       <el-button type="danger">删除模型图方案</el-button>
     </div>
-    <el-table ref="multipleTableRef" :data="ruleForm.modelList" style="width: 100%"
-      @selection-change="handleSelectionChange">
+    <el-table
+      ref="multipleTableRef"
+      :data="ruleForm.modelList"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" />
       <el-table-column property="scenarioName" label="模型图名称" width="240" />
-      <el-table-column property="modeType" label="模型规范" show-overflow-tooltip />
-      <el-table-column  label="操作" width="240">
-      <template #default>
-        <el-button type="primary" :icon="Edit" circle />
-      </template>
-    </el-table-column>
+      <el-table-column
+        property="modeType"
+        label="模型规范"
+        show-overflow-tooltip
+      />
+      <el-table-column label="操作" width="240">
+        <template #default="scope">
+          <el-button
+            type="primary"
+            :icon="Edit"
+            circle
+            @click="openDrawer(scope)"
+          />
+        </template>
+      </el-table-column>
     </el-table>
     <div class="footer">
       <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -87,10 +147,9 @@ import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
 import Visual from "./visual.vue";
-import {
-  Delete,
-  Edit,
-} from '@element-plus/icons-vue'
+import { v4 as uuidv4 } from "uuid";
+import { Delete, Edit } from "@element-plus/icons-vue";
+import { nextTick } from "vue";
 const ruleForm = reactive({
   name: "",
   cname: "",
@@ -100,16 +159,17 @@ const ruleForm = reactive({
   dcs: "",
   type: null,
   status: 1,
-  modelList: []
+  modelList: [],
 });
 const route = useRoute();
 const router = useRouter();
 const ruleFormRef = ref(null);
 let VisualCom = ref(null);
 let drawerTitle = ref("新建模型方案");
-const openFlag = ref('new')
+const openFlag = ref("new");
 let attr = useAttrs();
 let drawer = ref(false);
+let rowIndex = ref(0);
 
 const rules = reactive({
   name: [
@@ -190,38 +250,59 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
   label: `${idx + 1}`,
 }));
 const openDrawer = (flag) => {
-  openFlag.value = flag
+  openFlag.value = flag;
   drawer.value = true;
+  nextTick(() => {
+    if (flag === "new") {
+      VisualCom.value.doneType("new");
+      if (ruleForm.modelList.length >= 3) {
+        ElMessage({
+          type: "warning",
+          message: "最多可有三套模型方案",
+        });
+        drawer.value = false;
+      }
+    } else {
+      console.log(flag, "什么???");
+      rowIndex.value = flag.$index;
+      VisualCom.value.doneType("change", flag.row);
+    }
+  });
 };
 const cancelClick = () => {
   drawer.value = false;
 };
 const confirmClick = () => {
-  if (VisualCom.value.scenario_name === '') {
-    ElMessage({
-      type: 'warning',
-      message: '请输入模型名称'
-    })
-    return
-  }
-  if (VisualCom.value.mode_type === '') {
-    ElMessage({
-      type: 'warning',
-      message: '请选择模型规范'
-    })
-    return
-  }
   console.log(VisualCom.value.info, "属性???");
-  console.log(VisualCom.value.scenario_name, VisualCom.value.mode_type,"上面");
+  console.log(VisualCom.value.scenario_name, VisualCom.value.mode_type, "上面");
+  if (VisualCom.value.scenario_name === "") {
+    ElMessage({
+      type: "warning",
+      message: "请输入模型名称",
+    });
+    return;
+  }
+  if (VisualCom.value.mode_type === "") {
+    ElMessage({
+      type: "warning",
+      message: "请选择模型规范",
+    });
+    return;
+  }
+
   let modelParam = {
     flowInfo: VisualCom.value.info,
     scenarioName: VisualCom.value.scenario_name,
-    modeType: VisualCom.value.mode_type
+    modeType: VisualCom.value.mode_type,
+  };
+  if (openFlag.value === "new") {
+    modelParam.id = uuidv4();
+    ruleForm.modelList.push(modelParam);
+  } else {
+    console.log(ruleForm.modelList, rowIndex.value, modelParam, "插入");
+    ruleForm.modelList[rowIndex.value] = modelParam;
   }
-  if (ruleForm.modelList.findIndex(item => item.scenarioName === modelParam.scenarioName) === -1) {
-    ruleForm.modelList.push(modelParam)
-  }
-  cancelClick()
+  cancelClick();
 };
 </script>
 
@@ -258,6 +339,4 @@ h4 {
     justify-content: flex-end;
   }
 }
-
-
 </style>

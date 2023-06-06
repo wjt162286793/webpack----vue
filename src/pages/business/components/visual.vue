@@ -1,12 +1,22 @@
 <template>
-        <div class="nameContent">
-        方案名称:&nbsp;&nbsp;<el-input v-model.trim="scenario_name"
-          style="width: 200px; margin-left: 30px';margin-right:20px;"></el-input>
-        模型规范:&nbsp;&nbsp;<el-select v-model="mode_type" style="width: 200px; margin-left: 30px';margin-right:20px;">
-          <el-option v-for="(item, index) in typeOptions" :key="index" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
+  <div class="nameContent">
+    方案名称:&nbsp;&nbsp;<el-input
+      v-model.trim="scenario_name"
+      style="width: 200px; margin-left: 30px';margin-right:20px;"
+    ></el-input>
+    模型规范:&nbsp;&nbsp;<el-select
+      v-model="mode_type"
+      style="width: 200px; margin-left: 30px';margin-right:20px;"
+    >
+      <el-option
+        v-for="(item, index) in typeOptions"
+        :key="index"
+        :label="item.label"
+        :value="item.value"
+      >
+      </el-option>
+    </el-select>
+  </div>
   <ul class="box">
     <li class="leftMenu">
       <h3>选择节点</h3>
@@ -91,6 +101,7 @@ import RightForm from "./rightForm";
 //名称和规范
 let scenario_name = ref("");
 let mode_type = ref("");
+let doneFlag = ref("new");
 let typeOptions = ref([
   {
     value: 1,
@@ -142,7 +153,16 @@ const jsplumbSourceOptions = {
 }
 ----------------------------------------------
 */
-
+//修改
+const doneType = (flag, row) => {
+  doneFlag.value = flag;
+  if (row) {
+    console.log("???", row);
+    scenario_name.value = row.scenarioName;
+    mode_type.value = row.modeType;
+    info.value = row.flowInfo;
+  }
+};
 //左侧菜单节点的拖拽配置
 const options = {
   preventOnFilter: false,
@@ -401,11 +421,10 @@ const judgePosition = (dragNodeInfo, plumbBoxPositionInfo, x, y) => {
 //刷新画布区域信息
 const refreshPlumbPostionInfo = () => {
   plumbBox = document.querySelector(".plumbBox");
-  if(plumbBox){
+  if (plumbBox) {
     let positionInfo = plumbBox.getBoundingClientRect();
-  plumbBoxPositionInfo = positionInfo;
+    plumbBoxPositionInfo = positionInfo;
   }
-
 };
 //渲染节点
 const renderNode = (flag) => {
@@ -629,7 +648,7 @@ onMounted(() => {
       console.log("页面初次渲染完毕");
       renderFlag.value = "render";
     });
-  }, 2000);
+  });
 });
 //右侧保存值
 const changeActiveNodeInfo = (info) => {
@@ -677,7 +696,8 @@ defineExpose({
   plumbList,
   info,
   scenario_name,
-  mode_type
+  mode_type,
+  doneType,
 });
 </script>
 <style lang="less" scoped>
