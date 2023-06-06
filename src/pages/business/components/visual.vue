@@ -1,4 +1,12 @@
 <template>
+        <div class="nameContent">
+        方案名称:&nbsp;&nbsp;<el-input v-model.trim="scenario_name"
+          style="width: 200px; margin-left: 30px';margin-right:20px;"></el-input>
+        模型规范:&nbsp;&nbsp;<el-select v-model="mode_type" style="width: 200px; margin-left: 30px';margin-right:20px;">
+          <el-option v-for="(item, index) in typeOptions" :key="index" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
   <ul class="box">
     <li class="leftMenu">
       <h3>选择节点</h3>
@@ -80,6 +88,24 @@ import lodash from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { reactive } from "vue";
 import RightForm from "./rightForm";
+//名称和规范
+let scenario_name = ref("");
+let mode_type = ref("");
+let typeOptions = ref([
+  {
+    value: 1,
+    label: "精品",
+  },
+  {
+    value: 2,
+    label: "标准",
+  },
+  {
+    value: 3,
+    label: "草稿",
+  },
+]);
+//拖拽组件实例
 const draggable = VueDraggableNext;
 let plumbBox = null;
 let plumbBoxPositionInfo = reactive({});
@@ -375,8 +401,11 @@ const judgePosition = (dragNodeInfo, plumbBoxPositionInfo, x, y) => {
 //刷新画布区域信息
 const refreshPlumbPostionInfo = () => {
   plumbBox = document.querySelector(".plumbBox");
-  let positionInfo = plumbBox.getBoundingClientRect();
+  if(plumbBox){
+    let positionInfo = plumbBox.getBoundingClientRect();
   plumbBoxPositionInfo = positionInfo;
+  }
+
 };
 //渲染节点
 const renderNode = (flag) => {
@@ -647,6 +676,8 @@ const deleteNode = (nodeInfo) => {
 defineExpose({
   plumbList,
   info,
+  scenario_name,
+  mode_type
 });
 </script>
 <style lang="less" scoped>
@@ -712,6 +743,10 @@ defineExpose({
 }
 .activeNode {
   background-color: #80eaf8;
+}
+.nameContent {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eee;
 }
 </style>
 
