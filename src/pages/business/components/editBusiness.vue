@@ -100,21 +100,20 @@
       <el-button type="primary" @click="openDrawer('new')"
         >创建模型图方案</el-button
       >
-      <el-button type="danger">删除模型图方案</el-button>
     </div>
     <el-table
       ref="multipleTableRef"
       :data="ruleForm.modelList"
       style="width: 100%"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
       <el-table-column property="scenarioName" label="模型图名称" width="240" />
       <el-table-column
         property="modeType"
         label="模型规范"
+        width="240"
         show-overflow-tooltip
       />
+      <el-table-column property="id" label="id" width="width" />
       <el-table-column label="操作" width="240">
         <template #default="scope">
           <el-button
@@ -122,6 +121,12 @@
             :icon="Edit"
             circle
             @click="openDrawer(scope)"
+          />
+          <el-button
+            type="danger"
+            :icon="Delete"
+            circle
+            @click="deleteRow(scope)"
           />
         </template>
       </el-table-column>
@@ -276,6 +281,7 @@ const openDrawer = (flag) => {
   nextTick(() => {
     if (flag === "new") {
       VisualCom.value.doneType("new");
+      drawerTitle.value = '新建模型方案'
       if (ruleForm.modelList.length >= 3) {
         ElMessage({
           type: "warning",
@@ -287,9 +293,13 @@ const openDrawer = (flag) => {
       console.log(flag, "什么???");
       rowIndex.value = flag.$index;
       VisualCom.value.doneType("change", flag.row);
+      drawerTitle.value = flag.row.scenarioName
     }
   });
 };
+const deleteRow = (flag) =>{
+  ruleForm.modelList.splice(flag.$index,1)
+}
 
 const cancelClick = () => {
   drawer.value = false;

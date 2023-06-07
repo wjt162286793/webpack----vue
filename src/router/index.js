@@ -86,7 +86,33 @@ const asyncRoutes = [
                 meta: {
                     name: '实体'
                 },
-                component: () => import('pages/entiry/index.vue')
+                component: () => import('pages/entiry/index.vue'),
+                children: [
+                    {
+                        path: '/dashboard/entiry/entiryList',
+                        name: 'entiryList',
+                        meta: {
+                            name: '列表'
+                        },
+                        component: () => import('pages/entiry/components/entiryList.vue')
+                    },
+                    {
+                        path: '/dashboard/entiry/newEntiry',
+                        name: 'newEntiry',
+                        meta: {
+                            name: '新增'
+                        },
+                        component: () => import('pages/entiry/components/newEntiry.vue')
+                    },
+                    {
+                        path: '/dashboard/entiry/editEntiry',
+                        name: 'editEntiry',
+                        meta: {
+                            name: '编辑'
+                        },
+                        component: () => import('pages/entiry/components/editEntiry.vue')
+                    },
+                ]
             },
             {
                 path: '/dashboard/valueflow',
@@ -96,6 +122,22 @@ const asyncRoutes = [
                 },
                 component: () => import('pages/valueflow/index.vue')
             },
+            {
+                path: '/dashboard/task',
+                name: 'task',
+                meta: {
+                    name: '任务管理'
+                },
+                component: () => import('pages/task/index.vue')
+            },
+            {
+                path: '/dashboard/risk',
+                name: 'risk',
+                meta: {
+                    name: '风险管理'
+                },
+                component: () => import('pages/risk/index.vue')
+            },            
             {
                 path: '/dashboard/graph',
                 name: 'graph',
@@ -164,21 +206,6 @@ const asyncRoutes = [
                 ]
             },
             {
-                path: '/dashboard/task',
-                name: 'task',
-                meta: {
-                    name: '任务管理'
-                },
-                component: () => import('pages/task/index.vue')
-            },
-            {
-                path: '/dashboard/risk',
-                name: 'risk',
-                meta: {
-                    name: '风险管理'
-                },
-                component: () => import('pages/risk/index.vue')
-            },            {
                 path: '/dashboard/permission',
                 name: 'permission',
                 meta: {

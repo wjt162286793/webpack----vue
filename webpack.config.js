@@ -17,7 +17,7 @@ module.exports = (env) => {
             //文件名,使用hash算法生成文件名
             filename: '[name].[contenthash].js',
             //构建后文件的存放目录
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, 'assetProject'),
             publicPath: '/',
         },
         //代码源文件映射,方便调试
@@ -140,7 +140,7 @@ module.exports = (env) => {
         imports: ['vue', 'vue-router'],
       })
         ],
-        //开发服务器
+        //配置代理服务器
         devServer: {
             static: './dist',
             open: true,
