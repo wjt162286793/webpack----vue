@@ -1,119 +1,159 @@
 [
     {
-        "title":"基本信息",
-        "formList":[
+        "title": "基本信息",
+        "formList": [
             {
-                "name":"entiryName",
-                "label":"实体名称",
-                "type":"input",
-                "require":true,
-                "rule":[],
-                "remark":"请输入6到12位之间的英文、中划线、数字,并且必须以英文开头"
+                "name": "entiryName",
+                "label": "实体名称",
+                "type": "input",
+                "require": true,
+                "rule": [],
+                "remark": "请输入6到12位之间的英文、中划线、数字,并且必须以英文开头",
+                "default": ""
             },
             {
-                "name":"entiryEnName",
-                "label":"实体中文名称",
-                "type":"input",
-                "require":true,
-                "rule":[],
-                "remark":"请输入6到12位之间的中文、中划线、数字,并且必须以中文开头"
+                "name": "entiryEnName",
+                "label": "实体中文名称",
+                "type": "input",
+                "require": true,
+                "rule": [],
+                "remark": "请输入6到12位之间的中文、中划线、数字,并且必须以中文开头",
+                "default": ""
             },
             {
-                "name":"entiryType",
-                "label":"实体类型",
-                "type":"select",
-                "require":true,
-                "rule":[],
+                "name": "entiryType",
+                "label": "实体类型",
+                "type": "select",
+                "require": true,
+                "rule": [],
+                "default": null,
                 "options": [
                     {
-                      "label": "实物资产",
-                      "value": 1
+                        "label": "实物资产",
+                        "value": 1
                     },
                     {
-                      "label": "机械设备",
-                      "value": 2
+                        "label": "机械设备",
+                        "value": 2
                     },
                     {
-                      "label": "个体资产",
-                      "value": 3
+                        "label": "个体资产",
+                        "value": 3
                     },
                     {
-                      "label": "IT资产",
-                      "value": 4
-                    }
-                  ]
-            },
-            {
-                "name":"description",
-                "label":"描述",
-                "type":"textarea",
-                "require":false,
-                "rule":[]
-            }
-        ]
-    },
-    {
-        "title":"配置信息",
-        "formList":[
-            {
-                "name":"isMonitor",
-                "label":"实时监控",
-                "type":"radio",
-                "require":false,
-                "options":[
-                    {
-                        "label":true,
-                        "text":"是"
-                    },
-                    {
-                        "label":false,
-                        "text":"否"
+                        "label": "IT资产",
+                        "value": 4
                     }
                 ]
             },
             {
-                "name":"shareList",
-                "label":"共享人员",
-                "type":"multiple_select",
-                "require":false,
-                "options":[],
-                "optionsSource":"request",
-                "rquestName":"/user/userAllList"
+                "name": "description",
+                "label": "描述",
+                "type": "textarea",
+                "require": false,
+                "default": "",
+                "rule": []
+            }
+        ]
+    },
+    {
+        "title": "配置信息",
+        "formList": [
+            {
+                "name": "isMonitor",
+                "label": "实时监控",
+                "type": "radio",
+                "require": false,
+                "default": true,
+                "options": [
+                    {
+                        "label": true,
+                        "text": "是"
+                    },
+                    {
+                        "label": false,
+                        "text": "否"
+                    }
+                ]
             },
             {
-                "name":"region",
-                "label":"域",
-                "type":"select",
-                "require":true,
-                "rule":[],
-                "options":[
+                "name": "shareList",
+                "label": "共享人员",
+                "type": "multiple_select",
+                "require": false,
+                "options": [],
+                "optionsSource": "request",
+                "default": [],
+                "rquestName": "/user/userAllList"
+            },
+            {
+                "name": "region",
+                "label": "域",
+                "type": "select",
+                "require": true,
+                "rule": [],
+                "default": null,
+                "options": [
                     {
-                        "label":"重要资产",
-                        "value":"important"
+                        "label": "重要资产",
+                        "value": "important"
                     },
                     {
-                        "label":"附属资产",
-                        "value":"affiliate"
+                        "label": "附属资产",
+                        "value": "affiliate"
                     },
                     {
-                        "label":"非公共资产",
-                        "value":"noGlobal"
+                        "label": "非公共资产",
+                        "value": "noGlobal"
                     },
                     {
-                        "label":"风险资产",
-                        "value":"risk"
+                        "label": "风险资产",
+                        "value": "risk"
                     }
                 ],
-                "optionsSource":"request",
-                "rquestName":"/region/regionChild",
-                "childValue":"regionChild"
+                "optionsSource": "request",
+                "rquestName": "/region/regionChild",
+                "childValue": "regionChild"
             },
             {
-                "name":"code",
-                "label":"资产编码",
-                "type":"input",
-                "require":true,
-                "rule":[]
+                "name": "code",
+                "label": "资产编码",
+                "type": "input",
+                "require": true,
+                "rule": [],
+                "default": ""
+            },
+            {
+                "name": "textData",
+                "label": "文本数据",
+                "type": "input",
+                "require": true,
+                "rule": [],
+                "default": ""
+            },
+            {
+                "name": "url",
+                "label": "链接",
+                "type": "input",
+                "require": false,
+                "rule": [],
+                "default": ""
+            },
+            {
+                "name": "upload",
+                "label": "附属文件",
+                "type": "upload",
+                "require": false,
+                "rule": [],
+                "default": ""
+            },
+            {
+                "name": "time",
+                "label": "截止日期",
+                "type": "time",
+                "require": true,
+                "rule": [],
+                "default": ""
             }
         ]
     }
