@@ -1,5 +1,6 @@
 <template>
-    <globalList :modeType="modeType"></globalList>
+    <globalList :modeType="modeType">      
+    </globalList>
 </template>
 <script setup>
 import globalList from '@/components/globalList.vue';

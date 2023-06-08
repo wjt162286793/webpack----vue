@@ -97,16 +97,16 @@ const asyncRoutes = [
                         component: () => import('pages/entiry/components/entiryList.vue')
                     },
                     {
-                        path: '/dashboard/entiry/newEntiry',
-                        name: 'newEntiry',
+                        path: '/dashboard/entiry/entiryAdd',
+                        name: 'entiryAdd',
                         meta: {
                             name: '新增'
                         },
                         component: () => import('pages/entiry/components/newEntiry.vue')
                     },
                     {
-                        path: '/dashboard/entiry/editEntiry',
-                        name: 'editEntiry',
+                        path: '/dashboard/entiry/entiryEdit',
+                        name: 'entiryEdit',
                         meta: {
                             name: '编辑'
                         },

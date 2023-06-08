@@ -49,7 +49,7 @@
                 </el-table-column>
                 <el-table-column property="name" label="Name" width="120" />
                 <el-table-column property="address" label="Address" show-overflow-tooltip /> -->
-        <template v-for="(item, index) in tableHeader" :key="index">
+        <template v-for="(item, index) in templateData.tableTemplate" :key="index">
           <el-table-column
             v-if="!item.scoped"
             :property="item.property"
@@ -104,86 +104,22 @@
 </template>
 <script setup>
 import { Delete, Edit } from "@element-plus/icons-vue";
+import request from "@/utils/requestUtils";
+import { useRouter} from "vue-router";
 const props = defineProps({
   modeType: String,
 });
+const router  = useRouter()
 let multipleTableRef = ref(null);
-let templateData = reactive({
-  searchTemplate: [
-    {
-      name: "entiryName",
-      type: "input",
-      label: "实体名称",
-      placeholder: "请输入实体名称",
-      show: true,
-    },
-    {
-      name: "entiryType",
-      type: "select",
-      label: "实体类型",
-      placeholder: "请选择实体类型",
-      options: [
-        {
-          label: "实物资产",
-          value: 1,
-        },
-        {
-          label: "机械设备",
-          value: 2,
-        },
-        {
-          label: "个体资产",
-          value: 3,
-        },
-        {
-          label: "IT资产",
-          value: 4,
-        },
-      ],
-      show: true,
-    },
-    {
-      name: "searchBtn",
-      type: "button",
-      btnType: "primary",
-      text: "查询",
-      event: "search",
-    },
-    {
-      name: "addBtn",
-      type: "button",
-      btnType: "primary",
-      text: "新增",
-      event: "toAdd",
-    },
-  ],
-  tableTemplate: [],
-  pagination: {},
-  searchData: {
-    entiryName: "",
-    entiryType: "",
-  },
-});
-let tableHeader = ref([
-  {
-    property: "date",
-    label: "日期",
-    width: 200,
-    scope: false,
-  },
-  {
-    property: "name",
-    label: "姓名",
-    width: 200,
-    scope: false,
-  },
-  {
-    property: "address",
-    label: "地址",
-    width: "width",
-    scope: false,
-  },
-]);
+let templateData = reactive({});
+let reqTemplate = () =>{
+    request.post('/app/publicList/template',{name:props.modeType}).then(res=>{
+    templateData.searchTemplate =  res.data.searchTemplate
+    templateData.searchData = res.data.searchData
+    templateData.tableTemplate = res.data.tableTemplate
+    reqList()
+})
+}
 const tableData = ref([]);
 const total = ref(0);
 let pageSize = 10;
@@ -209,6 +145,11 @@ const reqList = () => {
 
 const toAdd = () => {
   console.log("新增");
+  console.log(props.modeType)
+  router.push({
+    name:`${props.modeType}Add`,
+  })
+
 };
 const btnClick = (btnFlag) => {
   switch (btnFlag) {
@@ -227,9 +168,7 @@ const deleteRow = (row) => {
   console.log(row, "删除");
 };
 onMounted(() => {
-  console.log(props.modeType, "多少??");
-  console.log(templateData.searchData.entiryName, "????");
-  console.log(multipleTableRef, "表格");
+    reqTemplate()
 });
 </script>
 <style lang="less">

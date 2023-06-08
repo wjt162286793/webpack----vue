@@ -1,6 +1,8 @@
 <template>
-    新建实体
+    <GlobalFormInfo></GlobalFormInfo>
   </template>
-  <script setup></script>
+  <script setup>
+  import GlobalFormInfo from '@/components/globalFormInfo.vue';
+ </script>
   <style lang="less">
   </style>
