@@ -7,7 +7,24 @@
                 "label": "实体名称",
                 "type": "input",
                 "require": true,
-                "rule": [],
+                "rule": [
+                    {
+                        "require": true,
+                        "message": "实体名称为必输项",
+                        "trigger": "blur"
+                    },
+                    {
+                        "min": 6,
+                        "max": 12,
+                        "message": "请输入6到12位之间的字符",
+                        "trigger": "blur"
+                    },
+                    {
+                        "pattern": "^[\\u4e00-\\u9fa5]+$",
+                        "message": "只可以输入英文,中划线,数字,并且必须以英文开头",
+                        "trigger": "blur"
+                    }
+                ],
                 "remark": "请输入6到12位之间的英文、中划线、数字,并且必须以英文开头",
                 "default": ""
             },
@@ -144,7 +161,11 @@
                 "label": "附属文件",
                 "type": "upload",
                 "require": false,
-                "rule": [],
+                "rule": [
+                    {
+                        "rule": "^[\\u4e00-\\u9fa5]+$"
+                    }
+                ],
                 "default": ""
             },
             {
