@@ -1,76 +1,82 @@
 {
-    "entiry":{
-        "searchTemplate": [
-            {
-              "name": "entiryName",
-              "type": "input",
-              "label": "实体名称",
-              "placeholder": "请输入实体名称",
-              "show": true
-            },
-            {
-              "name": "entiryType",
-              "type": "select",
-              "label": "实体类型",
-              "placeholder": "请选择实体类型",
-              "options": [
-                {
-                  "label": "实物资产",
-                  "value": 1
-                },
-                {
-                  "label": "机械设备",
-                  "value": 2
-                },
-                {
-                  "label": "个体资产",
-                  "value": 3
-                },
-                {
-                  "label": "IT资产",
-                  "value": 4
-                }
-              ],
-              "show": true
-            },
-            {
-              "name": "searchBtn",
-              "type": "button",
-              "btnType": "primary",
-              "text": "查询",
-              "event": "search"
-            },
-            {
-              "name": "addBtn",
-              "type": "button",
-              "btnType": "primary",
-              "text": "新增",
-              "event": "toAdd"
-            }
-          ],
-          "tableTemplate": [
-            {
-              "property": "entiryName",
-              "label": "实体名称",
-              "width": 200,
-              "scope": false
-            },
-            {
-              "property": "entiryCnName",
-              "label": "实体中文名称",
-              "width": 200,
-              "scope": false
-            },
-            {
-              "property": "url",
-              "label": "链接",
-              "width": "width",
-              "scope": false
-            }
-          ],
-          "searchData": {
-            "entiryName": "",
-            "entiryType": ""
+  "entiry": {
+    "searchTemplate": [
+      {
+        "name": "entiryName",
+        "type": "input",
+        "label": "实体名称",
+        "placeholder": "请输入实体名称",
+        "show": true
+      },
+      {
+        "name": "entiryType",
+        "type": "select",
+        "label": "实体类型",
+        "placeholder": "请选择实体类型",
+        "options": [
+          {
+            "label": "实物资产",
+            "value": 1
+          },
+          {
+            "label": "机械设备",
+            "value": 2
+          },
+          {
+            "label": "个体资产",
+            "value": 3
+          },
+          {
+            "label": "IT资产",
+            "value": 4
           }
+        ],
+        "show": true
+      },
+      {
+        "name": "searchBtn",
+        "type": "button",
+        "btnType": "primary",
+        "text": "查询",
+        "event": "search"
+      },
+      {
+        "name": "addBtn",
+        "type": "button",
+        "btnType": "primary",
+        "text": "新增",
+        "event": "toAdd"
+      }
+    ],
+    "tableTemplate": [
+      {
+        "property": "entiryName",
+        "label": "实体名称",
+        "width": 200,
+        "column": "jumpIn"
+      },
+      {
+        "property": "entiryCnName",
+        "label": "实体中文名称",
+        "width": 200,
+        "column": "normal"
+      },
+      {
+        "property": "entiryType",
+        "label": "实体类型",
+        "width": "200",
+        "column": "map"
+      },
+      {
+        "property": "url",
+        "label": "链接",
+        "width": "width",
+        "column": "jumpOut"
+      }
+    ],
+    "searchData": {
+      "entiryName": "",
+      "entiryType": ""
     }
+  }
 }

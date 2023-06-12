@@ -7,7 +7,7 @@
                 "label": "实体名称",
                 "type": "input",
                 "required": true,
-                "editDisabled":true,
+                "editDisabled": true,
                 "rule": [
                     {
                         "required": true,
@@ -34,7 +34,7 @@
                 "label": "实体中文名称",
                 "type": "input",
                 "required": true,
-                "editDisabled":true,
+                "editDisabled": true,
                 "rule": [
                     {
                         "required": true,
@@ -63,23 +63,23 @@
                 "required": true,
                 "rule": false,
                 "default": null,
-                "editDisabled":true,
+                "editDisabled": true,
                 "options": [
                     {
                         "label": "实物资产",
-                        "value": 1
+                        "value": "kind"
                     },
                     {
                         "label": "机械设备",
-                        "value": 2
+                        "value": "mechanical"
                     },
                     {
                         "label": "个体资产",
-                        "value": 3
+                        "value": "individual"
                     },
                     {
                         "label": "IT资产",
-                        "value": 4
+                        "value": "information"
                     }
                 ]
             },
@@ -89,8 +89,8 @@
                 "type": "textarea",
                 "required": false,
                 "default": "",
-                "editDisabled":false,
-                "rule":false
+                "editDisabled": false,
+                "rule": false
             }
         ]
     },
@@ -103,8 +103,8 @@
                 "type": "radio",
                 "required": true,
                 "default": true,
-                "rule":false,
-                "editDisabled":false,
+                "rule": false,
+                "editDisabled": false,
                 "options": [
                     {
                         "label": true,
@@ -123,17 +123,17 @@
                 "required": false,
                 "options": [],
                 "optionsSource": "request",
-                "editDisabled":false,
+                "editDisabled": false,
                 "default": [],
                 "requestName": "/user/userAllList",
-                "rule":false
+                "rule": false
             },
             {
                 "name": "region",
                 "label": "域",
                 "type": "select",
                 "required": true,
-                "editDisabled":true,
+                "editDisabled": true,
                 "rule": [
                     {
                         "required": true,
@@ -166,7 +166,7 @@
                 "label": "资产编码",
                 "type": "input",
                 "required": true,
-                "editDisabled":true,
+                "editDisabled": true,
                 "rule": [
                     {
                         "required": true,
@@ -186,15 +186,15 @@
                     }
                 ],
                 "default": "",
-                "remark":"资产的归属号,可以不唯一"
+                "remark": "资产的归属号,可以不唯一"
             },
             {
                 "name": "textData",
                 "label": "文本数据",
                 "type": "input",
                 "required": false,
-                "rule":false,
-                "editDisabled":false,
+                "rule": false,
+                "editDisabled": false,
                 "default": ""
             },
             {
@@ -202,8 +202,8 @@
                 "label": "链接",
                 "type": "input",
                 "required": false,
-                "rule":false,
-                "editDisabled":false,
+                "rule": false,
+                "editDisabled": false,
                 "default": ""
             },
             {
@@ -211,8 +211,8 @@
                 "label": "附属文件",
                 "type": "upload",
                 "required": false,
-                "rule":false,
-                "editDisabled":false,
+                "rule": false,
+                "editDisabled": false,
                 "default": ""
             },
             {
@@ -220,17 +220,17 @@
                 "label": "截止日期",
                 "type": "date",
                 "required": true,
-                "editDisabled":false,
+                "editDisabled": false,
                 "rule": [
                     {
-                        "required":true,
-                        "message":"截止日期必须选择",
-                        "trigger":"change"
+                        "required": true,
+                        "message": "截止日期必须选择",
+                        "trigger": "change"
                     }
                 ],
                 "default": "",
-                "scope":true,
-                "disabledScoped":"beforeNow"
+                "scope": true,
+                "disabledScoped": "beforeNow"
             }
         ]
     }

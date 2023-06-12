@@ -1,0 +1,16 @@
+{
+    "entiry": {
+        "entiryType": {
+            "kind": "实物资产",
+            "mechanical": "机械设备",
+            "individual": "个体资产",
+            "information": "IT资产"
+        },
+        "region": {
+            "important": "重要资产",
+            "affiliate": "附属资产",
+            "noGlobal": "非公共资产",
+            "risk": "风险资产"
+        }
+    }
+}

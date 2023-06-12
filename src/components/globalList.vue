@@ -49,9 +49,36 @@
                 </el-table-column>
                 <el-table-column property="name" label="Name" width="120" />
                 <el-table-column property="address" label="Address" show-overflow-tooltip /> -->
-        <template v-for="(item, index) in templateData.tableTemplate" :key="index">
+        <template
+          v-for="(item, index) in templateData.tableTemplate"
+          :key="index"
+        >
           <el-table-column
-            v-if="!item.scoped"
+            v-if="item.column === 'normal'"
+            :property="item.property"
+            :width="item.width"
+            :label="item.label"
+          ></el-table-column>
+          <el-table-column
+            v-else-if="item.column === 'jumpIn'"
+            :width="item.width"
+            :label="item.label"
+          >
+            <template #default="scope">
+              <p class="jumpIn">{{ scope.row[item.property] }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-else-if="item.column === 'map'"
+            :width="item.width"
+            :label="item.label"
+          >
+            <template #default="scope">
+              <p class="jumpIn">{{ getMap(scope.row[item.property]) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-else-if="item.column === 'jumpOut'"
             :property="item.property"
             :width="item.width"
             :label="item.label"
@@ -105,22 +132,24 @@
 <script setup>
 import { Delete, Edit } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
-import { useRouter,useRoute} from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const props = defineProps({
   modeType: String,
 });
-const router  = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 let multipleTableRef = ref(null);
 let templateData = reactive({});
-let reqTemplate = () =>{
-    request.post('/app/publicList/template',{name:props.modeType}).then(res=>{
-    templateData.searchTemplate =  res.data.searchTemplate
-    templateData.searchData = res.data.searchData
-    templateData.tableTemplate = res.data.tableTemplate
-    reqList()
-})
-}
+let reqTemplate = () => {
+  request
+    .post("/app/publicList/template", { name: props.modeType })
+    .then((res) => {
+      templateData.searchTemplate = res.data.searchTemplate;
+      templateData.searchData = res.data.searchData;
+      templateData.tableTemplate = res.data.tableTemplate;
+      reqList();
+    });
+};
 const tableData = ref([]);
 const total = ref(0);
 let pageSize = ref(10);
@@ -129,10 +158,10 @@ const handleSelectionChange = (val) => {
   //   multipleSelection.value = val
 };
 const reqList = () => {
-  console.log(templateData,'末班')
-  let postData = templateData.searchData
-  postData.currentPage = currentPage.value
-  postData.pageSize = pageSize.value
+  console.log(templateData, "末班");
+  let postData = templateData.searchData;
+  postData.currentPage = currentPage.value;
+  postData.pageSize = pageSize.value;
   // console.log(templateData.searchData,'搜索项')
   // tableData.value = [
   //   {
@@ -146,22 +175,21 @@ const reqList = () => {
   //     address: "No. 189, Grove St, Los Angeles",
   //   },
   // ];
-  request.post(`app/${route.name}`,postData).then(res=>{
-    console.log(res,'列表信息')
-    if(res.code === 200){
-      tableData.value = res.data.list
-      total.value = res.data.total
+  request.post(`app/${route.name}`, postData).then((res) => {
+    console.log(res, "列表信息");
+    if (res.code === 200) {
+      tableData.value = res.data.list;
+      total.value = res.data.total;
     }
-  })
+  });
 };
 
 const toAdd = () => {
   console.log("新增");
-  console.log(props.modeType)
+  console.log(props.modeType);
   router.push({
-    name:`${props.modeType}Add`,
-  })
-
+    name: `${props.modeType}Add`,
+  });
 };
 const btnClick = (btnFlag) => {
   switch (btnFlag) {
@@ -179,8 +207,13 @@ const editRow = (row) => {
 const deleteRow = (row) => {
   console.log(row, "删除");
 };
+const getMap = (value) => {
+  console.log(value, "???值");
+  console.log(route, "路由");
+  return value;
+};
 onMounted(() => {
-    reqTemplate()
+  reqTemplate();
 });
 </script>
 <style lang="less">
@@ -210,5 +243,9 @@ onMounted(() => {
     right: 0px;
     margin-right: 30px;
   }
+}
+.jumpIn {
+  color: #79bbff;
+  cursor: pointer;
 }
 </style>
