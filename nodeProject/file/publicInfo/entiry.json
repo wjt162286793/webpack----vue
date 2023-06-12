@@ -6,10 +6,11 @@
                 "name": "entiryName",
                 "label": "实体名称",
                 "type": "input",
-                "require": true,
+                "required": true,
+                "editDisabled":true,
                 "rule": [
                     {
-                        "require": true,
+                        "required": true,
                         "message": "实体名称为必输项",
                         "trigger": "blur"
                     },
@@ -20,7 +21,7 @@
                         "trigger": "blur"
                     },
                     {
-                        "pattern": "^[\\u4e00-\\u9fa5]+$",
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9-]*$",
                         "message": "只可以输入英文,中划线,数字,并且必须以英文开头",
                         "trigger": "blur"
                     }
@@ -29,21 +30,40 @@
                 "default": ""
             },
             {
-                "name": "entiryEnName",
+                "name": "entiryCnName",
                 "label": "实体中文名称",
                 "type": "input",
-                "require": true,
-                "rule": [],
-                "remark": "请输入6到12位之间的中文、中划线、数字,并且必须以中文开头",
+                "required": true,
+                "editDisabled":true,
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "实体中文名称为必输项",
+                        "trigger": "blur"
+                    },
+                    {
+                        "min": 3,
+                        "max": 12,
+                        "message": "请输入3到12位之间的字符",
+                        "trigger": "blur"
+                    },
+                    {
+                        "pattern": "^[\\u4e00-\\u9fa5][\\u4e00-\\u9fa5a-zA-Z0-9-]*$",
+                        "message": "只可以输入中文,中划线,数字,并且必须以中文开头",
+                        "trigger": "blur"
+                    }
+                ],
+                "remark": "请输入3到12位之间的中文、中划线、数字,并且必须以中文开头",
                 "default": ""
             },
             {
                 "name": "entiryType",
                 "label": "实体类型",
                 "type": "select",
-                "require": true,
-                "rule": [],
+                "required": true,
+                "rule": false,
                 "default": null,
+                "editDisabled":true,
                 "options": [
                     {
                         "label": "实物资产",
@@ -67,9 +87,10 @@
                 "name": "description",
                 "label": "描述",
                 "type": "textarea",
-                "require": false,
+                "required": false,
                 "default": "",
-                "rule": []
+                "editDisabled":false,
+                "rule":false
             }
         ]
     },
@@ -80,8 +101,10 @@
                 "name": "isMonitor",
                 "label": "实时监控",
                 "type": "radio",
-                "require": false,
+                "required": true,
                 "default": true,
+                "rule":false,
+                "editDisabled":false,
                 "options": [
                     {
                         "label": true,
@@ -97,18 +120,27 @@
                 "name": "shareList",
                 "label": "共享人员",
                 "type": "multiple_select",
-                "require": false,
+                "required": false,
                 "options": [],
                 "optionsSource": "request",
+                "editDisabled":false,
                 "default": [],
-                "rquestName": "/user/userAllList"
+                "requestName": "/user/userAllList",
+                "rule":false
             },
             {
                 "name": "region",
                 "label": "域",
                 "type": "select",
-                "require": true,
-                "rule": [],
+                "required": true,
+                "editDisabled":true,
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "请选择域",
+                        "trigger": "change"
+                    }
+                ],
                 "default": null,
                 "options": [
                     {
@@ -127,54 +159,78 @@
                         "label": "风险资产",
                         "value": "risk"
                     }
-                ],
-                "optionsSource": "request",
-                "rquestName": "/region/regionChild",
-                "childValue": "regionChild"
+                ]
             },
             {
                 "name": "code",
                 "label": "资产编码",
                 "type": "input",
-                "require": true,
-                "rule": [],
-                "default": ""
+                "required": true,
+                "editDisabled":true,
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "资产编码为必输项",
+                        "trigger": "blur"
+                    },
+                    {
+                        "min": 6,
+                        "max": 12,
+                        "message": "请输入8到12位之间的数字",
+                        "trigger": "blur"
+                    },
+                    {
+                        "pattern": "^\\d+$",
+                        "message": "只可以输入数字类型",
+                        "trigger": "blur"
+                    }
+                ],
+                "default": "",
+                "remark":"资产的归属号,可以不唯一"
             },
             {
                 "name": "textData",
                 "label": "文本数据",
                 "type": "input",
-                "require": true,
-                "rule": [],
+                "required": false,
+                "rule":false,
+                "editDisabled":false,
                 "default": ""
             },
             {
                 "name": "url",
                 "label": "链接",
                 "type": "input",
-                "require": false,
-                "rule": [],
+                "required": false,
+                "rule":false,
+                "editDisabled":false,
                 "default": ""
             },
             {
                 "name": "upload",
                 "label": "附属文件",
                 "type": "upload",
-                "require": false,
-                "rule": [
-                    {
-                        "rule": "^[\\u4e00-\\u9fa5]+$"
-                    }
-                ],
+                "required": false,
+                "rule":false,
+                "editDisabled":false,
                 "default": ""
             },
             {
-                "name": "time",
+                "name": "date",
                 "label": "截止日期",
-                "type": "time",
-                "require": true,
-                "rule": [],
-                "default": ""
+                "type": "date",
+                "required": true,
+                "editDisabled":false,
+                "rule": [
+                    {
+                        "required":true,
+                        "message":"截止日期必须选择",
+                        "trigger":"change"
+                    }
+                ],
+                "default": "",
+                "scope":true,
+                "disabledScoped":"beforeNow"
             }
         ]
     }

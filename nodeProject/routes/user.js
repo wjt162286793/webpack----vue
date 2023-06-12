@@ -38,7 +38,11 @@ const userRoutes = [
                             //匹配到相同账号名
                             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号已被注册')
                             return
-                        } else {
+                        } else if(list.findIndex(item => reqData.userName == item.userName) != -1){
+                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该用户名已被使用')
+                            return
+                        }
+                        else {
                             reqData.token = uuidv4()
                             //未匹配到相同相同账号名
                             list.push(reqData)
@@ -158,6 +162,35 @@ const userRoutes = [
                 })
             })
 
+        }
+    },
+    {
+        //全部用户列表
+        path: '/app/user/userAllList',
+        done: (req, res) => {
+            let fileData = []
+            fs.readFile(path.join(__dirname, '../file/user.json'), 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err, '读取错误')
+                    callBack(res, 'CONtent-Type', 'application/json; charset=utf-8', 201, [], '未找到任何用户信息')
+                } else {
+                    fileData = JSON.parse(data.toString())
+                    if (fileData.length > 0) {
+                        let list = []
+                        fileData.forEach(item => {
+                            list.push({
+                                value: item.name,
+                                label: item.userName
+                            })
+                        })
+                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, list, 'success')
+                    } else {
+                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, [], 'success')
+                    }
+                }
+
+
+            })
         }
     },
     {

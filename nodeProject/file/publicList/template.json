@@ -50,20 +50,20 @@
           ],
           "tableTemplate": [
             {
-              "property": "date",
-              "label": "日期",
+              "property": "entiryName",
+              "label": "实体名称",
               "width": 200,
               "scope": false
             },
             {
-              "property": "name",
-              "label": "姓名",
+              "property": "entiryCnName",
+              "label": "实体中文名称",
               "width": 200,
               "scope": false
             },
             {
-              "property": "address",
-              "label": "地址",
+              "property": "url",
+              "label": "链接",
               "width": "width",
               "scope": false
             }

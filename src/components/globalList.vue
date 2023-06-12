@@ -105,11 +105,12 @@
 <script setup>
 import { Delete, Edit } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
-import { useRouter} from "vue-router";
+import { useRouter,useRoute} from "vue-router";
 const props = defineProps({
   modeType: String,
 });
 const router  = useRouter()
+const route = useRoute()
 let multipleTableRef = ref(null);
 let templateData = reactive({});
 let reqTemplate = () =>{
@@ -122,25 +123,36 @@ let reqTemplate = () =>{
 }
 const tableData = ref([]);
 const total = ref(0);
-let pageSize = 10;
+let pageSize = ref(10);
 let currentPage = ref(1);
 const handleSelectionChange = (val) => {
   //   multipleSelection.value = val
 };
 const reqList = () => {
+  console.log(templateData,'末班')
+  let postData = templateData.searchData
+  postData.currentPage = currentPage.value
+  postData.pageSize = pageSize.value
   // console.log(templateData.searchData,'搜索项')
-  tableData.value = [
-    {
-      date: "2016-05-03",
-      name: "Tom",
-      address: "No. 189, Grove St, Los Angeles",
-    },
-    {
-      date: "2016-05-02",
-      name: "Tom",
-      address: "No. 189, Grove St, Los Angeles",
-    },
-  ];
+  // tableData.value = [
+  //   {
+  //     date: "2016-05-03",
+  //     name: "Tom",
+  //     address: "No. 189, Grove St, Los Angeles",
+  //   },
+  //   {
+  //     date: "2016-05-02",
+  //     name: "Tom",
+  //     address: "No. 189, Grove St, Los Angeles",
+  //   },
+  // ];
+  request.post(`app/${route.name}`,postData).then(res=>{
+    console.log(res,'列表信息')
+    if(res.code === 200){
+      tableData.value = res.data.list
+      total.value = res.data.total
+    }
+  })
 };
 
 const toAdd = () => {

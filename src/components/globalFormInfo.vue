@@ -1,98 +1,88 @@
 <template>
   <div class="mainBox">
-    <el-form
-      ref="ruleFormRef"
-      :model="formData"
-      :rules="rules"
-      label-width="120px"
-      class="demo-ruleForm"
-      status-icon
-    >
+    <el-form ref="ruleFormRef" :model="formData" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon>
       <template v-for="(Item, Index) in templateList" :key="Index">
         <h4>{{ Item.title }}</h4>
         <el-row class="tem">
-          <el-col
-            :span="12"
-            v-for="(item, index) in Item.formList"
-            :key="index"
-            style="margin: 10px 0"
-          >
-            <el-form-item :label="item.label" :prop="item.name">
-              <el-input
-                class="formItem"
-                v-if="item.type === 'input'"
-                v-model="formData[item.name]"
-              ></el-input>
-              <el-input
-                class="formItem"
-                v-if="item.type === 'textarea'"
-                v-model="formData[item.name]"
-                :rows="4"
-                type="textarea"
-              />
-              <el-select
-                class="formItem"
-                v-else-if="item.type === 'select'"
-                v-model="formData[item.name]"
-              >
-                <el-option
-                  v-for="(m, n) in item.options"
-                  :key="n"
-                  :label="m.label"
-                  :value="m.value"
-                ></el-option>
+          <el-col :span="12" v-for="(item, index) in Item.formList" :key="index" style="margin: 10px 0">
+            <template></template>
+            <el-form-item v-if="item.type === 'input'" :label="item.label" :prop="item.name">
+              <el-input class="formItem" v-model="formData[item.name]" clearable></el-input>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'textarea'" :label="item.label" :prop="item.name">
+              <el-input class="formItem" v-model="formData[item.name]" :rows="4" type="textarea" clearable/>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'select'" :label="item.label" :prop="item.name">
+              <el-select class="formItem" v-model="formData[item.name]" clearable>
+                <el-option v-for="(m, n) in item.options" :key="n" :label="m.label" :value="m.value"></el-option>
               </el-select>
-              <el-radio-group
-                class="ml-4"
-                v-model="formData[item.name]"
-                v-else-if="item.type === 'radio'"
-              >
-                <el-radio
-                  :label="m.label"
-                  size="large"
-                  v-for="(m, n) in item.options"
-                  :key="n"
-                  >{{ m.text }}</el-radio
-                >
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'radio'" :label="item.label" :prop="item.name">
+              <el-radio-group class="ml-4" v-model="formData[item.name]">
+                <el-radio :label="m.label" size="large" v-for="(m, n) in item.options" :key="n">{{ m.text }}</el-radio>
               </el-radio-group>
-              <el-select
-                class="formItem"
-                v-else-if="item.type === 'multiple_select'"
-                v-model="formData[item.name]"
-                multiple
-              >
-                <el-option
-                  v-for="(m, n) in item.options"
-                  :key="n"
-                  :label="m.label"
-                  :value="m.value"
-                ></el-option>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'multiple_select'" :label="item.label" :prop="item.name">
+              <el-select class="formItem" v-model="formData[item.name]" multiple clearable>
+                <el-option v-for="(m, n) in item.options" :key="n" :label="m.label" :value="m.value"></el-option>
               </el-select>
-              <el-upload
-                v-model="formData[item.name]"
-                class="formItem upload-demo"
-                v-else-if="item.type === 'upload'"
-                :limit="1"
-              >
-                <el-button type="primary">选取</el-button>
-                <el-button type="primary">上传</el-button>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'upload'" :label="item.label" :prop="item.name">
+              <el-upload v-model="formData[item.name]" class="formItem upload-demo" :http-request="requestFile"
+                :limit="1">
+                <el-button type="primary">上传文件</el-button>
+                <template #tip>
+                  <div>文件地址:&nbsp;&nbsp;{{ formData['upload'] }}</div>
+                </template>
               </el-upload>
-              <el-date-picker
-                class="formItem"
-                v-else-if="item.type === 'time'"
-                v-model="formData[item.name]"
-                type="date"
-                size="default"
-              />
-              <el-icon size="20px" class="iconBox"><QuestionFilled /></el-icon>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'date'" :label="item.label" :prop="item.name">
+              <el-date-picker class="formItem" v-model="formData[item.name]" type="date" :disabled-date="setDisableDate"
+                size="default" value-format="YYYY-MM-DD" clearable/>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
       </template>
+
     </el-form>
     <div class="footer">
-      <el-button type="primary"> 创建 </el-button>
-      <el-button>返回</el-button>
+      <el-button type="primary" @click="save(ruleFormRef)"> 创建 </el-button>
+      <el-button @click="jumpToList">返回</el-button>
     </div>
   </div>
 </template>
@@ -100,23 +90,102 @@
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { onMounted, reactive } from "vue";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const route = useRoute();
 let templateList = ref([]);
 let formData = reactive({});
-let rules = ref([]);
+let rules = reactive({});
+let fileList = ref([])
+let ruleFormRef = ref(null)
 const reqTemplate = () => {
   request.post("/app/publicForm/template", { type: "entiry" }).then((res) => {
-    console.log(res, "请求的结果");
-    templateList.value = res.data;
+    if(res.code === 200){
+      templateList.value = res.data;
+    //组织数据
     templateList.value.forEach((item) => {
       item.formList.forEach((val) => {
+        if (val.optionsSource && val.optionsSource === 'request') {
+          requestOPtions(val)
+        }
+        //表单数据汇总
         formData[val.name] = val.default;
+        if (val.rule) {
+          let index = val.rule.findIndex(z => z.pattern)
+          //匹配正则
+          if (index !== -1) {
+            console.log(val.rule[index], '正则???')
+            val.rule[index].pattern = new RegExp(val.rule[index].pattern)
+          }
+          //表单权限汇总
+          rules[val.name] = val.rule
+        }
       });
     });
-    console.log(formData, "依赖值??");
+    }else{
+      ElMessage({
+          message:res.message,
+          type:'warning'
+        })
+    }
+
   });
 };
+const setDisableDate = (time) => {
+  return time.getTime() < Date.now()
+}
+
+const requestOPtions = (item) => {
+  request.get(`/app${item.requestName}`).then(res => {
+    if(res.code === 200){
+      item.options = res.data
+    }else{
+      ElMessage({
+          message:res.message,
+          type:'warning'
+        })
+    }
+    
+  })
+}
+const requestFile = (a, b) => {
+  console.log(a, b, '自上传文件')
+  formData['upload'] = 'youtube.com'
+}
+const save = (ruleFormRef) =>{
+  console.log(ruleFormRef,'???')
+  if(!ruleFormRef) return
+  ruleFormRef.validate((valid,fields)=>{
+    if(valid){
+      request.post(`/app/${route.name}`,formData).then(res=>{
+        if(res.code === 200){
+          ElMessage({
+          message:res.message,
+          type:'success'
+        })
+        jumpToList()
+        }else{
+          ElMessage({
+          message:res.message,
+          type:'warning'
+        })
+        }
+
+      })
+    }else{
+
+    }
+  })
+}
+const jumpToList = ()=>{
+  let list = route.path.split('/')
+  list.pop()
+  list.push(`${list[list.length-1]}List`)
+  let path = list.join('/')
+  router.push({
+    path
+  })
+}
 
 onMounted(() => {
   reqTemplate();
@@ -128,26 +197,33 @@ onMounted(() => {
   padding: 10px;
   padding-bottom: 50px;
   position: relative;
+
   .tem {
     border-bottom: 1px solid #eee;
     margin-bottom: 20px;
   }
+
   h4 {
     font-size: 18px;
     font-weight: 500;
   }
+
   .formItem {
     width: 480px;
     // margin: 20px;
     // display: flex;
   }
+
   /deep/ .el-form-item__content {
     display: flex;
     flex-wrap: nowrap;
   }
+
   .iconBox {
     margin-left: 20px;
+    cursor: pointer;
   }
+
   .footer {
     height: 40px;
     width: 100%;
