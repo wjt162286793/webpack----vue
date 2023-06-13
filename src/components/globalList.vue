@@ -69,20 +69,32 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-else-if="item.column === 'details'"
+            :width="item.width"
+            :label="item.label"
+          >
+            <template #default="scope">
+              <p class="jumpIn" @click="jumpDetail(scope.row)">{{ scope.row[item.property] }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column
             v-else-if="item.column === 'map'"
             :width="item.width"
             :label="item.label"
           >
             <template #default="scope">
-              <p class="jumpIn">{{ getMap(scope.row[item.property]) }}</p>
+              <p>{{ getMap(item.property,scope.row[item.property]) }}</p>
             </template>
           </el-table-column>
           <el-table-column
             v-else-if="item.column === 'jumpOut'"
-            :property="item.property"
             :width="item.width"
             :label="item.label"
-          ></el-table-column>
+          >
+          <template #default="scope">
+              <p class="jumpOut" @click="jumpUrl(scope.row[item.property])">{{ scope.row[item.property] }}</p>
+            </template>
+        </el-table-column>
           <el-table-column v-else :width="item.width" :label="item.label">
             <template #default="scope">
               {{ scope.row[item.property] }}
@@ -133,8 +145,9 @@
 import { Delete, Edit } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
 import { useRouter, useRoute } from "vue-router";
+import words from '@/dictionaries/wordList.json'
 const props = defineProps({
-  modeType: String,
+  modeType: Object,
 });
 const router = useRouter();
 const route = useRoute();
@@ -142,7 +155,7 @@ let multipleTableRef = ref(null);
 let templateData = reactive({});
 let reqTemplate = () => {
   request
-    .post("/app/publicList/template", { name: props.modeType })
+    .post("/app/publicList/template", { name: props.modeType.type })
     .then((res) => {
       templateData.searchTemplate = res.data.searchTemplate;
       templateData.searchData = res.data.searchData;
@@ -155,8 +168,9 @@ const total = ref(0);
 let pageSize = ref(10);
 let currentPage = ref(1);
 const handleSelectionChange = (val) => {
-  //   multipleSelection.value = val
+   
 };
+//查询列表
 const reqList = () => {
   console.log(templateData, "末班");
   let postData = templateData.searchData;
@@ -183,14 +197,11 @@ const reqList = () => {
     }
   });
 };
-
-const toAdd = () => {
-  console.log("新增");
-  console.log(props.modeType);
-  router.push({
-    name: `${props.modeType}Add`,
-  });
-};
+//外部跳转
+const jumpUrl = (url)=>{
+  window.open(`http://${url}`)
+}
+//按钮事件
 const btnClick = (btnFlag) => {
   switch (btnFlag) {
     case "search":
@@ -200,17 +211,50 @@ const btnClick = (btnFlag) => {
       toAdd();
   }
 };
-
+//新增
+const toAdd = () => {
+  console.log("新增");
+  console.log(props.modeType.list);
+  router.push({
+    name: props.modeType.add,
+    query:{
+      type:'new'
+    }
+  });
+};
+//查看
+const jumpDetail = (row)=>{
+  console.log('查看')
+router.push({
+  name:props.modeType.detail,
+  query:{
+    uuid:row.uuid,
+    type:'detail',
+    mode:props.modeType.type
+  }
+})
+}
+//修改
 const editRow = (row) => {
   console.log(row, "编辑");
+  router.push({
+  name:props.modeType.edit,
+  query:{
+    uuid:row.uuid,
+    type:'edit',
+    mode:props.modeType.type
+  }
+  })
+
 };
+//删除
 const deleteRow = (row) => {
   console.log(row, "删除");
 };
-const getMap = (value) => {
-  console.log(value, "???值");
-  console.log(route, "路由");
-  return value;
+//从词表里获取对应值
+const getMap = (property,value) => {
+  let val = words[route.name][property][value]
+  return val;
 };
 onMounted(() => {
   reqTemplate();
@@ -245,6 +289,10 @@ onMounted(() => {
   }
 }
 .jumpIn {
+  color: #79bbff;
+  cursor: pointer;
+}
+.jumpOut{
   color: #79bbff;
   cursor: pointer;
 }

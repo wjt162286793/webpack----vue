@@ -5,6 +5,7 @@ const {v4:uuidv4} = require('uuid')
 const moment = require('moment')
 const publicFormRoutes = [
     {
+        //请求公共模板
         path:"/app/publicForm/template",
         done: (req,res)=>{
       let dataList = []
@@ -38,8 +39,7 @@ const publicFormRoutes = [
           } else {
               oldData = JSON.parse(data.toString())
               console.log(oldData, '当前文件数据');
-          }
-
+              
           let postData = ''
           //请求流
           req.on('data', function (chunk) {
@@ -85,10 +85,49 @@ const publicFormRoutes = [
                   callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, [], 'success')
               })
           })
+          }
       })
 
   }
 },
+{
+    //新建实体
+    path: '/app/entiryEdit',
+    done: function (req, res) {
+        let oldData = []
+        //读取文件
+        fs.readFile(path.join(__dirname, '../file/publicList/entiry.json'), 'utf8', (err, data) => {
+            if (err) {
+                console.log(err, '读取报错')
+            } else {
+                oldData = JSON.parse(data.toString())
+                console.log(oldData, '当前文件数据');
+                
+            let postData = ''
+            //请求流
+            req.on('data', function (chunk) {
+                postData += chunk
+            })
+            //请求结束
+            req.on('end', function () {
+                reqData = JSON.parse(postData)
+                console.log(reqData,'传递数据??')
+                let index = oldData.findIndex(item=>item.uuid === reqData.uuid)
+                oldData[index] = reqData
+                oldData.map((item, index) => { item.id = index + 1 })
+                oldData = JSON.stringify(oldData)
+                fs.writeFile(path.join(__dirname, '../file/publicList/entiry.json'), oldData, function (err) {
+                    if (err) {
+                        return console.error(err)
+                    }
+                    callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, [], 'success')
+                })
+            })
+            }
+        })
+  
+    }
+  },
 ]
 
 module.exports.publicFormRoutes = publicFormRoutes

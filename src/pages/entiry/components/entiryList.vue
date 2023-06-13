@@ -4,7 +4,14 @@
 </template>
 <script setup>
 import globalList from '@/components/globalList.vue';
-let modeType = ref('entiry')
+let modeType = {
+    type:'entiry',
+    list:'entiryList',
+    add:'entiryAdd',
+    edit:'entiryEdit',
+    delete:'entiryDelete',
+    detail:'entiryDetail'
+}
 </script>
 <style lang="less">
 

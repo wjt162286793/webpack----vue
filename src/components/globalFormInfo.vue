@@ -7,7 +7,7 @@
           <el-col :span="12" v-for="(item, index) in Item.formList" :key="index" style="margin: 10px 0">
             <template></template>
             <el-form-item v-if="item.type === 'input'" :label="item.label" :prop="item.name">
-              <el-input class="formItem" v-model="formData[item.name]" clearable></el-input>
+              <el-input class="formItem" v-model="formData[item.name]" clearable :disabled="disabledFun(item.editDisabled)"></el-input>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
                 <el-icon size="20px" class="iconBox">
                   <QuestionFilled />
@@ -15,7 +15,7 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item v-else-if="item.type === 'textarea'" :label="item.label" :prop="item.name">
-              <el-input class="formItem" v-model="formData[item.name]" :rows="4" type="textarea" clearable/>
+              <el-input class="formItem" v-model="formData[item.name]" :rows="4" type="textarea" clearable :disabled="disabledFun(item.editDisabled)"/>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
                 <el-icon size="20px" class="iconBox">
                   <QuestionFilled />
@@ -23,7 +23,7 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item v-else-if="item.type === 'select'" :label="item.label" :prop="item.name">
-              <el-select class="formItem" v-model="formData[item.name]" clearable>
+              <el-select class="formItem" v-model="formData[item.name]" clearable :disabled="disabledFun(item.editDisabled)">
                 <el-option v-for="(m, n) in item.options" :key="n" :label="m.label" :value="m.value"></el-option>
               </el-select>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
@@ -33,7 +33,7 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item v-else-if="item.type === 'radio'" :label="item.label" :prop="item.name">
-              <el-radio-group class="ml-4" v-model="formData[item.name]">
+              <el-radio-group class="ml-4" v-model="formData[item.name]" :disabled="disabledFun(item.editDisabled)">
                 <el-radio :label="m.label" size="large" v-for="(m, n) in item.options" :key="n">{{ m.text }}</el-radio>
               </el-radio-group>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
@@ -43,7 +43,7 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item v-else-if="item.type === 'multiple_select'" :label="item.label" :prop="item.name">
-              <el-select class="formItem" v-model="formData[item.name]" multiple clearable>
+              <el-select class="formItem" v-model="formData[item.name]" multiple clearable :disabled="disabledFun(item.editDisabled)">
                 <el-option v-for="(m, n) in item.options" :key="n" :label="m.label" :value="m.value"></el-option>
               </el-select>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
@@ -54,7 +54,7 @@
             </el-form-item>
             <el-form-item v-else-if="item.type === 'upload'" :label="item.label" :prop="item.name">
               <el-upload v-model="formData[item.name]" class="formItem upload-demo" :http-request="requestFile"
-                :limit="1">
+                :limit="1" :disabled="disabledFun(item.editDisabled)">
                 <el-button type="primary">上传文件</el-button>
                 <template #tip>
                   <div>文件地址:&nbsp;&nbsp;{{ formData['upload'] }}</div>
@@ -68,7 +68,7 @@
             </el-form-item>
             <el-form-item v-else-if="item.type === 'date'" :label="item.label" :prop="item.name">
               <el-date-picker class="formItem" v-model="formData[item.name]" type="date" :disabled-date="setDisableDate"
-                size="default" value-format="YYYY-MM-DD" clearable/>
+                size="default" value-format="YYYY-MM-DD" clearable :disabled="disabledFun(item.editDisabled)"/>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
                 <el-icon size="20px" class="iconBox">
                   <QuestionFilled />
@@ -81,7 +81,8 @@
 
     </el-form>
     <div class="footer">
-      <el-button type="primary" @click="save(ruleFormRef)"> 创建 </el-button>
+      <el-button type="primary" @click="save(ruleFormRef)" v-if="route.query.type === 'new'"> 创建 </el-button>
+      <el-button type="primary" @click="save(ruleFormRef)" v-if="route.query.type === 'edit'"> 保存 </el-button>
       <el-button @click="jumpToList">返回</el-button>
     </div>
   </div>
@@ -114,7 +115,6 @@ const reqTemplate = () => {
           let index = val.rule.findIndex(z => z.pattern)
           //匹配正则
           if (index !== -1) {
-            console.log(val.rule[index], '正则???')
             val.rule[index].pattern = new RegExp(val.rule[index].pattern)
           }
           //表单权限汇总
@@ -122,6 +122,11 @@ const reqTemplate = () => {
         }
       });
     });
+    console.log(route.query.uuid,'uuid的值')
+    if(route.query.type !== 'new'){
+      console.log('进来了???')
+      reqFormData()
+    }
     }else{
       ElMessage({
           message:res.message,
@@ -131,6 +136,19 @@ const reqTemplate = () => {
 
   });
 };
+const reqFormData = ()=>{
+  let query = {
+    uuid:route.query.uuid,
+    mode:route.query.mode
+  }
+  request.post('/app/detailInfo',query).then(res=>{
+    if(res.code === 200){
+      for(let val in res.data){
+        formData[val] = res.data[val]
+      }
+    }
+  })
+}
 const setDisableDate = (time) => {
   return time.getTime() < Date.now()
 }
@@ -186,7 +204,13 @@ const jumpToList = ()=>{
     path
   })
 }
-
+const disabledFun = (flag)=>{
+  if(route.query.type === 'detail' || (route.query.type !== 'new' && flag === true)){
+    return true
+  }else{
+    return false
+  }
+}
 onMounted(() => {
   reqTemplate();
 });

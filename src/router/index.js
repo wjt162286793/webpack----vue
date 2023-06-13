@@ -102,7 +102,7 @@ const asyncRoutes = [
                         meta: {
                             name: '新增'
                         },
-                        component: () => import('pages/entiry/components/newEntiry.vue')
+                        component: () => import('pages/entiry/components/entiryAdd.vue')
                     },
                     {
                         path: '/dashboard/entiry/entiryEdit',
@@ -110,8 +110,16 @@ const asyncRoutes = [
                         meta: {
                             name: '编辑'
                         },
-                        component: () => import('pages/entiry/components/editEntiry.vue')
+                        component: () => import('pages/entiry/components/entiryEdit.vue')
                     },
+                    {
+                        path: '/dashboard/entiry/entiryDetail',
+                        name: 'entiryDetail',
+                        meta: {
+                            name: '查看'
+                        },
+                        component: () => import('pages/entiry/components/entiryDetail.vue')
+                    }
                 ]
             },
             {

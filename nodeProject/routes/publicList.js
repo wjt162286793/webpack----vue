@@ -1,3 +1,4 @@
+const { data } = require('autoprefixer')
 const fs = require('fs')
 const path = require('path')
 const querystring = require('querystring')
@@ -91,7 +92,36 @@ const publicListRoutes = [
                     })
         
                 }
-    }
+    },
+    {
+        //具体信息
+        path: '/app/detailInfo',
+        done: function (req, res) {
+            let postData = ''
+            req.on('data',function(chunk){
+                postData+=chunk
+            })
+            req.on('end',function(){
+                let reqData = JSON.parse(postData)
+                let fileData = []
+                console.log(reqData,'请求参数???')
+                fs.readFile(path.join(__dirname,`../file/publicList/${reqData.mode}.json`),'utf8',(err,data)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        fileData = JSON.parse(data.toString())
+                        let row = fileData.find(item=>item.uuid === reqData.uuid)
+                        if(row){
+                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, row, 'success')
+                        }else{
+                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, {}, '未找到对应资源')
+                        }
+                        
+                    }
+                })
+            })
+        }
+},
 ]
 function callBack(res, type, headers, code, data, message) {
     res.setHeader(type, headers)
