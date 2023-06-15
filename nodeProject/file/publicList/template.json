@@ -16,19 +16,19 @@
         "options": [
           {
             "label": "实物资产",
-            "value": 1
+            "value": "kind"
           },
           {
             "label": "机械设备",
-            "value": 2
+            "value": "mechanical"
           },
           {
             "label": "个体资产",
-            "value": 3
+            "value": "individual"
           },
           {
             "label": "IT资产",
-            "value": 4
+            "value": "information"
           }
         ],
         "show": true

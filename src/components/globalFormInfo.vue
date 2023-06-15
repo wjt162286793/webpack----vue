@@ -171,11 +171,12 @@ const requestFile = (a, b) => {
   formData['upload'] = 'youtube.com'
 }
 const save = (ruleFormRef) =>{
+  formData.mode = route.name
   console.log(ruleFormRef,'???')
   if(!ruleFormRef) return
   ruleFormRef.validate((valid,fields)=>{
     if(valid){
-      request.post(`/app/${route.name}`,formData).then(res=>{
+      request.post('/app/publicApi/add',formData).then(res=>{
         if(res.code === 200){
           ElMessage({
           message:res.message,

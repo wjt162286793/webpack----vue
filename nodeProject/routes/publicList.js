@@ -6,7 +6,7 @@ const url = require('url')
 const util = require('util')
 const publicListRoutes = [
     {
-        path:'/app/publicList/template',
+        path:'/app/publicApi/template',
         done: (req,res)=>{
             let dataList = []
           fs.readFile(path.join(__dirname,'../file/publicList/template.json'),'utf-8',(err,data)=>{
@@ -33,64 +33,64 @@ const publicListRoutes = [
     },
     {
                 //列表查询
-                path: '/app/entiryList',
+                path: '/app/publicApi/list',
                 done: function (req, res) {
-                    let fileData = []
-                    //读取文件
-                    fs.readFile(path.join(__dirname, '../file/publicList/entiry.json'), 'utf8', (err, data) => {
-                        if (err) {
-                            console.log(err, '读取报错')
-                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], 'error')
-                            return
-                        } else {
-                            fileData = JSON.parse(data.toString())
-                        }
-        
-                        let postData = ''
-                        //请求流
-                        req.on('data', function (chunk) {
-                            postData += chunk
-                        })
-                        //请求结束
-                        req.on('end', function () {
-                            let reqData = JSON.parse(postData)
-                            let queryData = reqData.queryData
-                            let {pageSize,currentPage} = reqData
-                            // console.log(reqData,'请求数据')
-                            // console.log(fileData,'文件数据')
-                            let arr = []
-                            for(let val in queryData){
-                                console.log(val,'每一项的键')
-                                console.log(queryData[val],'每一项的值')
-                                if(queryData[val].toString()&&queryData[val].toString().length>0){
-                                    arr.push([val,queryData[val]])
-                                }
-                            }
-                            console.log(arr,'符合的数据')
-                            let list = []
-                            if(arr.length === 0){
-                                list = fileData
-                            }else{
-                                list = []
-                                fileData.forEach(item=>{
-                                   let flag = arr.every(n=>
-                                    item[n[0]].toString() === n[1].toString()
-                                   )
-                                   if(flag){
-                                    list.push(item)
-                                   }
-                                })
-                            }
-                            let filterData = list.slice((currentPage-1)*pageSize,currentPage*pageSize)
-                            console.log((currentPage-1)+(currentPage-1)*pageSize,currentPage*pageSize,'截取值')
-                            let resData = {
-                                total: list.length,
-                                list:filterData
-                            }
-                            callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, resData, 'success')
-                        })
+                    let postData = ''
+                    //请求流
+                    req.on('data', function (chunk) {
+                        postData += chunk
                     })
-        
+                    //请求结束
+                    req.on('end', function () {
+                        //解析参数
+                        let fileData = []
+                        let reqData = JSON.parse(postData)
+                        console.log(reqData,'请求参数')
+                        let {searchData,currentPage,pageSize,modeType} = reqData
+                        //读取文件
+                        fs.readFile(path.join(__dirname, `../file/publicList/${modeType}.json`), 'utf8', (err, data) => {
+                            if (err) {
+                                console.log(err, '读取报错')
+                                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], 'error')
+                                return
+                            } else {
+                                fileData = JSON.parse(data.toString())
+                                let arr = []
+                                for(let val in searchData){
+                                    console.log(val,'每一项的键')
+                                    console.log(searchData[val],'每一项的值')
+                                    if(searchData[val].toString()&&searchData[val].toString().length>0){
+                                        arr.push([val,searchData[val]])
+                                    }
+                                }
+                                console.log(arr,'符合的数据')
+                                let list = []
+                                if(arr.length === 0){
+                                    list = fileData
+                                }else{
+                                    list = []
+                                    fileData.forEach(item=>{
+                                       let flag = arr.every(n=>
+                                        item[n[0]].toString() === n[1].toString()
+                                       )
+                                       if(flag){
+                                        list.push(item)
+                                       }
+                                    })
+                                }
+                                console.log(list,'列表???')
+                                let filterData = list.slice((currentPage-1)*pageSize,currentPage*pageSize)
+                                console.log((currentPage-1)+(currentPage-1)*pageSize,currentPage*pageSize,'截取值')
+                                let resData = {
+                                    total: list.length,
+                                    list:filterData
+                                }
+                                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, resData, 'success')
+                            }
+            
+                        })
+
+                    })        
                 }
     },
     {

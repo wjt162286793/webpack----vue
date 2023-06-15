@@ -10,6 +10,8 @@
           <el-input
             v-model="templateData.searchData[item.name]"
             class="searchItem"
+            clearable
+            @change="reqList"
             :placeholder="item.placeholder"
           ></el-input>
         </div>
@@ -19,6 +21,8 @@
             class="searchItem"
             v-model="templateData.searchData[item.name]"
             :placeholder="item.placeholder"
+            clearable
+            @change="reqList"
           >
             <el-option
               v-for="(val, ind) in item.options"
@@ -146,6 +150,7 @@ import { Delete, Edit } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
 import { useRouter, useRoute } from "vue-router";
 import words from '@/dictionaries/wordList.json'
+import { ElMessage } from "element-plus";
 const props = defineProps({
   modeType: Object,
 });
@@ -155,7 +160,7 @@ let multipleTableRef = ref(null);
 let templateData = reactive({});
 let reqTemplate = () => {
   request
-    .post("/app/publicList/template", { name: props.modeType.type })
+    .post("/app/publicApi/template", { name: props.modeType.type })
     .then((res) => {
       templateData.searchTemplate = res.data.searchTemplate;
       templateData.searchData = res.data.searchData;
@@ -173,9 +178,11 @@ const handleSelectionChange = (val) => {
 //查询列表
 const reqList = () => {
   console.log(templateData, "末班");
-  let postData = templateData.searchData;
+  let postData = {}
+  postData.searchData = templateData.searchData;
   postData.currentPage = currentPage.value;
   postData.pageSize = pageSize.value;
+  postData.modeType = props.modeType.type
   // console.log(templateData.searchData,'搜索项')
   // tableData.value = [
   //   {
@@ -189,7 +196,7 @@ const reqList = () => {
   //     address: "No. 189, Grove St, Los Angeles",
   //   },
   // ];
-  request.post(`app/${route.name}`, postData).then((res) => {
+  request.post(`/app/publicApi/list`, postData).then((res) => {
     console.log(res, "列表信息");
     if (res.code === 200) {
       tableData.value = res.data.list;
@@ -218,7 +225,8 @@ const toAdd = () => {
   router.push({
     name: props.modeType.add,
     query:{
-      type:'new'
+      type:'new',
+      mode:props.modeType.type
     }
   });
 };
@@ -250,6 +258,15 @@ const editRow = (row) => {
 //删除
 const deleteRow = (row) => {
   console.log(row, "删除");
+  request.post(`/app/publicApi/delete`, {uuid:row.uuid}).then((res) => {
+    if (res.code === 200) {
+      ElMessage({
+        type:'success',
+        message:'删除成功'
+      })
+      reqList()
+    }
+  });
 };
 //从词表里获取对应值
 const getMap = (property,value) => {
