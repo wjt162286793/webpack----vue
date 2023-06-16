@@ -118,7 +118,7 @@
               type="danger"
               :icon="Delete"
               circle
-              @click="deleteRow(scope.row)"
+              @click="deleteDialogOpen(scope.row)"
             />
           </template>
         </el-table-column>
@@ -144,8 +144,22 @@
       </el-pagination>
     </div>
   </div>
+  <el-dialog
+    v-model="dialogDeleteVisible"
+    title="删除"
+    width="25%"
+  >
+    <span>{{deleteText}}</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="deleteRow">确定</el-button>
+        <el-button @click="dialogDeleteVisible = false">取消</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup>
+import lodash from 'lodash'
 import { Delete, Edit } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
 import { useRouter, useRoute } from "vue-router";
@@ -158,6 +172,9 @@ const router = useRouter();
 const route = useRoute();
 let multipleTableRef = ref(null);
 let templateData = reactive({});
+let dialogDeleteVisible = ref(false)
+let deleteText = ref('')
+let delRow = ref({})
 let reqTemplate = () => {
   request
     .post("/app/publicApi/template", { name: props.modeType.type })
@@ -175,35 +192,21 @@ let currentPage = ref(1);
 const handleSelectionChange = (val) => {
    
 };
-//查询列表
-const reqList = () => {
-  console.log(templateData, "末班");
+const reqListFun = ()=>{
   let postData = {}
   postData.searchData = templateData.searchData;
   postData.currentPage = currentPage.value;
   postData.pageSize = pageSize.value;
   postData.modeType = props.modeType.type
-  // console.log(templateData.searchData,'搜索项')
-  // tableData.value = [
-  //   {
-  //     date: "2016-05-03",
-  //     name: "Tom",
-  //     address: "No. 189, Grove St, Los Angeles",
-  //   },
-  //   {
-  //     date: "2016-05-02",
-  //     name: "Tom",
-  //     address: "No. 189, Grove St, Los Angeles",
-  //   },
-  // ];
-  request.post(`/app/publicApi/list`, postData).then((res) => {
-    console.log(res, "列表信息");
+    request.post(`/app/publicApi/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
     }
   });
-};
+}
+const reqList = lodash.throttle(reqListFun,2000)
+//查询列表
 //外部跳转
 const jumpUrl = (url)=>{
   window.open(`http://${url}`)
@@ -244,7 +247,6 @@ router.push({
 }
 //修改
 const editRow = (row) => {
-  console.log(row, "编辑");
   router.push({
   name:props.modeType.edit,
   query:{
@@ -255,15 +257,21 @@ const editRow = (row) => {
   })
 
 };
+function deleteDialogOpen(row){
+  delRow.value = row
+  deleteText.value = `确定要删除${row[props.modeType.type+'Name']}这条资产吗`
+  dialogDeleteVisible.value = true 
+}
 //删除
-const deleteRow = (row) => {
-  console.log(row, "删除");
-  request.post(`/app/publicApi/delete`, {uuid:row.uuid}).then((res) => {
+const deleteRow = () => {
+  console.log(delRow.value, "删除");
+  request.post(`/app/publicApi/delete`, {uuid:delRow.value.uuid,mode:props.modeType.type}).then((res) => {
     if (res.code === 200) {
       ElMessage({
         type:'success',
         message:'删除成功'
       })
+      dialogDeleteVisible.value = false
       reqList()
     }
   });

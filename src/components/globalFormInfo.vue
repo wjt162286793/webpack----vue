@@ -81,8 +81,8 @@
 
     </el-form>
     <div class="footer">
-      <el-button type="primary" @click="save(ruleFormRef)" v-if="route.query.type === 'new'"> 创建 </el-button>
-      <el-button type="primary" @click="save(ruleFormRef)" v-if="route.query.type === 'edit'"> 保存 </el-button>
+      <el-button type="primary" @click="add(ruleFormRef)" v-if="route.query.type === 'new'"> 创建 </el-button>
+      <el-button type="primary" @click="edit(ruleFormRef)" v-if="route.query.type === 'edit'"> 保存 </el-button>
       <el-button @click="jumpToList">返回</el-button>
     </div>
   </div>
@@ -141,7 +141,7 @@ const reqFormData = ()=>{
     uuid:route.query.uuid,
     mode:route.query.mode
   }
-  request.post('/app/detailInfo',query).then(res=>{
+  request.post('/app/publicApi/detail',query).then(res=>{
     if(res.code === 200){
       for(let val in res.data){
         formData[val] = res.data[val]
@@ -170,13 +170,37 @@ const requestFile = (a, b) => {
   console.log(a, b, '自上传文件')
   formData['upload'] = 'youtube.com'
 }
-const save = (ruleFormRef) =>{
-  formData.mode = route.name
-  console.log(ruleFormRef,'???')
+const add = (ruleFormRef) =>{
+  formData.mode = route.query.mode
   if(!ruleFormRef) return
   ruleFormRef.validate((valid,fields)=>{
     if(valid){
       request.post('/app/publicApi/add',formData).then(res=>{
+        if(res.code === 200){
+          ElMessage({
+          message:res.message,
+          type:'success'
+        })
+        jumpToList()
+        }else{
+          ElMessage({
+          message:res.message,
+          type:'warning'
+        })
+        }
+
+      })
+    }else{
+
+    }
+  })
+}
+const edit = (ruleFormRef) =>{
+  formData.mode = route.query.mode
+  if(!ruleFormRef) return
+  ruleFormRef.validate((valid,fields)=>{
+    if(valid){
+      request.post('/app/publicApi/edit',formData).then(res=>{
         if(res.code === 200){
           ElMessage({
           message:res.message,
