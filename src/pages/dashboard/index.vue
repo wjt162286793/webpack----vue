@@ -116,6 +116,7 @@ const getBreadList = (routePath, allRouters) => {
     }
   });
   console.log(breadList, "面包屑列表");
+  menuActive.value = breadList[1].name
 };
 const leftMenuList = router.options.routes.find(
   (item) => item.name === "dashboard"
