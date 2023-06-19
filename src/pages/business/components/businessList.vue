@@ -15,7 +15,13 @@
         clearable
         @change="reqList"
       />
-      <el-select v-model="query.status" class="m-2" placeholder="选择资产状态" @change="reqList" clearable>
+      <el-select
+        v-model="query.status"
+        class="m-2"
+        placeholder="选择资产状态"
+        @change="reqList"
+        clearable
+      >
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -27,12 +33,7 @@
       <el-button type="primary" @click="jumpAdd">新增</el-button>
     </div>
     <div class="table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        :border="true"
-        stripe
-      >
+      <el-table :data="tableData" style="width: 100%" :border="true" stripe>
         <el-table-column label="英文名称" width="240" fixed="left">
           <template #default="scope">
             <el-link type="primary">{{ scope.row.name }}</el-link>
@@ -49,11 +50,12 @@
             <span>{{ filterUtils(scope.row.status, "status") }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="entiry" label="关联实体">
+        <!-- <el-table-column prop="entiry" label="关联实体">
           <template #default="scope">
             <span>{{ filterUtils(scope.row.entiry, "entiry") }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
+        <el-table-column prop="uuid" label="业务领域编号" width="400" />
         <el-table-column prop="time" label="最后操作时间" width="240" />
         <el-table-column label="操作" fixed="right" width="120">
           <template #default="scope">
@@ -132,8 +134,8 @@ let query = reactive({
   user: "",
   status: "",
 });
-let pageSize = 10
-let currentPage = ref(1)
+let pageSize = 10;
+let currentPage = ref(1);
 const filterUtils = (value, flag) => {
   return dirct[flag].find((item) => item.value == value).label;
 };
@@ -163,10 +165,10 @@ const buttons = [
 ];
 const reqList = () => {
   let postData = {
-    queryData:toRaw(query),
+    queryData: toRaw(query),
     pageSize,
-    currentPage:currentPage.value
-  }
+    currentPage: currentPage.value,
+  };
   request.post("/app/business/list", postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
