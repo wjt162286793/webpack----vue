@@ -1,0 +1,156 @@
+[
+    {
+        "title": "基本信息",
+        "formList": [
+            {
+                "name": "valueflowName",
+                "label": "价值流名称",
+                "type": "input",
+                "required": true,
+                "editDisabled": true,
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "价值流名称为必输项",
+                        "trigger": "blur"
+                    },
+                    {
+                        "min": 6,
+                        "max": 12,
+                        "message": "请输入6到12位之间的字符",
+                        "trigger": "blur"
+                    },
+                    {
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9-]*$",
+                        "message": "只可以输入英文,中划线,数字,并且必须以英文开头",
+                        "trigger": "blur"
+                    }
+                ],
+                "remark": "请输入6到12位之间的英文、中划线、数字,并且必须以英文开头",
+                "default": ""
+            },
+            {
+                "name": "valueflowCnName",
+                "label": "价值流中文名",
+                "type": "input",
+                "required": true,
+                "editDisabled": true,
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "价值流中文名称为必输项",
+                        "trigger": "blur"
+                    },
+                    {
+                        "min": 3,
+                        "max": 12,
+                        "message": "请输入3到12位之间的字符",
+                        "trigger": "blur"
+                    },
+                    {
+                        "pattern": "^[\\u4e00-\\u9fa5][\\u4e00-\\u9fa5a-zA-Z0-9-]*$",
+                        "message": "只可以输入中文,中划线,数字,并且必须以中文开头",
+                        "trigger": "blur"
+                    }
+                ],
+                "remark": "请输入3到12位之间的中文、中划线、数字,并且必须以中文开头",
+                "default": ""
+            },
+
+            {
+                "name": "description",
+                "label": "描述",
+                "type": "textarea",
+                "required": false,
+                "default": "",
+                "editDisabled": false,
+                "rule": false
+            }
+        ]
+    },
+    {
+        "title": "配置信息",
+        "formList": [
+            {
+                "name": "standardType",
+                "label": "标准化",
+                "type": "select",
+                "required": true,
+                "rule": false,
+                "default": null,
+                "editDisabled": true,
+                "options": [
+                    {
+                        "label": "节能",
+                        "value": "energy"
+                    },
+                    {
+                        "label": "工艺",
+                        "value": "craft"
+                    },
+                    {
+                        "label": "安全",
+                        "value": "safe"
+                    },
+                    {
+                        "label": "效益",
+                        "value": "benefit"
+                    }
+                ]
+            },
+            {
+                "name": "shareList",
+                "label": "共享人员",
+                "type": "multiple_select",
+                "required": false,
+                "options": [],
+                "optionsSource": "request",
+                "requestMethod":"get",
+                "params":{},
+                "editDisabled": false,
+                "default": [],
+                "requestName": "/user/userAllList",
+                "rule": false
+            },
+            {
+                "name": "recomentiry",
+                "label": "选择实体",
+                "type": "select",
+                "required": true,
+                "options": [],
+                "optionsSource": "request",
+                "requestMethod":"post",
+                "requestName": "/publicApi/all",
+                "editDisabled": false,
+                "default": [],
+                "query":{
+                    "mode":"entiry"
+                },
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "必须选择对应的实体",
+                        "trigger": "change"
+                    }
+                ]
+            },
+            {
+                "name": "timeRange",
+                "label": "生命周期",
+                "type": "timeRange",
+                "required": true,
+                "editDisabled": false,
+                "rule": [
+                    {
+                        "required": true,
+                        "message": "请选择生命周期",
+                        "trigger": "change"
+                    }
+                ],
+                "default": [],
+                "scope": true,
+                "disabledScoped": "beforeNow"
+            }
+        ]
+    }
+]

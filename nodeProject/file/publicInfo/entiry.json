@@ -123,6 +123,8 @@
                 "required": false,
                 "options": [],
                 "optionsSource": "request",
+                "requestMethod":"get",
+                "query":{},
                 "editDisabled": false,
                 "default": [],
                 "requestName": "/user/userAllList",
@@ -163,14 +165,14 @@
             },
             {
                 "name": "code",
-                "label": "资产编码",
+                "label": "业主识别码",
                 "type": "input",
                 "required": true,
                 "editDisabled": true,
                 "rule": [
                     {
                         "required": true,
-                        "message": "资产编码为必输项",
+                        "message": "业主识别码为必输项",
                         "trigger": "blur"
                     },
                     {
@@ -189,8 +191,8 @@
                 "remark": "资产的归属号,可以不唯一"
             },
             {
-                "name": "textData",
-                "label": "文本数据",
+                "name": "addressUrl",
+                "label": "实体地址",
                 "type": "input",
                 "required": false,
                 "rule": false,

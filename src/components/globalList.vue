@@ -91,6 +91,15 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-else-if="item.column === 'timeRange'"
+            :width="item.width"
+            :label="item.label"
+          >
+            <template #default="scope">
+              <p>{{ getTimeRange(item.property,scope.row[item.property]) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column
             v-else-if="item.column === 'jumpOut'"
             :width="item.width"
             :label="item.label"
@@ -281,6 +290,11 @@ const getMap = (property,value) => {
   let val = words[route.name][property][value]
   return val;
 };
+const getTimeRange = (property,value) => {
+  console.log(property,value,'???取词?')
+ let str = `${value[0]}  至  ${value[1]}`
+ return str
+}
 onMounted(() => {
   reqTemplate();
 });

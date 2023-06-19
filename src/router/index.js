@@ -128,7 +128,41 @@ const asyncRoutes = [
                 meta: {
                     name: '价值流'
                 },
-                component: () => import('pages/valueflow/index.vue')
+                component: () => import('pages/valueflow/index.vue'),
+                children: [
+                    {
+                        path: '/dashboard/valueflow/valueflowList',
+                        name: 'valueflowList',
+                        meta: {
+                            name: '列表'
+                        },
+                        component: () => import('pages/valueflow/components/valueflowList.vue')
+                    },
+                    {
+                        path: '/dashboard/valueflow/valueflowAdd',
+                        name: 'valueflowAdd',
+                        meta: {
+                            name: '新增'
+                        },
+                        component: () => import('pages/valueflow/components/valueflowAdd.vue')
+                    },
+                    {
+                        path: '/dashboard/valueflow/valueflowEdit',
+                        name: 'valueflowEdit',
+                        meta: {
+                            name: '编辑'
+                        },
+                        component: () => import('pages/valueflow/components/valueflowEdit.vue')
+                    },
+                    {
+                        path: '/dashboard/valueflow/valueflowDetail',
+                        name: 'valueflowDetail',
+                        meta: {
+                            name: '查看'
+                        },
+                        component: () => import('pages/valueflow/components/valueflowDetail.vue')
+                    }
+                ]
             },
             {
                 path: '/dashboard/task',
@@ -136,7 +170,41 @@ const asyncRoutes = [
                 meta: {
                     name: '任务管理'
                 },
-                component: () => import('pages/task/index.vue')
+                component: () => import('pages/task/index.vue'),
+                children: [
+                    {
+                        path: '/dashboard/task/taskList',
+                        name: 'taskList',
+                        meta: {
+                            name: '列表'
+                        },
+                        component: () => import('pages/task/components/taskList.vue')
+                    },
+                    {
+                        path: '/dashboard/task/taskAdd',
+                        name: 'taskAdd',
+                        meta: {
+                            name: '新增'
+                        },
+                        component: () => import('pages/task/components/taskAdd.vue')
+                    },
+                    {
+                        path: '/dashboard/task/taskEdit',
+                        name: 'taskEdit',
+                        meta: {
+                            name: '编辑'
+                        },
+                        component: () => import('pages/task/components/taskEdit.vue')
+                    },
+                    {
+                        path: '/dashboard/task/taskDetail',
+                        name: 'taskDetail',
+                        meta: {
+                            name: '查看'
+                        },
+                        component: () => import('pages/task/components/taskDetail.vue')
+                    }
+                ]
             },
             {
                 path: '/dashboard/risk',

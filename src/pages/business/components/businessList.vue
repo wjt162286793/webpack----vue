@@ -55,25 +55,20 @@
           </template>
         </el-table-column>
         <el-table-column prop="time" label="最后操作时间" width="240" />
-        <el-table-column label="Operations" fixed="right" width="120">
+        <el-table-column label="操作" fixed="right" width="120">
           <template #default="scope">
-            <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="编辑"
-              placement="top"
-            >
-              <Edit class="operaIcon" @click="jumpEdit(scope.row)" />
-            </el-tooltip>
-            <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="删除"
-              placement="top"
-            >
-              <Delete class="operaIcon" @click="deleteDialog(scope.row)" />
-            </el-tooltip>
-            <span></span>
+            <el-button
+              type="primary"
+              :icon="Edit"
+              circle
+              @click="jumpEdit(scope.row)"
+            />
+            <el-button
+              type="danger"
+              :icon="Delete"
+              circle
+              @click="deleteDialog(scope.row)"
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -109,6 +104,7 @@
   </el-dialog>
 </template>
 <script setup>
+import { Delete, Edit } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import request from "@/utils/requestUtils";
 import dirct from "@/dictionaries/business.json";

@@ -62,6 +62,27 @@
     </div>
     <img src="@/assets/svg/菜单.svg" alt="" @click="unfold" class="menuIcon" />
   </div>
+  <el-dialog v-model="dialogUserInfoVisible" title="用户信息">
+    <el-form :model="form">
+      <el-form-item label="Promotion name" :label-width="formLabelWidth">
+        <el-input v-model="form.name" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="Zones" :label-width="formLabelWidth">
+        <el-select v-model="form.region" placeholder="Please select a zone">
+          <el-option label="Zone No.1" value="shanghai" />
+          <el-option label="Zone No.2" value="beijing" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -74,6 +95,7 @@ import {
   Setting,
 } from "@element-plus/icons-vue";
 const interInstance = getCurrentInstance();
+const dialogUserInfoVisible = ref(false)
 let menuActive = ref("dashboard");
 //全量路由
 let router = useRouter();
@@ -116,7 +138,10 @@ const getBreadList = (routePath, allRouters) => {
     }
   });
   console.log(breadList, "面包屑列表");
-  menuActive.value = breadList[1].name
+  if(breadList.length > 1){
+    menuActive.value = breadList[1].name
+  }
+  
 };
 const leftMenuList = router.options.routes.find(
   (item) => item.name === "dashboard"
@@ -177,6 +202,9 @@ const Iconto = (val) => {
       break;
     case "full":
     screenfull.toggle()
+      break;
+    case "user":
+
   }
 };
 const breadJump = (breadName) => {

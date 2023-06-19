@@ -74,10 +74,10 @@
         "column": "map"
       },
       {
-        "property": "url",
-        "label": "链接",
-        "width": "width",
-        "column": "jumpOut"
+        "property": "uuid",
+        "label": "实体编码",
+        "width": "400",
+        "column": "normal"
       },
       {
         "property": "updateTime",
@@ -89,6 +89,142 @@
     "searchData": {
       "entiryName": "",
       "entiryType": ""
+    }
+  },
+  "valueflow": {
+    "searchTemplate": [
+      {
+        "name": "valueflowName",
+        "type": "input",
+        "label": "价值流名称",
+        "placeholder": "请输入价值流名称",
+        "show": true
+      },
+      {
+        "name": "uuid",
+        "type": "input",
+        "label": "价值流编码",
+        "placeholder": "请输入价值流编码",
+        "show": true
+      },
+      {
+        "name": "searchBtn",
+        "type": "button",
+        "btnType": "primary",
+        "text": "查询",
+        "event": "search"
+      },
+      {
+        "name": "addBtn",
+        "type": "button",
+        "btnType": "primary",
+        "text": "新增",
+        "event": "toAdd"
+      }
+    ],
+    "tableTemplate": [
+      {
+        "property": "valueflowName",
+        "label": "价值流名称",
+        "width": 200,
+        "column": "details"
+      },
+      {
+        "property": "valueflowCnName",
+        "label": "价值流中文名称",
+        "width": 200,
+        "column": "normal"
+      },
+      {
+        "property": "uuid",
+        "label": "价值流编码",
+        "width": 400,
+        "column": "normal"
+      },
+      {
+        "property": "timeRange",
+        "label": "生命周期",
+        "width": 400,
+        "column": "timeRange"
+      },
+      {
+        "property": "updateTime",
+        "label": "最近更新时间",
+        "width": 200,
+        "column": "normal"
+      }
+    ],
+    "searchData": {
+      "valueflowName": "",
+      "uuid": ""
+    }
+  },
+  "task": {
+    "searchTemplate": [
+      {
+        "name": "taskName",
+        "type": "input",
+        "label": "任务名称",
+        "placeholder": "请输入任务名称",
+        "show": true
+      },
+      {
+        "name": "uuid",
+        "type": "input",
+        "label": "任务编码",
+        "placeholder": "请输入任务编码",
+        "show": true
+      },
+      {
+        "name": "searchBtn",
+        "type": "button",
+        "btnType": "primary",
+        "text": "查询",
+        "event": "search"
+      },
+      {
+        "name": "addBtn",
+        "type": "button",
+        "btnType": "primary",
+        "text": "新增",
+        "event": "toAdd"
+      }
+    ],
+    "tableTemplate": [
+      {
+        "property": "taskName",
+        "label": "任务名称",
+        "width": 200,
+        "column": "details"
+      },
+      {
+        "property": "taskCnName",
+        "label": "任务中文名称",
+        "width": 200,
+        "column": "normal"
+      },
+      {
+        "property": "uuid",
+        "label": "任务编码",
+        "width": 400,
+        "column": "normal"
+      },
+      {
+        "property": "timeRange",
+        "label": "生命周期",
+        "width": 400,
+        "column": "timeRange"
+      },
+      {
+        "property": "updateTime",
+        "label": "最近更新时间",
+        "width": 200,
+        "column": "normal"
+      }
+    ],
+    "searchData": {
+      "taskName": "",
+      "uuid": ""
     }
   }
 }

@@ -151,11 +151,11 @@ const publicListRoutes = [
                         let list = oldData
                         // list.push(JSON.parse(postData))
                         if (oldData.length > 0) {
-                            if (list.findIndex(item => reqData.entiryName == item.entiryName) != -1) {
+                            if (list.findIndex(item => reqData[`${reqData.mode}Name`] == item[`${reqData.mode}Name`]) != -1) {
                                 //匹配到相同实体名
                                 callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该实体已被注册')
                                 return
-                            } else if (list.findIndex(item => reqData.entiryCnName == item.entiryCnName) != -1) {
+                            } else if (list.findIndex(item => reqData[`${reqData.mode}Name`] == item[`${reqData.mode}Name`]) != -1) {
                                 //匹配到相同的中文名
                                 callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该实体已被注册')
                                 return
@@ -260,6 +260,28 @@ const publicListRoutes = [
                 }
             })
 
+            })
+        }
+    },
+    {
+        path:'/app/publicApi/all',
+        done:(req,res)=>{
+            let postData = ''
+            let reqData = ''
+            req.on('data',(chunk)=>{
+               postData+=chunk
+            })
+            req.on('end',()=>{
+                reqData = JSON.parse(postData)
+                console.log(reqData,'模板的数据')
+                fs.readFile(path.join(__dirname,`../file/publicList/${reqData.mode}.json`),'utf8',(err,data)=>{
+                    if(err){
+                      console.log(err,'报错')
+                    }else{
+                        let fileData = JSON.parse(data.toString())
+                        callBack(res,'Content-Type', 'application/json; charset=utf-8', 200, fileData, 'success')
+                    }
+                })
             })
         }
     }

@@ -67,8 +67,32 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item v-else-if="item.type === 'date'" :label="item.label" :prop="item.name">
-              <el-date-picker class="formItem" v-model="formData[item.name]" type="date" :disabled-date="setDisableDate"
+              <div class="timeBox">
+                <el-date-picker class="formItem" v-model="formData[item.name]" type="date" :disabled-date="setDisableDate"
                 size="default" value-format="YYYY-MM-DD" clearable :disabled="disabledFun(item.editDisabled)"/>
+              </div>
+              <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
+                <el-icon size="20px" class="iconBox">
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item v-else-if="item.type === 'timeRange'" :label="item.label" :prop="item.name">
+              <div class="timeBox">
+                <el-date-picker
+              class="formItem"
+              v-model="formData[item.name]"
+        type="daterange"
+        :disabled-date="setDisableDate"
+        size="default"
+        range-separator="至"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        :disabled="disabledFun(item.editDisabled)"
+        value-format="YYYY-MM-DD"
+        :size="size"
+      />
+              </div>
               <el-tooltip v-if="item.remark" class="box-item" effect="dark" :content="item.remark" placement="top">
                 <el-icon size="20px" class="iconBox">
                   <QuestionFilled />
@@ -100,7 +124,7 @@ let rules = reactive({});
 let fileList = ref([])
 let ruleFormRef = ref(null)
 const reqTemplate = () => {
-  request.post("/app/publicForm/template", { type: "entiry" }).then((res) => {
+  request.post("/app/publicForm/template", { type: route.query.mode }).then((res) => {
     if(res.code === 200){
       templateList.value = res.data;
     //组织数据
@@ -154,7 +178,8 @@ const setDisableDate = (time) => {
 }
 
 const requestOPtions = (item) => {
-  request.get(`/app${item.requestName}`).then(res => {
+  if(item.requestMethod === 'get'){
+    request.get(`/app${item.requestName}`).then(res => {
     if(res.code === 200){
       item.options = res.data
     }else{
@@ -165,6 +190,27 @@ const requestOPtions = (item) => {
     }
     
   })
+  }else{
+    console.log(item,'???---探索')
+    request.post(`/app${item.requestName}`,item.query).then(res => {
+    if(res.code === 200){
+      res.data.forEach(v=>{
+        console.log(v,)
+        item.options.push({
+          label:v[`${item.query['mode']}CnName`],
+          value:v.uuid
+        })
+      })
+    }else{
+      ElMessage({
+          message:res.message,
+          type:'warning'
+        })
+    }
+    
+  })
+  }
+
 }
 const requestFile = (a, b) => {
   console.log(a, b, '自上传文件')
@@ -261,6 +307,10 @@ onMounted(() => {
     width: 480px;
     // margin: 20px;
     // display: flex;
+  }
+  .timeBox{
+    width:480px;
+    display: flex;
   }
 
   /deep/ .el-form-item__content {
