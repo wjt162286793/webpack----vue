@@ -246,14 +246,13 @@
                 </el-icon>
               </el-tooltip>
             </el-form-item>
+            <el-form-item v-else-if="item.type === 'flowChart'" :label="item.label">
+               <el-button @click="openFlowChart" type="primary">打开画布</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </template>
     </el-form>
-    <div v-show="route.query.mode === 'valueflow'">
-      <h4>价值流程图</h4>
-      <GlobalFlow></GlobalFlow>
-    </div>
     <div class="footer">
       <el-button
         type="primary"
@@ -272,6 +271,22 @@
       <el-button @click="jumpToList">返回</el-button>
     </div>
   </div>
+  <el-dialog
+    v-model="dialogFlowChart"
+    title="价值流程图"
+    width="80%"
+    :before-close="handleClose"
+  >
+    <GlobalFlow ref="globalFlow"></GlobalFlow>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFlowChart = false">取消</el-button>
+        <el-button type="primary" @click="dialogFlowChart = false">
+          保存
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup>
 import { useRouter, useRoute } from "vue-router";
@@ -286,6 +301,8 @@ let formData = reactive({});
 let rules = reactive({});
 let fileList = ref([]);
 let ruleFormRef = ref(null);
+let dialogFlowChart = ref(false)
+let globalFlow = ref(null)
 const reqTemplate = () => {
   request
     .post("/app/publicForm/template", { type: route.query.mode })
@@ -442,6 +459,12 @@ const disabledFun = (flag) => {
     return false;
   }
 };
+const openFlowChart = ()=>{
+dialogFlowChart.value = true
+}
+const handleClose = ()=>{
+  dialogFlowChart.value = false
+}
 onMounted(() => {
   reqTemplate();
 });

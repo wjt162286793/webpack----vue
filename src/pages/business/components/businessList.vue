@@ -45,7 +45,7 @@
             <span>{{ filterUtils(scope.row.user, "user") }}</span>
           </template> -->
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="120">
+        <el-table-column prop="status" label="状态" width="width">
           <template #default="scope">
             <span>{{ filterUtils(scope.row.status, "status") }}</span>
           </template>

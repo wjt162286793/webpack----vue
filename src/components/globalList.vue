@@ -291,7 +291,6 @@ const getMap = (property,value) => {
   return val;
 };
 const getTimeRange = (property,value) => {
-  console.log(property,value,'???取词?')
  let str = `${value[0]}  至  ${value[1]}`
  return str
 }

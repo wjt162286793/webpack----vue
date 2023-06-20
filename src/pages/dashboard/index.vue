@@ -112,7 +112,6 @@ let breadList = reactive([
 const getBreadList = (routePath, allRouters) => {
   breadList.splice(0, breadList.length);
   let pathList = routePath.split("/");
-  console.log(pathList, "路由路径");
   pathList.shift();
   pathList.forEach((item, index) => {
     if (item === "dashboard") {
@@ -124,7 +123,6 @@ const getBreadList = (routePath, allRouters) => {
           cname: val.meta.name,
           name: val.name,
         });
-        console.log(val, "1层值");
         if (val.children) {
           let m = val.children.find((v) => v.name === pathList[index + 1]);
           if (m) {
@@ -137,7 +135,6 @@ const getBreadList = (routePath, allRouters) => {
       }
     }
   });
-  console.log(breadList, "面包屑列表");
   if(breadList.length > 1){
     menuActive.value = breadList[1].name
   }
@@ -238,7 +235,6 @@ const jumpMode = (name) => {
 //   },
 // };
 onMounted(() => {
-  console.log(route.name, "目前路由");
   if (route.path === "/dashboard") {
     router.push({ path: "/dashboard/business" });
     menuActive.value = "business";
@@ -249,7 +245,6 @@ onMounted(() => {
   watch(
     () => route.path,
     (newVal, oldVal) => {
-      console.log(newVal,'全的')
       getBreadList(newVal, router.options.routes[3].children);
       if (newVal === "/dashboard") {
         router.push({ path: "/dashboard/business" });
