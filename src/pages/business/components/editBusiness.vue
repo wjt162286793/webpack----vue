@@ -116,7 +116,11 @@
         label="模型规范"
         width="240"
         show-overflow-tooltip
-      />
+      >
+     <template #default="scope">
+      <span>{{ filterModeType(scope) }}</span>
+     </template>
+    </el-table-column>
       <el-table-column property="id" label="id" width="width" />
       <el-table-column label="操作" width="240">
         <template #default="scope">
@@ -167,6 +171,7 @@ import Visual from "./visual.vue";
 import { v4 as uuidv4 } from "uuid";
 import { Delete, Edit } from "@element-plus/icons-vue";
 import datas from "../data.json";
+import word from "@/dictionaries/business.json";
 import { onMounted } from "vue";
 let ruleForm = reactive({
   name: "",
@@ -221,7 +226,10 @@ const rules = reactive({
     },
   ],
 });
-
+const filterModeType = (scope)=>{
+  console.log(word.typeOptions,scope.row.modeType,'???什么')
+  return word.typeOptions.find(item=>item.value === scope.row.modeType)['label']
+}
 const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate((valid, fields) => {
@@ -261,12 +269,7 @@ const goBack = () => {
 const getLists = () => {
   request.get("/app/user/userAllList").then((res) => {
     if (res.code == 200) {
-      res.data.forEach((item) => {
-        userList.value.push({
-          label: item.userName,
-          value: item.name,
-        });
-      });
+      userList.value = res.data
     }
   });
   request.post("/app/publicApi/all", { mode: "entiry" }).then((res) => {
@@ -399,7 +402,7 @@ h4 {
     height: 40px;
     width: 100%;
     position: absolute;
-    bottom: 0px;
+    bottom: 30px;
     left: 0px;
     display: flex;
     padding-right: 20px;

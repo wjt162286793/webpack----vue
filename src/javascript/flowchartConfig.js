@@ -6,7 +6,7 @@ const allConfig = {
            svgName:'范围'
         },
         {
-            name:'entity',
+            name:'entiry',
             title:'实物',
             svgName:'矩形'
          },
@@ -34,6 +34,11 @@ const allConfig = {
             name:'danger',
             title:'风险点',
             svgName:'注意'
+         },
+         {
+            name:'link',
+            title:'连接线',
+            svgName:'连接'
          },
     ]
 }

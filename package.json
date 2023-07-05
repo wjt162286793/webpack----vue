@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@jiaminghi/data-view": "^2.10.0",
     "@logicflow/core": "^1.2.7",
     "@logicflow/extension": "^1.2.7",
     "@wangeditor/editor": "^5.1.23",

@@ -150,7 +150,7 @@ defineExpose({
 });
 </script>
 <style lang="less" scoped>
-/deep/ .el-form-item {
+::v-deep(.el-form-item)  {
   display: flex;
   flex-direction: column !important;
 }

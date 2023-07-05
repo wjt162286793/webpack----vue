@@ -152,18 +152,5 @@
                 "disabledScoped": "beforeNow"
             }
         ]
-    },
-    {
-        "title": "价值流程图",
-        "formList": [
-            {
-                "name": "flowChart",
-                "label": "绘制-流程图",
-                "type": "flowChart",
-                "required": false,
-                "editDisabled": false,
-                "default": {}
-            }
-        ]
     }
 ]

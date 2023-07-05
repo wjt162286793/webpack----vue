@@ -231,12 +231,12 @@ onMounted(() => {
   // overflow: auto;
 }
 
-/deep/ .rel-map-canvas {
+::v-deep(.rel-map-canvas ) {
   position: relative;
   // background-image: url(../../../assets/img/umbrella.jpeg);
 }
 
-/deep/ .c-mini-toolbar {
+::v-deep(.c-mini-toolbar)  {
   margin-left: 1600px;
   margin-top: 0;
 }

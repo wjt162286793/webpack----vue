@@ -97,25 +97,14 @@ import { ElMessage } from "element-plus";
 import lodash from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { reactive } from "vue";
+import word from "@/dictionaries/business.json";
 import RightForm from "./rightForm";
 //名称和规范
+console.log(typeOptions,'下拉框类型')
+let typeOptions = word.typeOptions
 let scenario_name = ref("");
 let mode_type = ref("");
 let doneFlag = ref("new");
-let typeOptions = ref([
-  {
-    value: 1,
-    label: "精品",
-  },
-  {
-    value: 2,
-    label: "标准",
-  },
-  {
-    value: 3,
-    label: "草稿",
-  },
-]);
 //拖拽组件实例
 const draggable = VueDraggableNext;
 let plumbBox = null;
@@ -128,7 +117,6 @@ let plumbList = ref([]);
 let renderFlag = ref(undefined);
 //动态节点
 let activeNode = ref({});
-let inputVal = ref("名称1");
 let rightForm = ref(null);
 /*
 ----------------------------------------------

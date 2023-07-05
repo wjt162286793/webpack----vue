@@ -338,12 +338,12 @@ let initChart = () => {
 .transportMonitoringMap {
   width: 100%;
   height: 100%;
-  /deep/ div{
+  div{
      width: 100% !important;
      height: 100% !important;
      overflow: auto !important;
   }
-  /deep/ canvas{
+   canvas{
    width: 100% !important;
    height: 100% !important;
   }

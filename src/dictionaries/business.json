@@ -58,5 +58,19 @@
             "label": "公共基础设施",
             "value": "6"
         }
+    ],
+    "typeOptions":[
+        {
+            "value": 1,
+            "label": "精品"
+          },
+          {
+            "value": 2,
+            "label": "标准"
+          },
+          {
+            "value": 3,
+            "label": "草稿"
+          }
     ]
 }

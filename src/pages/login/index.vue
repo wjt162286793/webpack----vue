@@ -289,14 +289,14 @@ export default {
       }
     }
   }
-  /deep/ .el-form-item__content {
+  ::v-deep(.el-form-item__content)  {
     margin-left: 40px !important;
   }
-  /deep/ .el-input {
+  ::v-deep(.el-input)  {
     width: 330px !important;
   }
 }
-/deep/ .el-form-item__label {
+::v-deep(.el-form-item__label)  {
   width: 100px !important;
 }
 </style>

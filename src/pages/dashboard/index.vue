@@ -294,6 +294,7 @@ onMounted(() => {
   .layoutBody {
     display: flex;
     flex-grow: 1;
+    overflow: auto;
     // .leftMenu {
     //   // width: 200px; /* 设置左侧边栏宽度 */
     //   transition: width 0.2s;
@@ -319,10 +320,10 @@ onMounted(() => {
         span {
           cursor: pointer;
         }
-        // /deep/ .el-breadcrumb__inner {
+        // ::v-deep() .el-breadcrumb__inner {
         //   color: #fff !important;
         // }
-        // /deep/ .el-breadcrumb__separator {
+        // ::v-deep() .el-breadcrumb__separator {
         //   color: #fff !important;
         // }
       }
@@ -337,7 +338,7 @@ onMounted(() => {
   width: 200px !important;
   min-height: 400px;
 }
-/deep/ .el-menu {
+::v-deep(.el-menu)  {
   border-right: none !important;
 }
 .menuIcon {

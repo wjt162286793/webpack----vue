@@ -271,10 +271,11 @@
       <el-button @click="jumpToList">返回</el-button>
     </div>
   </div>
-  <el-dialog
+  <div class="fullDiaLog">
+    <el-dialog
+  fullscreen
     v-model="dialogFlowChart"
-    title="价值流程图"
-    width="80%"
+    title="实体模型图"
     :before-close="handleClose"
   >
     <GlobalFlow ref="globalFlow"></GlobalFlow>
@@ -287,6 +288,8 @@
       </span>
     </template>
   </el-dialog>
+  </div>
+
 </template>
 <script setup>
 import { useRouter, useRoute } from "vue-router";
@@ -330,7 +333,6 @@ const reqTemplate = () => {
         });
         console.log(route.query.uuid, "uuid的值");
         if (route.query.type !== "new") {
-          console.log("进来了???");
           reqFormData();
         }
       } else {
@@ -496,7 +498,7 @@ onMounted(() => {
     display: flex;
   }
 
-  /deep/ .el-form-item__content {
+  ::v-deep(.el-form-item__content ) {
     display: flex;
     flex-wrap: nowrap;
   }
@@ -510,11 +512,19 @@ onMounted(() => {
     height: 40px;
     width: 100%;
     position: absolute;
-    bottom: 0px;
+    bottom: 30px;
     left: 0px;
     display: flex;
     padding-right: 20px;
     justify-content: flex-end;
   }
+}
+.fullDiaLog{
+  ::v-deep(.el-dialog__header) {
+  height: 50px !important;
+}
+::v-deep(.el-dialog__body) {
+  padding: 0px !important;
+}
 }
 </style>
