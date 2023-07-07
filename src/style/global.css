@@ -29,6 +29,8 @@
   line-height: 100px;
 }
 .modeBox {
+  overflow: auto;
+  flex: 1;
   height: 100%;
   background: var(--backround-color5);
 }

@@ -402,7 +402,7 @@ h4 {
     height: 40px;
     width: 100%;
     position: absolute;
-    bottom: 30px;
+    bottom: 10px;
     left: 0px;
     display: flex;
     padding-right: 20px;

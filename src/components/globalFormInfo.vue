@@ -473,7 +473,7 @@ onMounted(() => {
 </script>
 <style lang="less" scoped>
 .mainBox {
-  height: 100%;
+  overflow: auto;
   padding: 10px;
   padding-bottom: 50px;
   position: relative;

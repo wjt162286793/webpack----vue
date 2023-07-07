@@ -8,7 +8,7 @@
         <el-row>
           <draggable @start="moveStart" @end="moveEnd" v-model="lengendList" :options="dragOptions" style="display: contents;">
             <el-col :span="12" v-for="(legendItem,lengendIndex) in lengendList" :key="lengendIndex">
-      <div :class="lengendClass(legendItem.name)" @click="clickLengend(legendItem.name)">
+      <div :class="lengendClass(legendItem.name)"  :node_type="legendItem.name" @mousedown="clickLengend(legendItem.name)">
         <img :src="require(`@/assets/flowchartSvg/${legendItem.svgName}.svg`)" alt="">
         <span>{{ legendItem.title }}</span>
       </div>
@@ -19,7 +19,7 @@
       </div>
     </div>
      <div :class="!isMode?'chartNormal':'chartMode'">
-      <canvas width="1500" height="800" id="canvas" @mousedown="canvasDown" @mouseup="canvasUp" @mousemove="canvasMove"></canvas>
+      <canvas width="1500" height="800" id="canvas" @mousedown="canvasDown" @mouseup="canvasUp" @mousemove="canvasMove" @click="clickCanvas"></canvas>
      </div>
      <div class="setting">
       <h4>
@@ -34,7 +34,7 @@ import allConfig from '../javascript/flowchartConfig'
 import { VueDraggableNext } from "vue-draggable-next";
 import { ElMessage } from 'element-plus';
 import {v4 as uuidv4} from 'uuid'
-import {createRectFill,createTreeBox}  from '@/javascript/globalFlowFun.js'
+import {createRectFill,createTreeBox,createRectStroke,createArcFill}  from '@/javascript/globalFlowFun.js'
 const draggable = VueDraggableNext;
 let lengendList = reactive(allConfig.lengendList)
 let legendActiveItem = ref('')
@@ -58,18 +58,18 @@ let lengendClass = (name)=>{
   }
 }
 let clickLengend = (name)=>{
-  if(legendActiveItem.value === name){
-    legendActiveItem.value = ''
-    isMode.value = false
-  }else{
+  // if(legendActiveItem.value === name){
+  //   legendActiveItem.value = ''
+  //   isMode.value = false
+  // }else{
     console.log(name,'活动的')
   legendActiveItem.value = name
   if(name === 'mode'){
-    isMode.value = true
+    // isMode.value = true
   }else{
     isMode.value = false
   }
-  }
+  // }
 
 }
 const moveStart = (el)=>{
@@ -89,53 +89,101 @@ const moveEnd = (el) =>{
     })
   }else{
     changeNodeList(position)
-    draw()
+    draw(null)
   }
 }
-const canvasDown = (el)=>{
+const clickCanvas = (el)=>{
   console.log(el,'点击画布')
+  let position = canvas.getBoundingClientRect()
+  let positionInfo = {
+    x:el.clientX - position.left,
+    y:el.clientY - position.top
+  }
+  draw(positionInfo)
 }
+// const canvasDown = (el)=>{
+//   console.log(el,'点击画布')
+// }
 const canvasUp = (el)=>{
-  console.log(el,'鼠标在画布上抬起')
-  let canvasPosition = canvas.getBoundingClientRect()
-          let positionInfo = {
-            x:el.clientX- canvasPosition.left,
-            y:el.clientY- canvasPosition.top
-          }       
-        //   console.log(positionInfo,'位置信息')
-        let index =  nodeList.value.findIndex(item=>positionInfo.x>item.x&&positionInfo.x<item.x+item.width&&positionInfo.y>item.y&&positionInfo.y<item.y+item.height)
-        if(index !== -1){
-            activeNode.value = nodeList.value[index]
-            console.log(activeNode.value,'点中的节点信息')
-        }
+  // console.log(el,'鼠标在画布上抬起')
+  // let canvasPosition = canvas.getBoundingClientRect()
+  //         let positionInfo = {
+  //           x:el.clientX- canvasPosition.left,
+  //           y:el.clientY- canvasPosition.top
+  //         }       
+  //       //   console.log(positionInfo,'位置信息')
+  //       let index =  nodeList.value.findIndex(item=>positionInfo.x>item.x&&positionInfo.x<item.x+item.width&&positionInfo.y>item.y&&positionInfo.y<item.y+item.height)
+  //       if(index !== -1){
+  //           activeNode.value = nodeList.value[index]
+  //           console.log(activeNode.value,'点中的节点信息')
+  //       }
 }
 const canvasMove = (el)=>{
-  // console.log(el,'在画布上移动')
+  console.log(el,'在画布上移动')
 }
 const canvasInit = ()=>{
   canvas = document.getElementById('canvas')
   canvasMode = canvas.getContext('2d')
-  draw()
+  draw(null)
   
 }
-const draw = ()=>{
+const draw = (positionInfo)=>{
+  canvasMode.clearRect(0,0,canvas.width,canvas.height)
   canvasMode.beginPath()
-  nodeList.value.forEach(item=>{
+  nodeList.value.forEach((item,index)=>{
+    canvasMode.beginPath()
+    /**填充矩形(实物) */
     if(item.modeType === 'rectFill'){
+      canvasMode.rect(item.x,item.y,item.width,item.height)
       canvasMode.fillStyle = item.color
-    canvasMode.fillRect(item.x,item.y,item.width,item.height)
-    }else if(item.modeType === 'three'){
+      canvasMode.strokeStyle = item.color
+      canvasMode.fill()
+      canvasMode.stroke()
+      // canvasMode.fillRect(item.x,item.y,item.width,item.height)      
+
+    }
+    /**三角形(业务线)*/
+    else if(item.modeType === 'three'){
       console.log('在不在',item)
-      canvasMode.fillStyle = item.color
+      // canvasMode.strokeStyle = item.color
       canvasMode.moveTo(item.x1,item.y1)
       canvasMode.lineTo(item.x2,item.y2)
       canvasMode.lineTo(item.x3,item.y3)
       canvasMode.lineTo(item.x1,item.y1)
+      // canvasMode.stroke()
+      canvasMode.fillStyle = item.color
+      canvasMode.fill()
       // canvasMode.strokeStyle = item.color
     }
+    /**描边矩形(模块)*/
+    else if(item.modeType === 'rectStroke'){
+      canvasMode.rect(item.x,item.y,item.width,item.height)
+      canvasMode.fillStyle = '#fff'
+      canvasMode.strokeStyle = item.color
+      canvasMode.fill()
+      canvasMode.stroke()
+    }
+    /**圆形(供应商)*/
+    else if(item.modeType === 'arcFill'){
+      canvasMode.arc(item.x,item.y,item.arcSize,0,Math.PI*2,false)
+      canvasMode.fillStyle = item.color
+      canvasMode.strokeStyle = item.color
+      canvasMode.fill()
+      canvasMode.stroke()
+    }
     canvasMode.save()
+    //判断点击触发元素
+    if(positionInfo){
+    const isTarget_path = canvasMode.isPointInPath(positionInfo.x,positionInfo.y)
+    const isTarget_stroke = canvasMode.isPointInStroke(positionInfo.x,positionInfo.y)
+  if(isTarget_path || isTarget_stroke){
+    console.log('点击到了某元素',item,index)
+  }
+  }
+    canvasMode.closePath();
   })
-  canvasMode.closePath();
+
+
 }
 const changeNodeList = (position)=>{
   console.log(legendActiveItem.value,'???type')
@@ -145,6 +193,12 @@ const changeNodeList = (position)=>{
       break
     case 'triangle':
       nodeList.value.push(createTreeBox(position))
+      break
+    case 'mode':
+      nodeList.value.push(createRectStroke(position))
+      break
+    case 'ellipse':
+      nodeList.value.push(createArcFill(position))
    }
 
 }
