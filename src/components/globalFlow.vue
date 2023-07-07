@@ -101,9 +101,9 @@ const clickCanvas = (el)=>{
   }
   draw(positionInfo)
 }
-// const canvasDown = (el)=>{
-//   console.log(el,'点击画布')
-// }
+const canvasDown = (el)=>{
+  console.log(el,'点击画布')
+}
 const canvasUp = (el)=>{
   // console.log(el,'鼠标在画布上抬起')
   // let canvasPosition = canvas.getBoundingClientRect()
