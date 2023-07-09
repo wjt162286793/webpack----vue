@@ -1,48 +1,81 @@
 <template>
   <div class="flowBox">
     <div class="legend">
-      <h4>
-        图例
-      </h4>
+      <h4>图例</h4>
       <div class="legendBox" id="legendBox">
         <el-row>
-          <draggable @start="moveStart" @end="moveEnd" v-model="lengendList" :options="dragOptions" style="display: contents;">
-            <el-col :span="12" v-for="(legendItem,lengendIndex) in lengendList" :key="lengendIndex">
-      <div :class="lengendClass(legendItem.name)"  :node_type="legendItem.name" @mousedown="clickLengend(legendItem.name)">
-        <img :src="require(`@/assets/flowchartSvg/${legendItem.svgName}.svg`)" alt="">
-        <span>{{ legendItem.title }}</span>
-      </div>
-   
-    </el-col> </draggable>
-  </el-row>
-
+          <draggable
+            @start="moveStart"
+            @end="moveEnd"
+            v-model="lengendList"
+            :options="dragOptions"
+            style="display: contents"
+          >
+            <el-col
+              :span="12"
+              v-for="(legendItem, lengendIndex) in lengendList"
+              :key="lengendIndex"
+            >
+              <div
+                :class="lengendClass(legendItem.name)"
+                :node_type="legendItem.name"
+                @mousedown="clickLengend(legendItem.name)"
+              >
+                <img
+                  :src="
+                    require(`@/assets/flowchartSvg/${legendItem.svgName}.svg`)
+                  "
+                  alt=""
+                />
+                <span>{{ legendItem.title }}</span>
+              </div>
+            </el-col>
+          </draggable>
+        </el-row>
       </div>
     </div>
-     <div :class="!isMode?'chartNormal':'chartMode'">
-      <canvas width="1500" height="800" id="canvas" @mousedown="canvasDown" @mouseup="canvasUp" @mousemove="canvasMove" @click="clickCanvas"></canvas>
-     </div>
-     <div class="setting">
-      <h4>
-        画布设置
-      </h4>
-      
-     </div>
+    <div :class="!isMode ? 'chartNormal' : 'chartMode'">
+      <canvas
+        width="1500"
+        height="800"
+        id="canvas"
+        @mousedown="canvasDown"
+        @mouseup="canvasUp"
+        @mousemove="canvasMove"
+        @click="clickCanvas"
+      ></canvas>
+    </div>
+    <div class="setting">
+      <h4>画布设置</h4>
+      <p>
+        {{ activeNodeInfo }}
+      </p>
+    </div>
   </div>
 </template>
 <script setup>
-import allConfig from '../javascript/flowchartConfig'
+import allConfig from "../javascript/flowchartConfig";
 import { VueDraggableNext } from "vue-draggable-next";
-import { ElMessage } from 'element-plus';
-import {v4 as uuidv4} from 'uuid'
-import {createRectFill,createTreeBox,createRectStroke,createArcFill}  from '@/javascript/globalFlowFun.js'
+import { ElMessage } from "element-plus";
+import { v4 as uuidv4 } from "uuid";
+import {
+  createRectFill,
+  createTreeBox,
+  createRectStroke,
+  createArcStroke,
+  createLinkLine,
+} from "@/javascript/globalFlowFun.js";
 const draggable = VueDraggableNext;
-let lengendList = reactive(allConfig.lengendList)
-let legendActiveItem = ref('')
-let isMode = ref(false)
-let canvas = null
-let canvasMode = null
-let nodeList = ref([])
-let activeNode = ref({})
+let lengendList = reactive(allConfig.lengendList);
+let legendActiveItem = ref("");
+let isMode = ref(false);
+let canvas = null;
+let canvasMode = null;
+let nodeList = ref([]);
+let activeNodeInfo = ref([]);
+let activeNode = ref({});
+let isLinkLine = ref(false);
+let activeLineId = ref(undefined);
 const dragOptions = {
   preventOnFilter: false,
   sort: false,
@@ -50,213 +83,253 @@ const dragOptions = {
   ghostClass: "tt",
   forceFallback: true,
 };
-let lengendClass = (name)=>{
-  if(name !== legendActiveItem.value){
-    return 'lengendItemNormal'
-  }else{
-    return 'lengendItemActive'
+let lengendClass = (name) => {
+  if (name !== legendActiveItem.value) {
+    return "lengendItemNormal";
+  } else {
+    return "lengendItemActive";
   }
-}
-let clickLengend = (name)=>{
+};
+let clickLengend = (name) => {
   // if(legendActiveItem.value === name){
   //   legendActiveItem.value = ''
   //   isMode.value = false
   // }else{
-    console.log(name,'活动的')
-  legendActiveItem.value = name
-  if(name === 'mode'){
+  console.log(name, "活动的");
+  legendActiveItem.value = name;
+  if (name === "mode") {
     // isMode.value = true
-  }else{
-    isMode.value = false
+  } else {
+    isMode.value = false;
   }
   // }
-
-}
-const moveStart = (el)=>{
-  console.log('移动开始',el)
-}
-const moveEnd = (el) =>{
-  console.log('移动结束',el)
+};
+const moveStart = (el) => {
+  console.log("移动开始", el);
+};
+const moveEnd = (el) => {
+  console.log("移动结束", el);
   let position = {
-    x:el.originalEvent.clientX,
-    y:el.originalEvent.clientY
-  }
-  console.log('鼠标的位置',position)
-  if((position.x<202+25)||(position.x>1702-25)||(position.y<52+25)||(position.y>852-25)){
+    x: el.originalEvent.clientX,
+    y: el.originalEvent.clientY,
+  };
+  console.log("鼠标的位置", position);
+  if (
+    position.x < 202 + 100 ||
+    position.x > 1702 - 100 ||
+    position.y < 52 + 100 ||
+    position.y > 852 - 100
+  ) {
     ElMessage({
-      message:'未拖入画布之中',
-      type:'warning'
-    })
-  }else{
-    changeNodeList(position)
-    draw(null)
+      message: "未拖入画布之中",
+      type: "warning",
+    });
+  } else {
+    changeNodeList(position);
+    draw(null);
   }
-}
-const clickCanvas = (el)=>{
-  console.log(el,'点击画布')
-  let position = canvas.getBoundingClientRect()
+};
+const clickCanvas = (el) => {};
+const canvasDown = (el) => {
+  // console.log(el, "点击画布");
+  // if (isLinkLine) {
+  //   let infoIndex = nodeList.value.findIndex(
+  //     (item) => item.id === activeLineId.value
+  //   );
+  //   canvasMode.beginPath();
+  //   // console.log(info, "数据");
+  //   console.log(infoIndex, "索引值");
+  //   console.log(nodeList, "列表");
+  //   let info = nodeList.value[infoIndex];
+  //   console.log(info, "???");
+  //   canvasMode.arc(info.fromX, info.FromY, 10, 0, Math.PI * 2, true);
+  //   canvasMode.fillStyle = "red";
+  //   canvasMode.fill();
+  //   canvasMode.closePath();
+  // }
+  // console.log(el, "点击画布");
+  let position = canvas.getBoundingClientRect();
   let positionInfo = {
-    x:el.clientX - position.left,
-    y:el.clientY - position.top
-  }
-  draw(positionInfo)
-}
-const canvasDown = (el)=>{
-  console.log(el,'点击画布')
-}
-const canvasUp = (el)=>{
-  // console.log(el,'鼠标在画布上抬起')
+    x: el.clientX - position.left,
+    y: el.clientY - position.top,
+  };
+  draw(positionInfo);
+};
+const canvasUp = (el) => {
+  console.log(el, "鼠标在画布上抬起");
   // let canvasPosition = canvas.getBoundingClientRect()
   //         let positionInfo = {
   //           x:el.clientX- canvasPosition.left,
   //           y:el.clientY- canvasPosition.top
-  //         }       
+  //         }
   //       //   console.log(positionInfo,'位置信息')
   //       let index =  nodeList.value.findIndex(item=>positionInfo.x>item.x&&positionInfo.x<item.x+item.width&&positionInfo.y>item.y&&positionInfo.y<item.y+item.height)
   //       if(index !== -1){
   //           activeNode.value = nodeList.value[index]
   //           console.log(activeNode.value,'点中的节点信息')
   //       }
-}
-const canvasMove = (el)=>{
-  console.log(el,'在画布上移动')
-}
-const canvasInit = ()=>{
-  canvas = document.getElementById('canvas')
-  canvasMode = canvas.getContext('2d')
-  draw(null)
-  
-}
-const draw = (positionInfo)=>{
-  canvasMode.clearRect(0,0,canvas.width,canvas.height)
-  canvasMode.beginPath()
-  nodeList.value.forEach((item,index)=>{
-    canvasMode.beginPath()
+};
+const canvasMove = (el) => {
+  // console.log(el, "在画布上移动");
+  if (isLinkLine.value === true) {
+    createLinkTarget(el);
+  }
+};
+const canvasInit = () => {
+  canvas = document.getElementById("canvas");
+  canvasMode = canvas.getContext("2d");
+  draw(null);
+};
+let createLinkTarget = (el) => {};
+const draw = (positionInfo) => {
+  canvasMode.clearRect(0, 0, canvas.width, canvas.height);
+  nodeList.value.forEach((item, index) => {
+    canvasMode.beginPath();
     /**填充矩形(实物) */
-    if(item.modeType === 'rectFill'){
-      canvasMode.rect(item.x,item.y,item.width,item.height)
-      canvasMode.fillStyle = item.color
-      canvasMode.strokeStyle = item.color
-      canvasMode.fill()
-      canvasMode.stroke()
-      // canvasMode.fillRect(item.x,item.y,item.width,item.height)      
-
-    }
-    /**三角形(业务线)*/
-    else if(item.modeType === 'three'){
-      console.log('在不在',item)
+    if (item.modeType === "rectFill") {
+      canvasMode.rect(item.x, item.y, item.width, item.height);
+      canvasMode.fillStyle = item.color;
+      canvasMode.strokeStyle = item.color;
+      canvasMode.fill();
+      canvasMode.stroke();
+      // canvasMode.fillRect(item.x,item.y,item.width,item.height)
+    } else if (item.modeType === "three") {
+      /**三角形(业务线)*/
+      console.log("在不在", item);
       // canvasMode.strokeStyle = item.color
-      canvasMode.moveTo(item.x1,item.y1)
-      canvasMode.lineTo(item.x2,item.y2)
-      canvasMode.lineTo(item.x3,item.y3)
-      canvasMode.lineTo(item.x1,item.y1)
+      canvasMode.moveTo(item.x1, item.y1);
+      canvasMode.lineTo(item.x2, item.y2);
+      canvasMode.lineTo(item.x3, item.y3);
+      canvasMode.lineTo(item.x1, item.y1);
       // canvasMode.stroke()
-      canvasMode.fillStyle = item.color
-      canvasMode.fill()
+      canvasMode.fillStyle = item.color;
+      canvasMode.fill();
       // canvasMode.strokeStyle = item.color
+    } else if (item.modeType === "rectStroke") {
+      /**描边矩形(模块)*/
+      canvasMode.rect(item.x, item.y, item.width, item.height);
+      canvasMode.fillStyle = "#fff";
+      canvasMode.strokeStyle = item.color;
+      canvasMode.fill();
+      canvasMode.stroke();
+    } else if (item.modeType === "arcFill") {
+      /**圆形(供应商)*/
+      canvasMode.arc(item.x, item.y, item.arcSize, 0, Math.PI * 2, false);
+      canvasMode.fillStyle = "#fff";
+      canvasMode.strokeStyle = item.color;
+      canvasMode.fill();
+      canvasMode.stroke();
+    } else if (item.modeType === "linkLine") {
+      canvasMode.arc(
+        item.fromX,
+        item.fromY,
+        item.lineWidth / 2,
+        0,
+        Math.PI * 2,
+        false
+      );
+      canvasMode.fillStyle = item.color;
+      canvasMode.strokeStyle = item.color;
+      canvasMode.fill();
+      canvasMode.stroke();
     }
-    /**描边矩形(模块)*/
-    else if(item.modeType === 'rectStroke'){
-      canvasMode.rect(item.x,item.y,item.width,item.height)
-      canvasMode.fillStyle = '#fff'
-      canvasMode.strokeStyle = item.color
-      canvasMode.fill()
-      canvasMode.stroke()
-    }
-    /**圆形(供应商)*/
-    else if(item.modeType === 'arcFill'){
-      canvasMode.arc(item.x,item.y,item.arcSize,0,Math.PI*2,false)
-      canvasMode.fillStyle = item.color
-      canvasMode.strokeStyle = item.color
-      canvasMode.fill()
-      canvasMode.stroke()
-    }
-    canvasMode.save()
+    canvasMode.save();
     //判断点击触发元素
-    if(positionInfo){
-    const isTarget_path = canvasMode.isPointInPath(positionInfo.x,positionInfo.y)
-    const isTarget_stroke = canvasMode.isPointInStroke(positionInfo.x,positionInfo.y)
-  if(isTarget_path || isTarget_stroke){
-    console.log('点击到了某元素',item,index)
-  }
-  }
+    if (positionInfo) {
+      const isTarget_path = canvasMode.isPointInPath(
+        positionInfo.x,
+        positionInfo.y
+      );
+      const isTarget_stroke = canvasMode.isPointInStroke(
+        positionInfo.x,
+        positionInfo.y
+      );
+      if (isTarget_path || isTarget_stroke) {
+        console.log("点击到了某元素", item, index);
+        activeNodeInfo.value = item;
+      }
+    }
     canvasMode.closePath();
-  })
-
-
-}
-const changeNodeList = (position)=>{
-  console.log(legendActiveItem.value,'???type')
-   switch(legendActiveItem.value){
-    case 'entiry':
-      nodeList.value.push(createRectFill(position))
-      break
-    case 'triangle':
-      nodeList.value.push(createTreeBox(position))
-      break
-    case 'mode':
-      nodeList.value.push(createRectStroke(position))
-      break
-    case 'ellipse':
-      nodeList.value.push(createArcFill(position))
-   }
-
-}
+  });
+};
+const changeNodeList = (position) => {
+  console.log(legendActiveItem.value, "???type");
+  switch (legendActiveItem.value) {
+    case "entiry":
+      nodeList.value.push(createRectFill(position));
+      break;
+    case "triangle":
+      nodeList.value.push(createTreeBox(position));
+      break;
+    case "mode":
+      nodeList.value.push(createRectStroke(position));
+      break;
+    case "ellipse":
+      nodeList.value.push(createArcStroke(position));
+      break;
+    case "link":
+      let lineInfo = createLinkLine(position);
+      nodeList.value.push(lineInfo);
+      activeLineId.value = lineInfo.id;
+      isLinkLine.value = true;
+  }
+};
 onMounted(() => {
-  canvasInit()
-})
+  canvasInit();
+});
 </script>
 <style lang="less" scoped>
 .flowBox {
   width: 100%;
   height: 800px;
   display: flex;
-  .legend,.setting{
+  .legend,
+  .setting {
     width: 200px;
     height: 800px;
     background: #e0dede;
     display: flex;
     flex-direction: column;
     align-content: center;
-    h4{
+    h4 {
       font-size: 18px;
-      margin:10px auto;
+      margin: 10px auto;
       border-bottom: #000 dashed 1px;
     }
   }
-  .chartNormal{
-    flex:1;
+  .chartNormal {
+    flex: 1;
     border: 2px dashed #deec0e;
     cursor: pointer;
     box-sizing: border-box;
   }
-  .chartMode{
-    flex:1;
+  .chartMode {
+    flex: 1;
     border: 2px dashed #deec0e;
     box-sizing: border-box;
-    cursor: url('@/assets/flowchartSvg/笔.svg') 0 32,auto;;
+    cursor: url("@/assets/flowchartSvg/笔.svg") 0 32, auto;
   }
-  .lengendItemNormal{
-      margin-top: 10px;
-      height: 60px;
-      margin:10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-    .lengendItemActive{
-      margin:10px;
-      margin-top: 10px;
-      height: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border: #d81e06 1px dashed;
-      cursor: pointer;
-    }
-// .setting{
-//   cursor:url('@/assets/flowchartSvg/笔.svg') 0 32,auto;
-// }
+  .lengendItemNormal {
+    margin-top: 10px;
+    height: 60px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+  .lengendItemActive {
+    margin: 10px;
+    margin-top: 10px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: #d81e06 1px dashed;
+    cursor: pointer;
+  }
+  // .setting{
+  //   cursor:url('@/assets/flowchartSvg/笔.svg') 0 32,auto;
+  // }
 }
 </style>

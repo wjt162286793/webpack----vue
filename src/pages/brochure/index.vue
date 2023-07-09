@@ -188,7 +188,7 @@ export default {
   }
   .footer {
     position: fixed;
-    bottom: 30px;
+    bottom: 0px;
     left: 0px;
     width: 100%;
     height: 100px;
@@ -237,10 +237,10 @@ export default {
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
-::v-deep(.el-carousel__container ) {
+::v-deep(.el-carousel__container) {
   height: 480px;
 }
-::v-deep(.el-carousel__container)  {
+::v-deep(.el-carousel__container) {
   height: 440px !important;
 }
 </style>
