@@ -76,6 +76,7 @@ let activeNodeInfo = ref([]);
 let activeNode = ref({});
 let isLinkLine = ref(false);
 let activeLineId = ref(undefined);
+let linkLineFlag = ref(false)
 const dragOptions = {
   preventOnFilter: false,
   sort: false,
@@ -131,48 +132,29 @@ const moveEnd = (el) => {
 };
 const clickCanvas = (el) => {};
 const canvasDown = (el) => {
-  // console.log(el, "点击画布");
-  // if (isLinkLine) {
-  //   let infoIndex = nodeList.value.findIndex(
-  //     (item) => item.id === activeLineId.value
-  //   );
-  //   canvasMode.beginPath();
-  //   // console.log(info, "数据");
-  //   console.log(infoIndex, "索引值");
-  //   console.log(nodeList, "列表");
-  //   let info = nodeList.value[infoIndex];
-  //   console.log(info, "???");
-  //   canvasMode.arc(info.fromX, info.FromY, 10, 0, Math.PI * 2, true);
-  //   canvasMode.fillStyle = "red";
-  //   canvasMode.fill();
-  //   canvasMode.closePath();
-  // }
-  // console.log(el, "点击画布");
   let position = canvas.getBoundingClientRect();
   let positionInfo = {
     x: el.clientX - position.left,
     y: el.clientY - position.top,
   };
+  if (isLinkLine) {
+    console.log(el, "画布按下");
+    linkLineFlag.value = true
+    changeNodeList(positionInfo)
+  }
   draw(positionInfo);
 };
 const canvasUp = (el) => {
-  console.log(el, "鼠标在画布上抬起");
-  // let canvasPosition = canvas.getBoundingClientRect()
-  //         let positionInfo = {
-  //           x:el.clientX- canvasPosition.left,
-  //           y:el.clientY- canvasPosition.top
-  //         }
-  //       //   console.log(positionInfo,'位置信息')
-  //       let index =  nodeList.value.findIndex(item=>positionInfo.x>item.x&&positionInfo.x<item.x+item.width&&positionInfo.y>item.y&&positionInfo.y<item.y+item.height)
-  //       if(index !== -1){
-  //           activeNode.value = nodeList.value[index]
-  //           console.log(activeNode.value,'点中的节点信息')
-  //       }
+  linkLineFlag.value = false
+  console.log(el, "鼠标在画布上抬起",nodeList.value);
 };
 const canvasMove = (el) => {
   // console.log(el, "在画布上移动");
   if (isLinkLine.value === true) {
-    createLinkTarget(el);
+    if(linkLineFlag.value === true){
+      createLinkTarget(el);
+    }
+    
   }
 };
 const canvasInit = () => {
@@ -180,7 +162,15 @@ const canvasInit = () => {
   canvasMode = canvas.getContext("2d");
   draw(null);
 };
-let createLinkTarget = (el) => {};
+let createLinkTarget = (el) => {
+  let linkLineInfo = nodeList.value[nodeList.value.findIndex(item=>item.id === activeLineId.value)]
+  if(el.offsetX >0 && el.offsetY>0){
+    linkLineInfo.targetX = el.offsetX
+    linkLineInfo.targetY = el.offsetY
+    requestAnimationFrame(draw)
+  }
+
+};
 const draw = (positionInfo) => {
   canvasMode.clearRect(0, 0, canvas.width, canvas.height);
   nodeList.value.forEach((item, index) => {
@@ -220,14 +210,26 @@ const draw = (positionInfo) => {
       canvasMode.fill();
       canvasMode.stroke();
     } else if (item.modeType === "linkLine") {
-      canvasMode.arc(
-        item.fromX,
-        item.fromY,
-        item.lineWidth / 2,
-        0,
-        Math.PI * 2,
-        false
-      );
+    
+      // canvasMode.arc(
+      //   item.fromX,
+      //   item.fromY,
+      //   item.lineWidth / 2,
+      //   0,
+      //   Math.PI * 2,
+      //   false
+      // );
+      canvasMode.moveTo(item.fromX,item.fromY)
+      if(item.targetX && item.targetY){
+        canvasMode.lineTo(item.targetX,item.targetY)
+        canvasMode.lineTo(item.targetX-1,item.targetY-1)
+        canvasMode.lineTo(item.targetX-1,item.targetY+1)
+        canvasMode.lineTo(item.targetX+1,item.targetY-1)
+      }else{
+        canvasMode.lineTo(item.fromX,item.fromY)
+      }
+      canvasMode.lineCap = 'round'
+      canvasMode.lineWidth = item.lineWidth
       canvasMode.fillStyle = item.color;
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();

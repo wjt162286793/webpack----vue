@@ -59,11 +59,11 @@ export let createArcStroke = (position) => {
 //创建连线
 export let createLinkLine = (position) => {
    return {
-      fromX: position.x - 202,
-      fromY: position.y - 52,
+      fromX: position.x,
+      fromY: position.y,
       targetX: null,
       targetY: null,
-      lineWidth: 20,
+      lineWidth: 2,
       name: '连接线',
       color: 'red',
       modeType: 'linkLine',
