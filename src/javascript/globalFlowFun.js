@@ -63,7 +63,7 @@ export let createLinkLine = (position) => {
       fromY: position.y,
       targetX: null,
       targetY: null,
-      lineWidth: 2,
+      lineWidth: 20,
       name: '连接线',
       color: 'red',
       modeType: 'linkLine',
