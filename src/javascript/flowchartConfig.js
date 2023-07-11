@@ -40,6 +40,18 @@ const allConfig = {
             title:'连接线',
             svgName:'连接'
          },
+    ],
+    utilsList:[
+      {
+         name:'allClear',
+         title:'清除',
+         svgName:'清除'
+      },
+      {
+         name:'resetLengend',
+         title:'重置',
+         svgName:'重置'
+      },
     ]
 }
 export default allConfig

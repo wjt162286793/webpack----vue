@@ -6,11 +6,20 @@ export let createRectFill = (position) => {
       y: position.y - 52 - 100,
       width: 200,
       height: 200,
-      name: '实体',
+      name: '模块',
       color: 'red',
       modeType: 'rectFill',
       styleType: 'fill',
-      id: uuidv4()
+      id: uuidv4(),
+      nodeIndex:1,
+      fromList:[],
+      targetList:[],
+      text:{
+         info:'模块',
+         x:position.x - 202-150,
+         y:position.y - 52 -150,
+         color:'#fff'
+      }
    }
 }
 //创建一个三角形
@@ -26,7 +35,16 @@ export let createTreeBox = (position) => {
       color: 'red',
       modeType: 'three',
       styleType: 'stroke',
-      id: uuidv4()
+      id: uuidv4(),
+      nodeIndex:1,
+      fromList:[],
+      targetList:[],
+      text:{
+         info:'业务线',
+         x:position.x - 150,
+         y:position.y - 50,
+         color:'red'
+      }
    }
 }
 //创建一个描边矩形
@@ -36,11 +54,20 @@ export let createRectStroke = (position) => {
       y: position.y - 52 - 100,
       width: 200,
       height: 200,
-      name: '实体',
+      name: '实物',
       color: 'red',
       modeType: 'rectStroke',
       styleType: 'stroke',
-      id: uuidv4()
+      id: uuidv4(),
+      nodeIndex:1,
+      fromList:[],
+      targetList:[],
+      text:{
+         info:'实物',
+         x:position.x - 202-150,
+         y:position.y - 52 -150,
+         color:'green'
+      }
    }
 }
 //创建一个圆形
@@ -53,7 +80,16 @@ export let createArcStroke = (position) => {
       color: 'red',
       modeType: 'arcFill',
       styleType: 'fill',
-      id: uuidv4()
+      id: uuidv4(),
+      nodeIndex:1,
+      fromList:[],
+      targetList:[],
+      text:{
+         info:'供应商',
+         x:position.x - 202-50,
+         y:position.y - 52,
+         color:'#fff'
+      }
    }
 }
 //创建连线
@@ -68,6 +104,7 @@ export let createLinkLine = (position) => {
       color: 'red',
       modeType: 'linkLine',
       styleType: 'fill',
-      id: uuidv4()
+      id: uuidv4(),
+      nodeIndex:0
    }
 }

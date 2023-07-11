@@ -399,6 +399,7 @@ h4 {
   }
 
   .footer {
+    padding-top: 10px;
     height: 40px;
     width: 100%;
     position: absolute;
