@@ -65,13 +65,24 @@
         @mouseup="canvasUp"
         @mousemove="canvasMove"
         @click="clickCanvas"
+        :style="{background:canvasStyleInfo.background}"
       ></canvas>
     </div>
     <div class="setting">
+      <h4>画布信息</h4>
+      <p>画布背景色:</p>
+      <el-color-picker v-model="canvasStyleInfo.background" />
+      <p>画布下载</p>
+      <div style="display: flex;">
+        <el-input v-model="imageName" placeholder="请输入图片名称" style="width: 140px;"></el-input>
+        <el-button type="primary" style="width:30px">下载</el-button>
+      </div>
+      
+      <!-- <p>画布缩放比例:</p>
+      <el-slider v-model="canvasStyleInfo.scale" :show-tooltip="false" :min="0" :max="2" :step="0.1" style="width: 180px;" @input="changeScale"/> -->
       <h4>节点信息</h4>
-      <p>
-        {{activeNodeInfo}}
-      </p>
+      <p>节点主题色</p>
+      <el-color-picker v-model="activeNodeInfo.color" @active-change="changeNodeInfo()"/>
     </div>
   </div>
 </template>
@@ -103,6 +114,11 @@ let linkLineFrom = ref(undefined) //线条起点
 let linkLineTarget = ref(undefined) //线条终点
 let clickNodeFlag = ref(false); //是否点击节点
 let eventName = ref(undefined) //当前处于什么事件
+let canvasStyleInfo = ref({
+  background:'#fff',
+  scale:1
+})
+let imageName = ref('画布')
 //拖拽配置
 const dragOptions = {
   preventOnFilter: false,
@@ -235,7 +251,7 @@ const canvasMove = (el) => {
 //节点移动时线条位置的改变
 const moveLineInfo = (el)=>{
   console.log(activeNodeInfo.value,el,'移动的信息')
-  if(!activeNodeInfo.value){
+  if(!activeNodeInfo.value || !activeNodeInfo.value.fromList){
     return
   }
   if(activeNodeInfo.value.fromList.length>0){
@@ -275,11 +291,11 @@ let createLinkTarget = (el) => {
 };
 //绘制图形(核心方法)
 const draw = (positionInfo) => {
+  console.log('绘制',canvasStyleInfo.value.scale)
   canvasMode.clearRect(0, 0, canvas.width, canvas.height);
   nodeList.value.forEach((item, index) => {
     canvasMode.beginPath();
-    canvasMode.restore()
-    canvasMode.lineWidth = 20;
+    canvasMode.lineWidth = 3;
     /**填充矩形(实物) */
     if (item.modeType === "rectFill") {
       canvasMode.rect(item.x, item.y, item.width, item.height);
@@ -287,12 +303,9 @@ const draw = (positionInfo) => {
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();
       canvasMode.stroke();
-      canvasMode.save()
-      canvasMode.font = '30px Times'
-      canvasMode.fillText(item.text.info,item.text.x,item.text.y)
       canvasMode.fillStyle = item.text.color
-      canvasMode.save()
-      canvasMode.restore()
+      canvasMode.font = '18px Times'
+      canvasMode.fillText(item.text.info,item.x+80, item.y+100)
     } 
     /**描边三角形(业务线)*/
     else if (item.modeType === "three") {
@@ -300,14 +313,12 @@ const draw = (positionInfo) => {
       canvasMode.lineTo(item.x2, item.y2);
       canvasMode.lineTo(item.x3, item.y3);
       canvasMode.lineTo(item.x1, item.y1);
-      canvasMode.fillText(item.text.info,item.text.x,item.text.y)
+      canvasMode.closePath()
       canvasMode.fillStyle = item.color;
       canvasMode.fill();
-      canvasMode.font = '30px Times'
-      canvasMode.fillText(item.text.info,item.text.x,item.text.y)
       canvasMode.fillStyle = item.text.color
-      canvasMode.save()
-      canvasMode.restore()
+      canvasMode.font = '18px Times'
+      canvasMode.fillText(item.text.info,item.x1-30, item.y1+130)
     } else if (item.modeType === "rectStroke") {
       /**描边矩形(模块)*/
       canvasMode.rect(item.x, item.y, item.width, item.height);
@@ -315,11 +326,9 @@ const draw = (positionInfo) => {
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();
       canvasMode.stroke();
-      canvasMode.font = '30px Times'
-      canvasMode.fillText(item.text.info,item.text.x,item.text.y)
       canvasMode.fillStyle = item.text.color
-      canvasMode.save()
-      canvasMode.restore()
+      canvasMode.font = '18px Times'
+      canvasMode.fillText(item.text.info,item.x+80, item.y+100)
     } else if (item.modeType === "arcFill") {
       /**圆形(供应商)*/
       canvasMode.arc(item.x, item.y, item.arcSize, 0, Math.PI * 2, false);
@@ -327,11 +336,9 @@ const draw = (positionInfo) => {
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();
       canvasMode.stroke();
-      canvasMode.font = '30px Times'
-      canvasMode.fillText(item.text.info,item.text.x,item.text.y)
       canvasMode.fillStyle = item.text.color
-      canvasMode.save()
-      canvasMode.restore()
+      canvasMode.font = '18px Times'      
+      canvasMode.fillText(item.text.info,item.x-30, item.y)
     }
     /**连线*/ 
     else if (item.modeType === "linkLine") {
@@ -347,7 +354,7 @@ const draw = (positionInfo) => {
       canvasMode.fill();
       canvasMode.stroke();
     }
-    canvasMode.save();
+    
     //判断点击触发元素
     if (positionInfo) {
       console.log(positionInfo,'???')
@@ -423,6 +430,14 @@ const changeNodeList = (position) => {
   })
   nodeList.value = [].concat(list0).concat(list1).concat(list2)
 };
+const changeScale = ()=>{
+  requestAnimationFrame(draw);
+}
+const changeNodeInfo = (value)=>{
+  console.log(activeNodeInfo,'当前选中的节点信息??')
+  activeNodeInfo.value.color = value
+  requestAnimationFrame(draw);
+}
 onMounted(() => {
   canvasInit();
 });
@@ -434,6 +449,7 @@ onMounted(() => {
   display: flex;
   .legend,
   .setting {
+    padding-left: 10px;
     width: 200px;
     height: 800px;
     background: #e0dede;

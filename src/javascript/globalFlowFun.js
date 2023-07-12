@@ -6,7 +6,7 @@ export let createRectFill = (position) => {
       y: position.y - 52 - 100,
       width: 200,
       height: 200,
-      name: '模块',
+      name: '实物',
       color: 'red',
       modeType: 'rectFill',
       styleType: 'fill',
@@ -15,9 +15,7 @@ export let createRectFill = (position) => {
       fromList:[],
       targetList:[],
       text:{
-         info:'模块',
-         x:position.x - 202-150,
-         y:position.y - 52 -150,
+         info:'实物',
          color:'#fff'
       }
    }
@@ -41,9 +39,7 @@ export let createTreeBox = (position) => {
       targetList:[],
       text:{
          info:'业务线',
-         x:position.x - 150,
-         y:position.y - 50,
-         color:'red'
+         color:'#fff'
       }
    }
 }
@@ -54,7 +50,7 @@ export let createRectStroke = (position) => {
       y: position.y - 52 - 100,
       width: 200,
       height: 200,
-      name: '实物',
+      name: '模块',
       color: 'red',
       modeType: 'rectStroke',
       styleType: 'stroke',
@@ -63,10 +59,8 @@ export let createRectStroke = (position) => {
       fromList:[],
       targetList:[],
       text:{
-         info:'实物',
-         x:position.x - 202-150,
-         y:position.y - 52 -150,
-         color:'green'
+         info:'模块',
+         color:'red'
       }
    }
 }
@@ -86,9 +80,7 @@ export let createArcStroke = (position) => {
       targetList:[],
       text:{
          info:'供应商',
-         x:position.x - 202-50,
-         y:position.y - 52,
-         color:'#fff'
+         color:'red'
       }
    }
 }
