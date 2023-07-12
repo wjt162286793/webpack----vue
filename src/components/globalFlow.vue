@@ -36,24 +36,22 @@
       <h4>工具</h4>
       <el-row>
         <el-col
-              :span="12"
-              v-for="(utilName, lengendIndex) in utilsList"
-              :key="lengendIndex"
-            >
-              <div
-                :class="lengendClass(utilName.name)"
-                :node_type="utilName.name"
-                @mousedown="clickLengend(utilName.name)"
-              >
-                <img
-                  :src="
-                    require(`@/assets/flowchartSvg/${utilName.svgName}.svg`)
-                  "
-                  alt=""
-                />
-                <span>{{ utilName.title }}</span>
-              </div>
-            </el-col>
+          :span="12"
+          v-for="(utilName, lengendIndex) in utilsList"
+          :key="lengendIndex"
+        >
+          <div
+            :class="lengendClass(utilName.name)"
+            :node_type="utilName.name"
+            @mousedown="clickLengend(utilName.name)"
+          >
+            <img
+              :src="require(`@/assets/flowchartSvg/${utilName.svgName}.svg`)"
+              alt=""
+            />
+            <span>{{ utilName.title }}</span>
+          </div>
+        </el-col>
       </el-row>
     </div>
     <div :class="!isMode ? 'chartNormal' : 'chartMode'">
@@ -65,7 +63,7 @@
         @mouseup="canvasUp"
         @mousemove="canvasMove"
         @click="clickCanvas"
-        :style="{background:canvasStyleInfo.background}"
+        :style="{ background: canvasStyleInfo.background }"
       ></canvas>
     </div>
     <div class="setting">
@@ -73,16 +71,49 @@
       <p>画布背景色:</p>
       <el-color-picker v-model="canvasStyleInfo.background" />
       <p>画布下载</p>
-      <div style="display: flex;">
-        <el-input v-model="imageName" placeholder="请输入图片名称" style="width: 140px;"></el-input>
-        <el-button type="primary" style="width:30px">下载</el-button>
+      <div style="display: flex">
+        <el-input
+          v-model="imageName"
+          placeholder="请输入图片名称"
+          style="width: 140px"
+        ></el-input>
+        <el-button type="primary" style="width: 30px">下载</el-button>
       </div>
-      
+
       <!-- <p>画布缩放比例:</p>
       <el-slider v-model="canvasStyleInfo.scale" :show-tooltip="false" :min="0" :max="2" :step="0.1" style="width: 180px;" @input="changeScale"/> -->
-      <h4>节点信息</h4>
-      <p>节点主题色</p>
-      <el-color-picker v-model="activeNodeInfo.color" @active-change="changeNodeInfo()"/>
+      <template v-if="activeNodeInfo.id">
+        <h4>节点信息</h4>
+        <div>
+          <p>节点主题颜色</p>
+          <el-color-picker
+            v-model="activeNodeInfo.color"
+            @active-change="changeNodeThemeColor"
+          />
+        </div>
+        <div v-if="activeNodeInfo.modeType !== 'linkLine'">
+          <p>节点字体颜色</p>
+          <el-color-picker
+            v-model="activeNodeInfo.text.color"
+            @active-change="changeNodeTextColor"
+          />
+        </div>
+        <div v-if="activeNodeInfo.modeType !== 'linkLine'">
+          <p>节点文字信息</p>
+          <el-input
+            v-model="activeNodeInfo.text.info"
+            style="180px"
+            @input="changeNodeTextInfo"
+          ></el-input>
+        </div>
+        <div v-if="activeNodeInfo.modeType === 'linkLine'">
+          <el-button type="primary" @click="deleteLine">删除连线</el-button>
+        </div>
+        <div v-if="activeNodeInfo.modeType !== 'linkLine'">
+          <el-button type="primary" @click="deleteNode">删除节点</el-button>
+        </div>
+        <p>{{ nodeList }}</p>
+      </template>
     </div>
   </div>
 </template>
@@ -100,25 +131,25 @@ import {
 } from "@/javascript/globalFlowFun.js";
 const draggable = VueDraggableNext; //拖拽组件
 let lengendList = reactive(allConfig.lengendList); //图例集合
-let utilsList = reactive(allConfig.utilsList) //工具集合
+let utilsList = reactive(allConfig.utilsList); //工具集合
 let legendActiveItem = ref(""); //当前选中图例
 let isMode = ref(false); //是否为模块
 let canvas = null; //画布
 let canvasMode = null; //画布实例
 let nodeList = ref([]); //画布内容数组
-let activeNodeInfo = ref([]); //活动的组件信息
+let activeNodeInfo = ref({}); //活动的组件信息
 let isLinkLine = ref(false); //是否为连线状态
 let activeLineId = ref(undefined); //当前连线的id
 let linkLineFlag = ref(false); //连线标志
-let linkLineFrom = ref(undefined) //线条起点
-let linkLineTarget = ref(undefined) //线条终点
+let linkLineFrom = ref(undefined); //线条起点
+let linkLineTarget = ref(undefined); //线条终点
 let clickNodeFlag = ref(false); //是否点击节点
-let eventName = ref(undefined) //当前处于什么事件
+let eventName = ref(undefined); //当前处于什么事件
 let canvasStyleInfo = ref({
-  background:'#fff',
-  scale:1
-})
-let imageName = ref('画布')
+  background: "#fff",
+  scale: 1,
+});
+let imageName = ref("画布");
 //拖拽配置
 const dragOptions = {
   preventOnFilter: false,
@@ -144,13 +175,12 @@ let clickLengend = (name) => {
     // isMode.value = true
   } else if (name === "link") {
     isLinkLine.value = true;
-  } else if(name === 'allClear'){
-    canvasMode.clearRect(0,0,canvas.width,canvas.height)
-    nodeList.value = []
-  } else if(name === 'resetLengend'){
-    legendActiveItem.value = undefined
-  }
-  else {
+  } else if (name === "allClear") {
+    canvasMode.clearRect(0, 0, canvas.width, canvas.height);
+    nodeList.value = [];
+  } else if (name === "resetLengend") {
+    legendActiveItem.value = undefined;
+  } else {
   }
 };
 //图例拖动开始
@@ -184,7 +214,7 @@ const moveEnd = (el) => {
 const clickCanvas = (el) => {};
 //画布中鼠标按下
 const canvasDown = (el) => {
-  eventName.value = 'mousedown'
+  eventName.value = "mousedown";
   let position = canvas.getBoundingClientRect();
   let positionInfo = {
     x: el.clientX - position.left,
@@ -194,14 +224,14 @@ const canvasDown = (el) => {
     console.log(el, "画布按下");
     linkLineFlag.value = true;
     changeNodeList(positionInfo);
-  }else{
+  } else {
     clickNodeFlag.value = true;
   }
   draw(positionInfo);
 };
 //画布中鼠标抬起
 const canvasUp = (el) => {
-  eventName.value = 'mouseup'
+  eventName.value = "mouseup";
   linkLineFlag.value = false;
   clickNodeFlag.value = false;
   console.log(el, "鼠标在画布上抬起", nodeList.value);
@@ -210,67 +240,67 @@ const canvasUp = (el) => {
     x: el.clientX - position.left,
     y: el.clientY - position.top,
   };
-  draw(positionInfo)
+  draw(positionInfo);
 };
 //画布中鼠标移动
 const canvasMove = (el) => {
-  eventName.value = 'mousemove'
+  eventName.value = "mousemove";
   if (isLinkLine.value === true) {
     if (linkLineFlag.value === true) {
       createLinkTarget(el);
-      draw()
+      draw();
     }
-  }else{
+  } else {
     if (clickNodeFlag.value === true) {
-    switch (activeNodeInfo.value.modeType) {
-      case "rectStroke":
-        activeNodeInfo.value.x = el.offsetX-100;
-        activeNodeInfo.value.y = el.offsetY-100;
-      break
-      case "rectFill":
-        activeNodeInfo.value.x = el.offsetX-100;
-        activeNodeInfo.value.y = el.offsetY-100;
-      break
-      case "arcFill":
-        activeNodeInfo.value.x = el.offsetX;
-        activeNodeInfo.value.y = el.offsetY;
-      break
-      case "three":
-      activeNodeInfo.value.x1 = el.offsetX
-      activeNodeInfo.value.y1 = el.offsetY-100
-      activeNodeInfo.value.x2 = el.offsetX-100
-      activeNodeInfo.value.y2 = el.offsetY+100
-      activeNodeInfo.value.x3 = el.offsetX+100
-      activeNodeInfo.value.y3 = el.offsetY+100
+      switch (activeNodeInfo.value.modeType) {
+        case "rectStroke":
+          activeNodeInfo.value.x = el.offsetX - 100;
+          activeNodeInfo.value.y = el.offsetY - 100;
+          break;
+        case "rectFill":
+          activeNodeInfo.value.x = el.offsetX - 100;
+          activeNodeInfo.value.y = el.offsetY - 100;
+          break;
+        case "arcFill":
+          activeNodeInfo.value.x = el.offsetX;
+          activeNodeInfo.value.y = el.offsetY;
+          break;
+        case "three":
+          activeNodeInfo.value.x1 = el.offsetX;
+          activeNodeInfo.value.y1 = el.offsetY - 100;
+          activeNodeInfo.value.x2 = el.offsetX - 100;
+          activeNodeInfo.value.y2 = el.offsetY + 100;
+          activeNodeInfo.value.x3 = el.offsetX + 100;
+          activeNodeInfo.value.y3 = el.offsetY + 100;
+      }
+      moveLineInfo(el);
+      draw();
     }
-    moveLineInfo(el)
-    draw();
-  }
   }
 };
 //节点移动时线条位置的改变
-const moveLineInfo = (el)=>{
-  console.log(activeNodeInfo.value,el,'移动的信息')
-  if(!activeNodeInfo.value || !activeNodeInfo.value.fromList){
-    return
+const moveLineInfo = (el) => {
+  console.log(activeNodeInfo.value, el, "移动的信息");
+  if (!activeNodeInfo.value || !activeNodeInfo.value.fromList) {
+    return;
   }
-  if(activeNodeInfo.value.fromList.length>0){
-    activeNodeInfo.value.fromList.forEach(Item=>{
-      let line = nodeList.value.find(item=>Item === item.id)
-      console.log(line,'线的信息1')
-      line.fromX = el.offsetX 
-      line.fromY = el.offsetY 
-    })
+  if (activeNodeInfo.value.fromList.length > 0) {
+    activeNodeInfo.value.fromList.forEach((Item) => {
+      let line = nodeList.value.find((item) => Item === item.id);
+      console.log(line, "线的信息1");
+      line.fromX = el.offsetX;
+      line.fromY = el.offsetY;
+    });
   }
-  if(activeNodeInfo.value.targetList.length>0){
-    activeNodeInfo.value.targetList.forEach(Item=>{
-      let line = nodeList.value.find(item=>Item === item.id)
-      console.log(line,'线的信息2')
-      line.targetX = el.offsetX
-      line.targetY = el.offsetY
-    })
+  if (activeNodeInfo.value.targetList.length > 0) {
+    activeNodeInfo.value.targetList.forEach((Item) => {
+      let line = nodeList.value.find((item) => Item === item.id);
+      console.log(line, "线的信息2");
+      line.targetX = el.offsetX;
+      line.targetY = el.offsetY;
+    });
   }
-}
+};
 //画布初始化
 const canvasInit = () => {
   canvas = document.getElementById("canvas");
@@ -291,11 +321,11 @@ let createLinkTarget = (el) => {
 };
 //绘制图形(核心方法)
 const draw = (positionInfo) => {
-  console.log('绘制',canvasStyleInfo.value.scale)
+  console.log("绘制", canvasStyleInfo.value.scale);
   canvasMode.clearRect(0, 0, canvas.width, canvas.height);
   nodeList.value.forEach((item, index) => {
     canvasMode.beginPath();
-    canvasMode.lineWidth = 3;
+    canvasMode.lineWidth = 5;
     /**填充矩形(实物) */
     if (item.modeType === "rectFill") {
       canvasMode.rect(item.x, item.y, item.width, item.height);
@@ -303,22 +333,21 @@ const draw = (positionInfo) => {
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();
       canvasMode.stroke();
-      canvasMode.fillStyle = item.text.color
-      canvasMode.font = '18px Times'
-      canvasMode.fillText(item.text.info,item.x+80, item.y+100)
-    } 
-    /**描边三角形(业务线)*/
-    else if (item.modeType === "three") {
+      canvasMode.fillStyle = item.text.color;
+      canvasMode.font = "18px Times";
+      canvasMode.fillText(item.text.info, item.x + 80, item.y + 100);
+    } else if (item.modeType === "three") {
+      /**描边三角形(业务线)*/
       canvasMode.moveTo(item.x1, item.y1);
       canvasMode.lineTo(item.x2, item.y2);
       canvasMode.lineTo(item.x3, item.y3);
       canvasMode.lineTo(item.x1, item.y1);
-      canvasMode.closePath()
+      canvasMode.closePath();
       canvasMode.fillStyle = item.color;
       canvasMode.fill();
-      canvasMode.fillStyle = item.text.color
-      canvasMode.font = '18px Times'
-      canvasMode.fillText(item.text.info,item.x1-30, item.y1+130)
+      canvasMode.fillStyle = item.text.color;
+      canvasMode.font = "18px Times";
+      canvasMode.fillText(item.text.info, item.x1 - 30, item.y1 + 130);
     } else if (item.modeType === "rectStroke") {
       /**描边矩形(模块)*/
       canvasMode.rect(item.x, item.y, item.width, item.height);
@@ -326,9 +355,9 @@ const draw = (positionInfo) => {
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();
       canvasMode.stroke();
-      canvasMode.fillStyle = item.text.color
-      canvasMode.font = '18px Times'
-      canvasMode.fillText(item.text.info,item.x+80, item.y+100)
+      canvasMode.fillStyle = item.text.color;
+      canvasMode.font = "18px Times";
+      canvasMode.fillText(item.text.info, item.x + 80, item.y + 100);
     } else if (item.modeType === "arcFill") {
       /**圆形(供应商)*/
       canvasMode.arc(item.x, item.y, item.arcSize, 0, Math.PI * 2, false);
@@ -336,12 +365,11 @@ const draw = (positionInfo) => {
       canvasMode.strokeStyle = item.color;
       canvasMode.fill();
       canvasMode.stroke();
-      canvasMode.fillStyle = item.text.color
-      canvasMode.font = '18px Times'      
-      canvasMode.fillText(item.text.info,item.x-30, item.y)
-    }
-    /**连线*/ 
-    else if (item.modeType === "linkLine") {
+      canvasMode.fillStyle = item.text.color;
+      canvasMode.font = "18px Times";
+      canvasMode.fillText(item.text.info, item.x - 30, item.y);
+    } else if (item.modeType === "linkLine") {
+      /**连线*/
       canvasMode.moveTo(item.fromX, item.fromY);
       if (item.targetX && item.targetY) {
         canvasMode.lineTo(item.targetX, item.targetY);
@@ -354,10 +382,10 @@ const draw = (positionInfo) => {
       canvasMode.fill();
       canvasMode.stroke();
     }
-    
+
     //判断点击触发元素
     if (positionInfo) {
-      console.log(positionInfo,'???')
+      console.log(positionInfo, "???");
       const isTarget_path = canvasMode.isPointInPath(
         positionInfo.x,
         positionInfo.y
@@ -369,23 +397,22 @@ const draw = (positionInfo) => {
       if (isTarget_path || isTarget_stroke) {
         console.log("点击到了某元素", item, index);
         activeNodeInfo.value = item;
-        if(isLinkLine.value === true){
-          if(activeLineId.value){
-            if(eventName.value === 'mousedown'){
-              if(item.modeType !== 'linkLine'){
-            console.log(item.id,'起源id',activeLineId.value)
-            linkLineFrom.value = item.id
-            item.fromList.push(activeLineId.value)
+        if (isLinkLine.value === true) {
+          if (activeLineId.value) {
+            if (eventName.value === "mousedown") {
+              if (item.modeType !== "linkLine") {
+                console.log(item.id, "起源id", activeLineId.value);
+                linkLineFrom.value = item.id;
+                item.fromList.push(activeLineId.value);
               }
-         }else if(eventName.value === 'mouseup'){
-          if(item.modeType !== 'linkLine'){
-            console.log(item.id,'目标id',activeLineId.value)
-            linkLineTarget.value = item.id
-            item.targetList.push(activeLineId.value)
-          } 
-         }
+            } else if (eventName.value === "mouseup") {
+              if (item.modeType !== "linkLine") {
+                console.log(item.id, "目标id", activeLineId.value);
+                linkLineTarget.value = item.id;
+                item.targetList.push(activeLineId.value);
+              }
+            }
           }
-
         }
       }
     }
@@ -415,29 +442,81 @@ const changeNodeList = (position) => {
       activeLineId.value = lineInfo.id;
       isLinkLine.value = true;
   }
-  let list0 = []
-  let list1 = []
-  let list2 = []
-  nodeList.value.forEach(m=>{
-    if(m.nodeIndex === 0){
-      list0.push(m)
-    }else if(m.nodeIndex === 1){
-      list1.push(m)
+  let list0 = [];
+  let list1 = [];
+  let list2 = [];
+  nodeList.value.forEach((m) => {
+    if (m.nodeIndex === 0) {
+      list0.push(m);
+    } else if (m.nodeIndex === 1) {
+      list1.push(m);
+    } else if (m.nodeIndex === 2) {
+      list2.push(m);
     }
-    else if(m.nodeIndex === 2){
-      list2.push(m)
-    }
-  })
-  nodeList.value = [].concat(list0).concat(list1).concat(list2)
+  });
+  nodeList.value = [].concat(list0).concat(list1).concat(list2);
 };
-const changeScale = ()=>{
+const changeScale = () => {
   requestAnimationFrame(draw);
-}
-const changeNodeInfo = (value)=>{
-  console.log(activeNodeInfo,'当前选中的节点信息??')
-  activeNodeInfo.value.color = value
+};
+const changeNodeThemeColor = (value) => {
+  activeNodeInfo.value.color = value;
   requestAnimationFrame(draw);
-}
+};
+const changeNodeTextColor = (value) => {
+  activeNodeInfo.value.text.color = value;
+  requestAnimationFrame(draw);
+};
+const changeNodeTextInfo = (value) => {
+  activeNodeInfo.value.text.info = value;
+  requestAnimationFrame(draw);
+};
+const deleteNode = () => {
+  console.log("删除节点??..");
+  let index = nodeList.value.findIndex(
+    (item) => item.id === activeNodeInfo.value.id
+  );
+  nodeList.value.splice(index, 1);
+  activeNodeInfo.value.fromList.forEach((m) => {
+    if (m) {
+      console.log(m, "删除来源线?");
+      deleteLinkLine(m);
+    }
+  });
+  activeNodeInfo.value.targetList.forEach((m) => {
+    if (m) {
+      console.log(m, "删除目标线?");
+      deleteLinkLine(m);
+    }
+  });
+  console.log(nodeList.value, "列表");
+  requestAnimationFrame(draw);
+};
+let deleteLine = () => {
+  deleteLinkLine(activeNodeInfo.value.id);
+};
+let deleteLinkLine = (id) => {
+  let index = nodeList.value.findIndex((m) => m.id === id);
+  if (index !== -1) {
+    nodeList.value.splice(index, 1);
+  }
+  nodeList.value.forEach((n) => {
+    if (n.fromList) {
+      let fromIndex = n.fromList.findIndex((z) => z === id);
+      if (fromIndex !== -1) {
+        n.fromList.splice(fromIndex, 1);
+      }
+    }
+    if (n.targetList) {
+      let targetIndex = n.targetList.findIndex((z) => z === id);
+
+      if (targetIndex !== -1) {
+        n.targetList.splice(targetIndex, 1);
+      }
+    }
+  });
+  requestAnimationFrame(draw);
+};
 onMounted(() => {
   canvasInit();
 });
