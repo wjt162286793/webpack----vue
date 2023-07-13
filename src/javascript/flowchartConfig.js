@@ -25,16 +25,16 @@ const allConfig = {
             title:'标注',
             svgName:'标注'
          },
-         {
-            name:'flag',
-            title:'关键点',
-            svgName:'旗帜'
-         },
-         {
-            name:'danger',
-            title:'风险点',
-            svgName:'注意'
-         },
+         // {
+         //    name:'flag',
+         //    title:'关键点',
+         //    svgName:'旗帜'
+         // },
+         // {
+         //    name:'danger',
+         //    title:'风险点',
+         //    svgName:'注意'
+         // },
          {
             name:'link',
             title:'连接线',

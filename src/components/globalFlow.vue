@@ -82,7 +82,7 @@
 
       <!-- <p>画布缩放比例:</p>
       <el-slider v-model="canvasStyleInfo.scale" :show-tooltip="false" :min="0" :max="2" :step="0.1" style="width: 180px;" @input="changeScale"/> -->
-      <template v-if="activeNodeInfo.id">
+      <template v-if="activeNodeInfo.id && nodeList.length>0">
         <h4>节点信息</h4>
         <div>
           <p>节点主题颜色</p>
@@ -91,14 +91,14 @@
             @active-change="changeNodeThemeColor"
           />
         </div>
-        <div v-if="activeNodeInfo.modeType !== 'linkLine'">
+        <div v-if="activeNodeInfo.modeType !== 'linkLine' && activeNodeInfo.modeType !== 'text'">
           <p>节点字体颜色</p>
           <el-color-picker
             v-model="activeNodeInfo.text.color"
             @active-change="changeNodeTextColor"
           />
         </div>
-        <div v-if="activeNodeInfo.modeType !== 'linkLine'">
+        <div v-if="activeNodeInfo.modeType !== 'linkLine' && activeNodeInfo.modeType !== 'text'">
           <p>节点文字信息</p>
           <el-input
             v-model="activeNodeInfo.text.info"
@@ -112,9 +112,18 @@
         <div v-if="activeNodeInfo.modeType !== 'linkLine'">
           <el-button type="primary" @click="deleteNode">删除节点</el-button>
         </div>
-        <p>{{ nodeList }}</p>
       </template>
     </div>
+    <el-input
+    @blur="saveTextareaValue"
+    v-show="textareaShow"
+    :style="textareaClass"
+    v-model="textareaValue"
+    maxlength="30"
+    show-word-limit
+    type="textarea"
+    :rows="textareaClass.rows"
+  />
   </div>
 </template>
 <script setup>
@@ -128,8 +137,10 @@ import {
   createRectStroke,
   createArcStroke,
   createLinkLine,
+  createText
 } from "@/javascript/globalFlowFun.js";
 const draggable = VueDraggableNext; //拖拽组件
+let mousePosition = ref({}) //
 let lengendList = reactive(allConfig.lengendList); //图例集合
 let utilsList = reactive(allConfig.utilsList); //工具集合
 let legendActiveItem = ref(""); //当前选中图例
@@ -150,6 +161,18 @@ let canvasStyleInfo = ref({
   scale: 1,
 });
 let imageName = ref("画布");
+let textareaValue = ref('')
+let textareaShow = ref(false)
+let textareaClass = ref({
+  position:'absolute',
+  left:'300px',
+  top:'300px',
+  index:1000,
+  width:'300px',
+  border:'1px dashed #23cf7d',
+  outline:'none',
+  rows:5
+})
 //拖拽配置
 const dragOptions = {
   preventOnFilter: false,
@@ -168,7 +191,7 @@ let lengendClass = (name) => {
 };
 //点击图例事件
 let clickLengend = (name) => {
-  console.log(name, "活动的");
+  textareaShow.value = false
   legendActiveItem.value = name;
   isLinkLine.value = false;
   if (name === "mode") {
@@ -180,21 +203,21 @@ let clickLengend = (name) => {
     nodeList.value = [];
   } else if (name === "resetLengend") {
     legendActiveItem.value = undefined;
-  } else {
+  } else if(name === 'label'){
+    textareaShow.value = true
+  }
+  else {
   }
 };
 //图例拖动开始
 const moveStart = (el) => {
-  console.log("移动开始", el);
 };
 //图例拖动结束
 const moveEnd = (el) => {
-  console.log("移动结束", el);
   let position = {
     x: el.originalEvent.clientX,
     y: el.originalEvent.clientY,
   };
-  console.log("鼠标的位置", position);
   if (
     position.x < 202 + 100 ||
     position.x > 1702 - 100 ||
@@ -221,7 +244,6 @@ const canvasDown = (el) => {
     y: el.clientY - position.top,
   };
   if (isLinkLine.value === true) {
-    console.log(el, "画布按下");
     linkLineFlag.value = true;
     changeNodeList(positionInfo);
   } else {
@@ -234,12 +256,17 @@ const canvasUp = (el) => {
   eventName.value = "mouseup";
   linkLineFlag.value = false;
   clickNodeFlag.value = false;
-  console.log(el, "鼠标在画布上抬起", nodeList.value);
   let position = canvas.getBoundingClientRect();
   let positionInfo = {
     x: el.clientX - position.left,
     y: el.clientY - position.top,
   };
+  textareaShow.value = false
+  if(legendActiveItem.value === 'label'){
+    textareaShow.value = true
+    textareaClass.value.left = el.layerX+'px'
+    textareaClass.value.top = el.layerY+'px'
+  }
   draw(positionInfo);
 };
 //画布中鼠标移动
@@ -272,22 +299,24 @@ const canvasMove = (el) => {
           activeNodeInfo.value.y2 = el.offsetY + 100;
           activeNodeInfo.value.x3 = el.offsetX + 100;
           activeNodeInfo.value.y3 = el.offsetY + 100;
+          break
       }
       moveLineInfo(el);
       draw();
     }
   }
 };
+const canvasLeave = (el) =>{
+  legendActiveItem.value = undefined
+}
 //节点移动时线条位置的改变
 const moveLineInfo = (el) => {
-  console.log(activeNodeInfo.value, el, "移动的信息");
   if (!activeNodeInfo.value || !activeNodeInfo.value.fromList) {
     return;
   }
   if (activeNodeInfo.value.fromList.length > 0) {
     activeNodeInfo.value.fromList.forEach((Item) => {
       let line = nodeList.value.find((item) => Item === item.id);
-      console.log(line, "线的信息1");
       line.fromX = el.offsetX;
       line.fromY = el.offsetY;
     });
@@ -295,7 +324,6 @@ const moveLineInfo = (el) => {
   if (activeNodeInfo.value.targetList.length > 0) {
     activeNodeInfo.value.targetList.forEach((Item) => {
       let line = nodeList.value.find((item) => Item === item.id);
-      console.log(line, "线的信息2");
       line.targetX = el.offsetX;
       line.targetY = el.offsetY;
     });
@@ -321,7 +349,6 @@ let createLinkTarget = (el) => {
 };
 //绘制图形(核心方法)
 const draw = (positionInfo) => {
-  console.log("绘制", canvasStyleInfo.value.scale);
   canvasMode.clearRect(0, 0, canvas.width, canvas.height);
   nodeList.value.forEach((item, index) => {
     canvasMode.beginPath();
@@ -382,10 +409,26 @@ const draw = (positionInfo) => {
       canvasMode.fill();
       canvasMode.stroke();
     }
+    /*绘制文本*/
+    else if(item.modeType === "text"){
+      canvasMode.strokeStyle = canvasStyleInfo.value.background
+      canvasMode.fillStyle = canvasStyleInfo.value.background
+      canvasMode.lineWidth = 1
+      let maxLength = item.info.reduce(function(newVal,oldVal){
+       return newVal.length>oldVal.length?newVal.length:oldVal.length
+      })
+      canvasMode.rect(item.textX-200,item.textY-50,(maxLength+1)*10,(item.info.length+1)*20)
+      canvasMode.fill()
+      canvasMode.stroke()
+      canvasMode.fillStyle = item.color;
+      canvasMode.font = "18px Times";
+      item.info.forEach((m,n)=>{
+        canvasMode.fillText(m,item.textX-200,item.textY-30+20*n)
+      })
+    }
 
     //判断点击触发元素
     if (positionInfo) {
-      console.log(positionInfo, "???");
       const isTarget_path = canvasMode.isPointInPath(
         positionInfo.x,
         positionInfo.y
@@ -401,19 +444,26 @@ const draw = (positionInfo) => {
           if (activeLineId.value) {
             if (eventName.value === "mousedown") {
               if (item.modeType !== "linkLine") {
-                console.log(item.id, "起源id", activeLineId.value);
                 linkLineFrom.value = item.id;
                 item.fromList.push(activeLineId.value);
               }
             } else if (eventName.value === "mouseup") {
               if (item.modeType !== "linkLine") {
-                console.log(item.id, "目标id", activeLineId.value);
                 linkLineTarget.value = item.id;
                 item.targetList.push(activeLineId.value);
               }
             }
           }
         }
+        if(activeNodeInfo.value.modeType === 'text'){
+          textareaShow.value = true
+          textareaClass.value.left = activeNodeInfo.value.textX +'px'
+          textareaClass.value.top = activeNodeInfo.value.textY-50 + 'px'
+          textareaClass.value.rows = 5
+          let str = activeNodeInfo.value.info.join('\n')
+        textareaValue.value = `${str}`
+        }
+
       }
     }
     canvasMode.closePath();
@@ -421,7 +471,6 @@ const draw = (positionInfo) => {
 };
 //通过操作对节点列表数据进行修改
 const changeNodeList = (position) => {
-  console.log(legendActiveItem.value, "???type");
   isLinkLine.value = false;
   switch (legendActiveItem.value) {
     case "entiry":
@@ -441,10 +490,20 @@ const changeNodeList = (position) => {
       nodeList.value.push(lineInfo);
       activeLineId.value = lineInfo.id;
       isLinkLine.value = true;
+      break
+    case "label":
+      let Info = createText(position)
+      let textInfo = `${textareaValue.value}`
+      Info.info = textInfo.split('\n')
+      textareaValue.value = ''
+      textareaShow.value = false
+      nodeList.value.push(Info);
+      break
   }
   let list0 = [];
   let list1 = [];
   let list2 = [];
+  let list3 = []
   nodeList.value.forEach((m) => {
     if (m.nodeIndex === 0) {
       list0.push(m);
@@ -452,50 +511,61 @@ const changeNodeList = (position) => {
       list1.push(m);
     } else if (m.nodeIndex === 2) {
       list2.push(m);
+    }else if (m.nodeIndex === 1000) {
+       list3.push(m)
     }
   });
-  nodeList.value = [].concat(list0).concat(list1).concat(list2);
+  nodeList.value = [].concat(list0).concat(list1).concat(list2).concat(list3);
 };
 const changeScale = () => {
   requestAnimationFrame(draw);
 };
+//修改节点主题色
 const changeNodeThemeColor = (value) => {
   activeNodeInfo.value.color = value;
   requestAnimationFrame(draw);
 };
+//修改节点字体颜色
 const changeNodeTextColor = (value) => {
   activeNodeInfo.value.text.color = value;
   requestAnimationFrame(draw);
 };
+//修改节点中的字体文字
 const changeNodeTextInfo = (value) => {
   activeNodeInfo.value.text.info = value;
   requestAnimationFrame(draw);
 };
+//删除当前选中节点
 const deleteNode = () => {
-  console.log("删除节点??..");
+  textareaShow.value = false
+  textareaValue.value = ''
   let index = nodeList.value.findIndex(
     (item) => item.id === activeNodeInfo.value.id
   );
   nodeList.value.splice(index, 1);
-  activeNodeInfo.value.fromList.forEach((m) => {
+  if(activeNodeInfo.value.fromList){
+    activeNodeInfo.value.fromList.forEach((m) => {
     if (m) {
-      console.log(m, "删除来源线?");
       deleteLinkLine(m);
     }
   });
-  activeNodeInfo.value.targetList.forEach((m) => {
+  }
+  if(activeNodeInfo.value.targetList){
+    activeNodeInfo.value.targetList.forEach((m) => {
     if (m) {
-      console.log(m, "删除目标线?");
       deleteLinkLine(m);
     }
   });
-  console.log(nodeList.value, "列表");
+  }
+
   requestAnimationFrame(draw);
 };
-let deleteLine = () => {
+//删除当前选中连接线
+const deleteLine = () => {
   deleteLinkLine(activeNodeInfo.value.id);
 };
-let deleteLinkLine = (id) => {
+//删除节点附带的连接线
+const deleteLinkLine = (id) => {
   let index = nodeList.value.findIndex((m) => m.id === id);
   if (index !== -1) {
     nodeList.value.splice(index, 1);
@@ -517,6 +587,14 @@ let deleteLinkLine = (id) => {
   });
   requestAnimationFrame(draw);
 };
+//文本框焦点消失时保存文本
+const saveTextareaValue = ()=>{
+  textareaShow.value = false
+  changeNodeList({
+    x:parseInt(textareaClass.value.left),
+    y:parseInt(textareaClass.value.top)+50
+  })   
+}
 onMounted(() => {
   canvasInit();
 });
@@ -526,6 +604,7 @@ onMounted(() => {
   width: 100%;
   height: 800px;
   display: flex;
+  position: relative;
   .legend,
   .setting {
     padding-left: 10px;

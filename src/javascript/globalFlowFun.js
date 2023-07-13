@@ -100,3 +100,16 @@ export let createLinkLine = (position) => {
       nodeIndex:0
    }
 }
+//创建一个文本
+export let createText = (position) =>{
+   console.log(position,'文本地址')
+   return {
+      textX:position.x,
+      textY:position.y,
+      color:'red',
+      modeType:'text',
+      id:uuidv4(),
+      nodeIndex:1000,
+      info:'',
+   }
+}
