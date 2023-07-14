@@ -245,7 +245,7 @@
                 "type": "flowChart",
                 "required": false,
                 "editDisabled": false,
-                "default": {}
+                "default": []
             }
         ]
     }

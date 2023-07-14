@@ -83,7 +83,8 @@
         "property": "updateTime",
         "label": "最近更新时间",
         "width": "200",
-        "column": "normal"
+        "column": "normal",
+        "sortable":true
       }
     ],
     "searchData": {
@@ -151,7 +152,8 @@
         "property": "updateTime",
         "label": "最近更新时间",
         "width": 200,
-        "column": "normal"
+        "column": "normal",
+        "sortable":true
       }
     ],
     "searchData": {
@@ -219,7 +221,8 @@
         "property": "updateTime",
         "label": "最近更新时间",
         "width": 200,
-        "column": "normal"
+        "column": "normal",
+        "sortable":true
       }
     ],
     "searchData": {

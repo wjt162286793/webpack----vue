@@ -281,8 +281,8 @@
     <GlobalFlow ref="globalFlow"></GlobalFlow>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFlowChart = false">取消</el-button>
-        <el-button type="primary" @click="dialogFlowChart = false">
+        <el-button @click="dialogFlowChart = false">返回</el-button>
+        <el-button type="primary" @click="saveEntiryCanvas" v-if="route.query.type !== 'detail'">
           保存
         </el-button>
       </span>
@@ -294,7 +294,7 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
-import { onMounted, reactive } from "vue";
+import { nextTick, onMounted, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import GlobalFlow from "@/components/globalFlow.vue";
 const router = useRouter();
@@ -463,8 +463,16 @@ const disabledFun = (flag) => {
 };
 const openFlowChart = ()=>{
 dialogFlowChart.value = true
+console.log(globalFlow,'组件')
+nextTick(()=>{
+  globalFlow.value.canvasInit(formData.flowChart)
+})
 }
 const handleClose = ()=>{
+  dialogFlowChart.value = false
+}
+const saveEntiryCanvas = ()=>{
+  formData.flowChart = globalFlow.value.nodeList
   dialogFlowChart.value = false
 }
 onMounted(() => {

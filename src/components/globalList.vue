@@ -62,6 +62,7 @@
             :property="item.property"
             :width="item.width"
             :label="item.label"
+            :sortable="item.sortable || false"
           ></el-table-column>
           <el-table-column
             v-else-if="item.column === 'jumpIn'"

@@ -69,7 +69,7 @@
     <div class="setting">
       <h4>画布信息</h4>
       <p>画布背景色:</p>
-      <el-color-picker v-model="canvasStyleInfo.background" />
+      <el-color-picker v-model="canvasStyleInfo.background" :disabled="route.query.type === 'detail'"/>
       <p>画布下载</p>
       <div style="display: flex">
         <el-input
@@ -77,7 +77,7 @@
           placeholder="请输入图片名称"
           style="width: 140px"
         ></el-input>
-        <el-button type="primary" style="width: 30px">下载</el-button>
+        <el-button type="primary" style="width: 30px" @click="downLoad">下载</el-button>
       </div>
 
       <!-- <p>画布缩放比例:</p>
@@ -87,6 +87,7 @@
         <div>
           <p>节点主题颜色</p>
           <el-color-picker
+          :disabled="route.query.type === 'detail'"
             v-model="activeNodeInfo.color"
             @active-change="changeNodeThemeColor"
           />
@@ -94,6 +95,7 @@
         <div v-if="activeNodeInfo.modeType !== 'linkLine' && activeNodeInfo.modeType !== 'text'">
           <p>节点字体颜色</p>
           <el-color-picker
+          :disabled="route.query.type === 'detail'"
             v-model="activeNodeInfo.text.color"
             @active-change="changeNodeTextColor"
           />
@@ -101,20 +103,22 @@
         <div v-if="activeNodeInfo.modeType !== 'linkLine' && activeNodeInfo.modeType !== 'text'">
           <p>节点文字信息</p>
           <el-input
+          :disabled="route.query.type === 'detail'"
             v-model="activeNodeInfo.text.info"
             style="180px"
             @input="changeNodeTextInfo"
           ></el-input>
         </div>
         <div v-if="activeNodeInfo.modeType === 'linkLine'">
-          <el-button type="primary" @click="deleteLine">删除连线</el-button>
+          <el-button type="primary" @click="deleteLine" :disabled="route.query.type === 'detail'">删除连线</el-button>
         </div>
         <div v-if="activeNodeInfo.modeType !== 'linkLine'">
-          <el-button type="primary" @click="deleteNode">删除节点</el-button>
+          <el-button type="primary" @click="deleteNode" :disabled="route.query.type === 'detail'">删除节点</el-button>
         </div>
       </template>
     </div>
     <el-input
+    :disabled="route.query.type === 'detail'"
     @blur="saveTextareaValue"
     v-show="textareaShow"
     :style="textareaClass"
@@ -140,6 +144,7 @@ import {
   createText
 } from "@/javascript/globalFlowFun.js";
 const draggable = VueDraggableNext; //拖拽组件
+const route = useRoute()
 let mousePosition = ref({}) //
 let lengendList = reactive(allConfig.lengendList); //图例集合
 let utilsList = reactive(allConfig.utilsList); //工具集合
@@ -181,6 +186,7 @@ const dragOptions = {
   ghostClass: "tt",
   forceFallback: true,
 };
+
 //图例的样式
 let lengendClass = (name) => {
   if (name !== legendActiveItem.value) {
@@ -191,6 +197,9 @@ let lengendClass = (name) => {
 };
 //点击图例事件
 let clickLengend = (name) => {
+    if(route.query.type === 'detail'){
+        return
+    }
   textareaShow.value = false
   legendActiveItem.value = name;
   isLinkLine.value = false;
@@ -237,6 +246,9 @@ const moveEnd = (el) => {
 const clickCanvas = (el) => {};
 //画布中鼠标按下
 const canvasDown = (el) => {
+        if(route.query.type === 'detail'){
+        return
+    }
   eventName.value = "mousedown";
   let position = canvas.getBoundingClientRect();
   let positionInfo = {
@@ -271,6 +283,9 @@ const canvasUp = (el) => {
 };
 //画布中鼠标移动
 const canvasMove = (el) => {
+    if(route.query.type === 'detail'){
+        return
+    }
   eventName.value = "mousemove";
   if (isLinkLine.value === true) {
     if (linkLineFlag.value === true) {
@@ -330,9 +345,10 @@ const moveLineInfo = (el) => {
   }
 };
 //画布初始化
-const canvasInit = () => {
+let canvasInit = (list) => {
   canvas = document.getElementById("canvas");
   canvasMode = canvas.getContext("2d");
+  nodeList.value = list
   draw(null);
 };
 //创建连接起始点
@@ -595,9 +611,28 @@ const saveTextareaValue = ()=>{
     y:parseInt(textareaClass.value.top)+50
   })   
 }
-onMounted(() => {
-  canvasInit();
-});
+//下载
+const downLoad = ()=>{
+    const dataURL = canvas.toDataURL('image/png');
+	
+	// 创建img元素，用于预览图片
+	const img = document.createElement('img');
+	img.src = dataURL;
+	document.body.appendChild(img);
+	
+	// 创建a元素，用于下载图片
+	const link = document.createElement('a');
+	link.href = dataURL;
+	link.download = `${imageName.value}.png`;
+	
+	// 添加a元素到DOM中，并触发点击事件以下载图片
+	document.body.appendChild(link);
+	link.click();
+}
+defineExpose({
+nodeList,
+canvasInit
+})
 </script>
 <style lang="less" scoped>
 .flowBox {
