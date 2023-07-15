@@ -130,6 +130,13 @@
               circle
               @click="deleteDialogOpen(scope.row)"
             />
+            <el-button
+              v-if="!scope.row.isRisk"
+              type="warning"
+              :icon="WarnTriangleFilled"
+              circle
+              @click="openRisk(scope.row)"
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -167,10 +174,12 @@
       </span>
     </template>
   </el-dialog>
+  <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
 import lodash from 'lodash'
-import { Delete, Edit } from "@element-plus/icons-vue";
+import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
+import CreatRisk from "@/components/creatRisk"
 import request from "@/utils/requestUtils";
 import { useRouter, useRoute } from "vue-router";
 import words from '@/dictionaries/wordList.json'
@@ -181,6 +190,7 @@ const props = defineProps({
 const router = useRouter();
 const route = useRoute();
 let multipleTableRef = ref(null);
+const creatRisk = ref(null)
 let templateData = reactive({});
 let dialogDeleteVisible = ref(false)
 let deleteText = ref('')
@@ -214,6 +224,9 @@ const reqListFun = ()=>{
       total.value = res.data.total;
     }
   });
+}
+const openRisk = (record)=>{
+  creatRisk.value.openDialog(record)
 }
 const reqList = lodash.throttle(reqListFun,2000)
 //查询列表
@@ -294,6 +307,9 @@ const getMap = (property,value) => {
 const getTimeRange = (property,value) => {
  let str = `${value[0]}  至  ${value[1]}`
  return str
+}
+const addRiskSuccess = ()=>{
+  reqList()
 }
 onMounted(() => {
   reqTemplate();

@@ -12,5 +12,6 @@
             "noGlobal": "非公共资产",
             "risk": "风险资产"
         }
-    }
+    },
+    "typeList":{"business":"业务领域","entiry":"实体","task":"任务","valueflow":"价值流"}
 }

@@ -170,6 +170,7 @@ const ruleForm = reactive({
   type: null,
   status: 1,
   modelList: [],
+  mode:'business'
 });
 const route = useRoute();
 const router = useRouter();

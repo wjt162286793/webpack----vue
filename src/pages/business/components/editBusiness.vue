@@ -182,6 +182,7 @@ let ruleForm = reactive({
   dcs: "",
   type: null,
   status: 1,
+  mode:'business'
 });
 const route = useRoute();
 const router = useRouter();
@@ -301,6 +302,7 @@ const getInfo = () => {
       ruleForm.status = res.data.status;
       ruleForm.id = res.data.id;
       ruleForm.modelList = res.data.modelList;
+      ruleForm.mode = res.data.mode
     }
   });
 };
