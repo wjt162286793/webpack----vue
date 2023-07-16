@@ -246,8 +246,13 @@
                 </el-icon>
               </el-tooltip>
             </el-form-item>
-            <el-form-item v-else-if="item.type === 'flowChart'" :label="item.label">
-               <el-button @click="openFlowChart" type="primary">打开画布</el-button>
+            <el-form-item
+              v-else-if="item.type === 'flowChart'"
+              :label="item.label"
+            >
+              <el-button @click="openFlowChart" type="primary"
+                >打开画布</el-button
+              >
             </el-form-item>
           </el-col>
         </el-row>
@@ -273,23 +278,26 @@
   </div>
   <div class="fullDiaLog">
     <el-dialog
-  fullscreen
-    v-model="dialogFlowChart"
-    title="实体模型图"
-    :before-close="handleClose"
-  >
-    <GlobalFlow ref="globalFlow"></GlobalFlow>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFlowChart = false">返回</el-button>
-        <el-button type="primary" @click="saveEntiryCanvas" v-if="route.query.type !== 'detail'">
-          保存
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
+      fullscreen
+      v-model="dialogFlowChart"
+      title="实体模型图"
+      :before-close="handleClose"
+    >
+      <GlobalFlow ref="globalFlow"></GlobalFlow>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFlowChart = false">返回</el-button>
+          <el-button
+            type="primary"
+            @click="saveEntiryCanvas"
+            v-if="route.query.type !== 'detail'"
+          >
+            保存
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
-
 </template>
 <script setup>
 import { useRouter, useRoute } from "vue-router";
@@ -304,8 +312,8 @@ let formData = reactive({});
 let rules = reactive({});
 let fileList = ref([]);
 let ruleFormRef = ref(null);
-let dialogFlowChart = ref(false)
-let globalFlow = ref(null)
+let dialogFlowChart = ref(false);
+let globalFlow = ref(null);
 const reqTemplate = () => {
   request
     .post("/app/publicForm/template", { type: route.query.mode })
@@ -461,20 +469,20 @@ const disabledFun = (flag) => {
     return false;
   }
 };
-const openFlowChart = ()=>{
-dialogFlowChart.value = true
-console.log(globalFlow,'组件')
-nextTick(()=>{
-  globalFlow.value.canvasInit(formData.flowChart)
-})
-}
-const handleClose = ()=>{
-  dialogFlowChart.value = false
-}
-const saveEntiryCanvas = ()=>{
-  formData.flowChart = globalFlow.value.nodeList
-  dialogFlowChart.value = false
-}
+const openFlowChart = () => {
+  dialogFlowChart.value = true;
+  console.log(globalFlow, "组件");
+  nextTick(() => {
+    globalFlow.value.canvasInit(formData.flowChart);
+  });
+};
+const handleClose = () => {
+  dialogFlowChart.value = false;
+};
+const saveEntiryCanvas = () => {
+  formData.flowChart = globalFlow.value.nodeList;
+  dialogFlowChart.value = false;
+};
 onMounted(() => {
   reqTemplate();
 });
@@ -506,7 +514,7 @@ onMounted(() => {
     display: flex;
   }
 
-  ::v-deep(.el-form-item__content ) {
+  ::v-deep(.el-form-item__content) {
     display: flex;
     flex-wrap: nowrap;
   }
@@ -528,12 +536,12 @@ onMounted(() => {
     justify-content: flex-end;
   }
 }
-.fullDiaLog{
+.fullDiaLog {
   ::v-deep(.el-dialog__header) {
-  height: 50px !important;
-}
-::v-deep(.el-dialog__body) {
-  padding: 0px !important;
-}
+    height: 50px !important;
+  }
+  ::v-deep(.el-dialog__body) {
+    padding: 0px !important;
+  }
 }
 </style>
