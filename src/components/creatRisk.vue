@@ -207,6 +207,7 @@ const riskSure = () => {
             let queryData = {}
             queryData.mode = recordInfo.value.mode
             queryData.propertyId = recordInfo.value.uuid
+            queryData.status = 'unreviewed'
             queryData.propertyName = recordInfo.value.name || recordInfo.value[`${recordInfo.value.mode}Name`]
             queryData.propertyCnName =  recordInfo.value.cname || recordInfo.value[`${recordInfo.value.mode}CnName`]
             queryData = Object.assign(queryData,ruleForm0.value)

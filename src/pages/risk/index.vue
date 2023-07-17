@@ -39,7 +39,7 @@
       </div>
       <div class="searchItem">
         <el-button type="primary" @click="reqList">查询</el-button>
-        <el-button type="primary" @click="downLoad">下载</el-button>
+        <el-button type="primary" @click="downLoad" v-show="selectionDoneFlag">下载</el-button>
       </div>
     </div>
     <div class="tableBox">
@@ -61,16 +61,19 @@
         <el-table-column label="资产类别" width="180">
           <template #default="scope">{{ getType(scope.row.mode) }}</template>
         </el-table-column>
+        <el-table-column label="当前状态" width="180">
+          <template #default="scope">{{ getRiskType(scope.row.status) }}</template>
+        </el-table-column>
         <el-table-column
           property="propertyCnName"
           label="所属资产名称"
           width="240"
         />
-        <el-table-column property="uuid" label="风险编码" width="width" />
+        <el-table-column property="uuid" label="风险编码" width="400" />
         <el-table-column property="time" label="更改日期" width="240" />
         <el-table-column label="操作" fixed="right" width="180">
           <template #default="scope">
-            <el-button type="danger" :icon="Delete" circle />
+            <el-button type="primary" :icon="View" circle @click="openDrawer(scope.row)"/>
           </template>
         </el-table-column>
       </el-table>
@@ -91,10 +94,50 @@
       />
     </div>
   </div>
+  <el-drawer v-model="drawer" :direction="direction" size="75%">
+    <template #header>
+      <h3>风险资产详情</h3>
+    </template>
+    <template #default>
+      <div class="rowBox">
+  <el-row>
+    <el-col :span="2"><h5>风险别名:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.riskAlias }}</el-col>
+    <el-col :span="2"><h5>风险编号:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.uuid }}</el-col>
+    <el-col :span="2"><h5>资产名称:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.propertyName }}</el-col>
+    <el-col :span="2"><h5>风险定位:</h5></el-col>
+    <el-col :span="10">{{getriskPostion(activeRecord.riskPosition)}}</el-col>
+    <el-col :span="2"><h5>资产类型:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.mode }}</el-col>
+    <el-col :span="2"><h5>资产编号:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.propertyId}}</el-col>
+    <el-col :span="2"><h5>风险等级:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.riskLevel }}</el-col>
+    <el-col :span="2"><h5>资产状态:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.status}}</el-col>
+    <el-col :span="2"><h5>监控粒度:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.controlSize }}</el-col>
+    <el-col :span="2"><h5>监控时间:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.times}}</el-col>
+    <el-col :span="2"><h5>审核人员:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.auitUser }}</el-col>
+    <el-col :span="2"><h5>通知方式:</h5></el-col>
+    <el-col :span="10">{{ activeRecord.inform}}</el-col>
+  </el-row>
+      </div>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="closeDrawer">返回</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
   
 <script setup>
-import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
+import { View } from "@element-plus/icons-vue";
 import { ElTable } from "element-plus";
 import request from "@/utils/requestUtils";
 import wordList from "@/dictionaries/wordList.json";
@@ -108,8 +151,12 @@ let pageSize = 10;
 let currentPage = ref(1);
 let total = ref(0);
 const multipleTableRef = ref(null);
+const drawer = ref(false)
+const direction = ref('rtl')
 const multipleSelection = ref([]);
 const selectionData = ref([]);
+const activeRecord = ref({})
+let selectionDoneFlag = ref(false)
 const toggleSelection = (rows) => {
   if (rows) {
     rows.forEach((row) => {
@@ -130,6 +177,9 @@ const tableData = ref([]);
 const getType = (value) => {
   return wordList.typeList[value];
 };
+const getRiskType = (value) =>{
+    return riskWordlist['status'][value]
+}
 const reqList = () => {
   let postData = {
     queryData: query.value,
@@ -143,12 +193,37 @@ const reqList = () => {
     }
   });
 };
+const openDrawer = (row)=>{
+    activeRecord.value = row
+    drawer.value = true
+}
 const selectionHandler = (selection, row) => {
   selectionData.value = selection;
+  if(selectionData.value.length<1){
+    selectionDoneFlag.value = false
+  }else{
+    selectionDoneFlag.value = true
+  }
 };
 const downLoad = () => {
   console.log(selectionData.value, "选中的数据");
+  let content = JSON.stringify(selectionData.value)
+  let blob_file = new Blob([content],{type:'application/json;charset=utf-8'})
+  let downLoadElement = document.createElement('a')
+  let href = URL.createObjectURL(blob_file)
+  downLoadElement.href = href
+  downLoadElement.download = '风险资产.json'
+  document.body.appendChild(downLoadElement)
+  downLoadElement.click()
+  document.body.removeChild(downLoadElement)
+  window.URL.revokeObjectURL(href)
 };
+const closeDrawer = ()=>{
+    drawer.value = false
+}
+const getriskPostion = (info)=>{
+
+}
 onMounted(() => {
   reqList();
 });
@@ -185,6 +260,15 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
   }
+}
+.rowBox{
+ .el-col{
+    margin-bottom: 30px;
+    h5{
+        font-size: 16px;
+        font-weight: 400;
+    }
+ }
 }
 </style>
   

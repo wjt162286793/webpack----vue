@@ -64,5 +64,10 @@
             "value":"day",
             "label":"日"
         }        
-    ]
+    ],
+    "status":{
+        "unreviewed":"未审批",
+        "reviewed":"已审批",
+        "missed":"已过期"
+    }
 }
