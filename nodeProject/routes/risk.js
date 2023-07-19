@@ -45,6 +45,11 @@ const riskRoutes = [
                         reqData.uuid = uuidv4()
                         let time  = moment().format('YYYY-MM-DD hh:mm:ss')
                         reqData.time = time
+                        reqData.recordList.push({
+                            time:time,
+                            name:'创建',
+                            user:reqData.doneUser
+                        })
                         list.push(reqData)
                     }
                     list.map((item, index) => { item.id = index + 1 })

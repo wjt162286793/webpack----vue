@@ -180,6 +180,7 @@ export default {
           this.$axios.post("app/user/login", this.ruleForm).then((res) => {
             console.log(res, "登录返回结果");
             if (res.code === 200) {
+              localStorage.setItem("userInfo", JSON.stringify(res.data));
               localStorage.setItem("token", res.data.token);
               this.$store.dispatch("changeUserInfo", res.data);
               this.$router.push({

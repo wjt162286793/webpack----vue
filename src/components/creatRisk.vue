@@ -81,6 +81,7 @@
     </el-dialog>
 </template>
 <script setup>
+import store from '@/store/index.js'
 import { Location, Tools, Tickets } from '@element-plus/icons-vue'
 import riskOptions from '@/dictionaries/risk.json'
 import request from "@/utils/requestUtils";
@@ -210,6 +211,13 @@ const riskSure = () => {
             queryData.status = 'unreviewed'
             queryData.propertyName = recordInfo.value.name || recordInfo.value[`${recordInfo.value.mode}Name`]
             queryData.propertyCnName =  recordInfo.value.cname || recordInfo.value[`${recordInfo.value.mode}CnName`]
+            queryData.progress = 1
+            queryData.recordList = []
+            let doneUser= {
+                name:JSON.parse(localStorage.getItem("userInfo")).name,
+                userName:JSON.parse(localStorage.getItem("userInfo")).userName
+                               } 
+            queryData.doneUser = doneUser
             queryData = Object.assign(queryData,ruleForm0.value)
             queryData = Object.assign(queryData,ruleForm1.value)
             queryData = Object.assign(queryData,ruleForm2.value)
@@ -262,6 +270,7 @@ defineExpose({
 })
 onMounted(() => {
     console.log(riskOptions, '配置')
+    console.log(store.state.user.userInfo,'全局变量',JSON.parse(localStorage.getItem("userInfo")))
 })
 </script>
 <style lang="less" scoped>
