@@ -212,7 +212,34 @@ const asyncRoutes = [
                 meta: {
                     name: '风险管理'
                 },
-                component: () => import('pages/risk/index.vue')
+                component: () => import('pages/risk/index.vue'),
+                redirect:'/dashboard/risk/riskList',
+                children: [
+                    {
+                        path: '/dashboard/risk/riskList',
+                        name: 'riskList',
+                        meta: {
+                            name: '列表'
+                        },
+                        component: () => import('pages/risk/components/riskList.vue')
+                    },
+                    {
+                        path: '/dashboard/risk/riskModel',
+                        name: 'riskModel',
+                        meta: {
+                            name: '模型'
+                        },
+                        component: () => import('pages/risk/components/riskModel.vue')
+                    },
+                    {
+                        path: '/dashboard/risk/monitoring',
+                        name: 'monitoring',
+                        meta: {
+                            name: '监控'
+                        },
+                        component: () => import('pages/risk/components/monitoring.vue')
+                    }                   
+                ]
             },            
             {
                 path: '/dashboard/graph',

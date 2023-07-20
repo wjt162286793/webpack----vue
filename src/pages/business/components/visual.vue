@@ -412,6 +412,7 @@ const refreshPlumbPostionInfo = () => {
   if (plumbBox) {
     let positionInfo = plumbBox.getBoundingClientRect();
     plumbBoxPositionInfo = positionInfo;
+    console.log(plumbBoxPositionInfo,'画布信息')
   }
 };
 //渲染节点
@@ -574,63 +575,6 @@ function sendActive(node) {
 
 onMounted(() => {
   setTimeout(() => {
-    //     info.value = [
-    //   {
-    //     name: "div1",
-    //     to: ["div2", "div3"],
-    //     top: 300,
-    //     left: 100,
-    //     color: "red",
-    //     context: "开始运行",
-    //     status: "success",
-    //     isSource: true,
-    //     isTarget: false,
-    //   },
-    //   {
-    //     name: "div2",
-    //     to: ["div4"],
-    //     top: 200,
-    //     left: 500,
-    //     color: "green",
-    //     context: "构建任务1",
-    //     status: "success",
-    //     isSource: true,
-    //     isTarget: true,
-    //   },
-    //   {
-    //     name: "div3",
-    //     to: ["div5"],
-    //     top: 400,
-    //     left: 500,
-    //     color: "green",
-    //     context: "构建任务2",
-    //     status: "error",
-    //     isSource: true,
-    //     isTarget: true,
-    //   },
-    //   {
-    //     name: "div4",
-    //     to: [],
-    //     top: 200,
-    //     left: 900,
-    //     color: "blue",
-    //     context: "完成部署1",
-    //     status: "success",
-    //     isSource: false,
-    //     isTarget: true,
-    //   },
-    //   {
-    //     name: "div5",
-    //     to: [],
-    //     top: 400,
-    //     left: 900,
-    //     color: "blue",
-    //     context: "完成部署2",
-    //     status: "loading",
-    //     isSource: false,
-    //     isTarget: true,
-    //   },
-    // ]
     renderNode();
     nextTick(() => {
       console.log("页面初次渲染完毕");

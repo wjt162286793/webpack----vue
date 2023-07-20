@@ -47,7 +47,7 @@ const riskRoutes = [
                         reqData.time = time
                         reqData.recordList.push({
                             time:time,
-                            name:'创建',
+                            name:'风险提交',
                             user:reqData.doneUser
                         })
                         list.push(reqData)
