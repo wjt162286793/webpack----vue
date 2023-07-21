@@ -1,9 +1,10 @@
 <template>
-    <globalFlowChart></globalFlowChart>
+    <globalFlowChart :leftNodeList="leftNodeList"></globalFlowChart>
 </template>
      
 <script setup>
 import globalFlowChart from '@/components/globalFlowChart.vue'
+import {leftNodeList} from '../data' 
 </script>
 <style lang="less" scoped>
 .modelBox {

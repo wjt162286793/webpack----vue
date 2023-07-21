@@ -424,6 +424,7 @@ const renderNode = (flag) => {
     if (flag === "new") {
       renderFlag.value = "once";
     }
+    //清除之前的内容
     plumbInit.deleteEveryConnection();
     plumbInit.deleteEveryEndpoint();
     refreshPlumbPostionInfo();
@@ -452,6 +453,7 @@ const renderNode = (flag) => {
     plumbInit.ready(() => {
       renderList.forEach((item) => {
         // plumbInit.connect(item,jsPlumbConnectOptions);
+        console.log(item,'渲染参数===')
         plumbInit.connect(item);
       });
       info.value.forEach((item) => {
@@ -529,7 +531,8 @@ const getStyle = function (item) {
 };
 //初始化jsplumb实例
 let plumbInit = jsPlumb.getInstance();
-//
+
+//点击连线事件
 plumbInit.bind("click", (conn, originalEvent) => {
   console.log(conn, "点击连线");
   let lineInfo = {};
