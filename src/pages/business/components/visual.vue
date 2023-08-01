@@ -549,7 +549,7 @@ plumbInit.bind("click", (conn, originalEvent) => {
 });
 //连线触发事件
 plumbInit.bind("connection", (event) => {
-  // console.log(event, "新的连线事件触发");
+  console.log(event, "新的连线事件触发");
   // forceUpdate();
   let sourceNode = info.value.find((item) => item.id === event.sourceId);
   console.log(sourceNode.to, event.targetId, "???");
