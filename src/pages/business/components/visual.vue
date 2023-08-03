@@ -477,7 +477,7 @@ const makeFun = (item) => {
   plumbInit.makeSource(item.id, {
     filter: ".plumbNode",
     filterExclude: false,
-    allowLoopback: true,
+    allowLoopback: false,
     maxConnections: -1,
     Container: "plumbBox",
     anchor: item.anchor,
@@ -491,7 +491,7 @@ const makeFun = (item) => {
   plumbInit.makeTarget(item.id, {
     filter: ".plumbNode",
     filterExclude: false,
-    allowLoopback: true,
+    allowLoopback: false,
     maxConnections: 1,
     Container: "plumbBox",
     anchor: item.anchor,

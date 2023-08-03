@@ -1,29 +1,5 @@
 const readyConfig = {
-    //   //连接锚点位置
-    //   Anchors:["Bottom","Left","Top","Right"],
-    //   //画布容器id
-    //   Container:"canvasBox",
-    //   //连接线类型
-    //   Connector:['Straight',{stub:20,gap:1}],
-    //   //鼠标不能拖动删除线
-    //   ConnectionsDetachable:false,
-    //   //删除线的时候节点不删除
-    //   DeleteEndpointsOnDetach:true,
-    //   //端点的类型
-    //   Endpoint:['blank',{Overlays:''}],
-    //   //端点的样式
-    //   EndpointStyle:{fill:'#eee',outlineWidth:1},
-    //   //log日志
-    //   LogEnabled:true,
-    //   //连线的样式
-    //   paintStyle:{stroke:'#000',strokeWidth:2,outlineStroke:'transparent',outlineWidth:10},
-    //   //拖拽时的样式
-    //   dragOptions:{ cursor: 'pointer', zIndex: 2000 },
-    //   //绘图的模式
-    //   renderMode:'canvas',
-    //   //鼠标滑过线条的样式
-    //   hoverPaintStyle:{ stroke: '#b0b2b5', strokeWidth: 3 },
-    
+    RenderMode:'canvas',
     //画布容器id
     Container:"canvasBox",
     //连接锚点位置
@@ -31,6 +7,28 @@ const readyConfig = {
     //连线类型
     // connector: 'Bezier',
     connector:'Straight',
+    //线条上的一些文字等
+    // connectorOverlays: [
+    //     ['Arrow', {
+    //       width: 10,
+    //       length: 10,
+    //       location: 1
+    //     }],
+    //     ['Label', {
+    //       label: '文字',
+    //       cssClass: '',
+    //       labelStyle: {
+    //         color: 'red'
+    //       },
+    //       events: {
+    //         click: function (labelOverlay, originalEvent) {
+    //           console.log('click on label overlay for :' + labelOverlay.component)
+    //           console.log(labelOverlay)
+    //           console.log(originalEvent)
+    //         }
+    //       }
+    //     }]
+    //   ],
     //末端类型
     endpoint: 'Blank',
     //线条样式
@@ -58,7 +56,8 @@ const defaultList = [
         id: 'node1',
         isSource: true,
         isTarget: false,
-        to: ['node2']
+        to: ['node2'],
+        status:'success'
     },
     {
         label: '审核通过',
@@ -67,7 +66,8 @@ const defaultList = [
         id: 'node2',
         isSource: true,
         isTarget: true,
-        to: ['node3']
+        to: ['node3'],
+        status:'success'
     },
     {
         label: '缺陷改造',
@@ -76,7 +76,8 @@ const defaultList = [
         id: 'node3',
         isSource: true,
         isTarget: true,
-        to: ['node4']
+        to: ['node4'],
+        status:'error'
     },
     {
         label: '检查核定',
@@ -85,7 +86,8 @@ const defaultList = [
         id: 'node4',
         isSource: true,
         isTarget: true,
-        to: ['node5']
+        to: ['node5'],
+        status:'loading'
     },
     {
         label: '注销提交',
@@ -93,11 +95,61 @@ const defaultList = [
         top: 500,
         id: 'node5',
         isSource: false,
-        isTarget: true
+        isTarget: true,
+        status:'loading'
     }
 ]
 
+const contextMenuList = {
+    canvasBox:[
+        {
+            label:'清除画布',
+            value:'reset'
+        },
+        {
+            label:'下载图形',
+            value:'downLoad'
+        },
+        {
+            label:'放大',
+            value:'big'
+        },
+        {
+            label:'缩小',
+            value:'small'
+        }       
+    ],
+    canvasNode:[
+        {
+            label:'启动',
+            value:'run'
+        },
+        {
+            label:'中断',
+            value:'breakOff'
+        },
+        {
+            label:'重命名',
+            value:'rename'
+        },
+        {
+            label:'删除节点',
+            value:'deleteNode'
+        }   
+    ],
+    lineNode:[
+        {
+            label:'删除连线',
+            value:'deleteLine'
+        },
+        // {
+        //     label:'修改文字',
+        //     value:'changeText'
+        // }
+    ]
+}
 export default {
     readyConfig,
-    defaultList
+    defaultList,
+    contextMenuList
 }

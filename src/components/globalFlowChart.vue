@@ -3,23 +3,46 @@
         <div class="leftMenu">
             <h3>流程节点</h3>
             <draggable @start="nodeMoveStart" @end="nodeMoveEnd" v-model="props.leftNodeList">
-                <div v-for="(nodeItem, nodeIndex) in leftNodeList" :key="nodeItem.nodeId" 
+                <div v-for="(nodeItem, nodeIndex) in leftNodeOptionsList" :key="nodeItem.nodeId" 
                 @mousedown="(el)=>downNode(el,nodeItem)"
                 class="nodeItem">{{ nodeItem.label
                 }}</div>
             </draggable>
         </div>
-        <div class="canvasBox" id="canvasBox">
-            <div v-for="(canvasNodeItem, canvasNodeIndex) in infoList" :key="canvasNodeIndex" :id="canvasNodeItem.id" @contextmenu.prevent="openMenuFun($event,canvasNodeItem)"
+        <div class="canvasBox" id="canvasBox" @contextmenu.prevent="openMenuFun($event,'canvasBox')" @click.prevent="canvasBoxClick">
+            <div v-for="(canvasNodeItem, canvasNodeIndex) in infoList" :key="canvasNodeIndex" :id="canvasNodeItem.id" 
                 :style="canvasNodeStyle(canvasNodeItem)">
                 <div class="pointNode">
                     <el-icon><CirclePlusFilled /></el-icon>
                 </div>
-                {{ canvasNodeItem.label }}</div>
+                {{ canvasNodeItem.label }}
+                <div class="statusIcon">
+                    <el-icon color="green" v-if="canvasNodeItem.status === 'success'"><CircleCheckFilled /></el-icon>
+                    <el-icon color="#000" v-else-if="canvasNodeItem.status === 'loading'"><Loading /></el-icon>
+                    <el-icon color="red" v-else-if="canvasNodeItem.status === 'error'"><CircleCloseFilled /></el-icon>
+                </div>
+            </div>
+
         </div>
         <div class="contextMenu" :style="contextStyle" v-show="contextMenuShow">
-        右键------------</div>
+          <div v-for="(menuItem,menuIndex) in contextMenuList" @click="menuClickFun(menuItem)">{{ menuItem.label }}</div>
+        </div>
     </div>
+    <el-dialog
+    v-model="dialogVisible"
+    :title="dialogTitle"
+    width="20%"
+  >
+  <el-input v-model.trim="inputValue" maxlength="10"/>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="closeDiaLog">取消</el-button>
+        <el-button type="primary" @click="okDiaLog">
+           确定
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup>
 import lodash from "lodash";
@@ -31,6 +54,8 @@ import { v4 as uuidv4 } from "uuid";
 import { VueDraggableNext } from "vue-draggable-next";
 //引入画布基础配置信息
 import globalConfig from '@/javascript/globalFlowChartConfig'
+//引入画布的一些事件
+import globalFun from '@/javascript/globalFlowChartFun'
 //使用可拖拽组件
 const draggable = VueDraggableNext;
 //引入jsplumb插件
@@ -55,18 +80,39 @@ let renderFlag = ref(undefined);
 let contextMenuShow = ref(false)
 //右键菜单样式
 let contextStyle = reactive({left:0,top:0})
+//右键菜单
+let contextMenuList = ref([])
+//选中的连线信息
+let activeLineInfo = reactive({
+    sourceId:'',
+    targetId:''
+})
+//选中的节点信息
+let activeNodeInfo = reactive({})
+//弹框标识
+let dialogVisible = ref(false)
+//弹框标题
+let dialogTitle = ref('')
+//输入框的值
+let inputValue = ref('')
+//右键操作标识
+let doneType = ref('')
+
 //props传值
 const props = defineProps({
-    //左侧节点信息
-    leftNodeList: Array
+    //默认节点信息
+    leftNodeList: Array,
+    leftNodeOptionsList:Array
 })
+
+
 //鼠标开始拖拽左侧
 const nodeMoveStart = (el) => {
-    console.log(el, '鼠标开始的位置')
+    // console.log(el, '鼠标开始的位置')
 }
 //鼠标停止左侧的拖拽
 const nodeMoveEnd = (el) => {
-    console.log(el,'鼠标停止的位置')
+    // console.log(el,'鼠标停止的位置')
     refreshCanvas()
     //判断位置
     judgePosition(
@@ -78,7 +124,7 @@ const nodeMoveEnd = (el) => {
 }
 //鼠标选取左侧的节点
 const downNode = (el,nodeItem) =>{
-    console.log('活动的具体信息',nodeItem)
+    // console.log('活动的具体信息',nodeItem)
     activeLeftNode = nodeItem
       //具体位置鼠标信息
   let mousedownPositionInfo = { x: el.clientX, y: el.clientY };
@@ -95,7 +141,7 @@ const downNode = (el,nodeItem) =>{
 //重新获取画布的信息,画布的位置
 const refreshCanvas = () => {
     canvasBox.value = document.querySelector('.canvasBox')
-    console.log(canvasBox.value.getBoundingClientRect(), '画布信息')
+    // console.log(canvasBox.value.getBoundingClientRect(), '画布信息')
     canvasBoxPositionInfo = canvasBox.value.getBoundingClientRect()
 }
 //判断拖动区域
@@ -120,15 +166,18 @@ const judgePosition = (dragNodeInfo, plumbBoxPositionInfo, x, y) => {
 };
 //添加新的节点
 const addNode = (dragNodeInfo)=>{
- console.log(dragNodeInfo,'添加的节点信息')
+//  console.log(dragNodeInfo,'添加的节点信息')
  let addInfo = {
     id:uuidv4(),
-    isSource:true,
-    isTarget:true,
-    label:'新的节点',
+    isSource:dragNodeInfo.isSource,
+    isTarget:dragNodeInfo.isTarget,
+    maxConnections:dragNodeInfo.maxConnections,
+    label:dragNodeInfo.label,
     to:[],
     left:dragNodeInfo.left,
-    top:dragNodeInfo.top
+    top:dragNodeInfo.top,
+    status:'loading',
+
  }
  infoList.value.push(Object.assign(addInfo,globalConfig.readyConfig))
 
@@ -170,6 +219,7 @@ const renderFun = (flag)=>{
                         target: v,
                         anchor:item.anchor,
                         connector:item.connector,
+                        // connectorOverlays:item.connectorOverlays,
                         endpoint:item.endpoint,
                         overlays:item.overlays,
                         paintStyle:item.paintStyle,
@@ -184,7 +234,7 @@ const renderFun = (flag)=>{
             renderList.forEach(item=>{
                 plumbInstance.connect(item)
             })
-            console.log(infoList.value,'待渲染的信息')
+            // console.log(infoList.value,'待渲染的信息')
             infoList.value.forEach(item=>{
                 makeFun(item)
                 plumbInstance.draggable(item.id, {
@@ -200,15 +250,16 @@ const renderFun = (flag)=>{
 }
 //给节点设置可连接属性
 const makeFun = (item) => {
-    console.log(item,'渲染=================')
+    // console.log(item,'渲染=================')
     plumbInstance.setSourceEnabled(item.id, item.isSource);
     plumbInstance.setTargetEnabled(item.id, item.isTarget);
     plumbInstance.setDraggable(item.id, true);
-    plumbInstance.makeSource(item.id, {
+    if(item.isSource){
+        plumbInstance.makeSource(item.id, {
     filter: ".pointNode",
     filterExclude: false,
     allowLoopback: true,
-    maxConnections: -1,
+    maxConnections: item.maxConnections || -1,
     Container: item.Container,
     anchor: item.anchor,
     connector: item.connector,
@@ -217,12 +268,15 @@ const makeFun = (item) => {
     paintStyle: item.paintStyle,
     hoverPaintStyle: item.hoverPaintStyle,
     endpointStyle: item.endpointStyle,
+    allowLoopback:true
   });
-  plumbInstance.makeTarget(item.id, {
+    }
+    if(item.isTarget){
+        plumbInstance.makeTarget(item.id, {
     filter: ".pointNode",
     filterExclude: false,
     allowLoopback: true,
-    maxConnections: 1,
+    maxConnections: item.maxConnections || 1,
     Container: item.Container,
     anchor: item.anchor,
     connector: item.connector,
@@ -231,7 +285,10 @@ const makeFun = (item) => {
     paintStyle: item.paintStyle,
     hoverPaintStyle: item.hoverPaintStyle,
     endpointStyle: item.endpointStyle,
+    allowLoopback:true
   });
+    }
+
   plumbInstance.draggable(item.id, {
     containment: "parent",
     stop: function (el) {
@@ -240,13 +297,21 @@ const makeFun = (item) => {
     },
   });
 };
-
+//连线右击事件
+plumbInstance.bind("contextmenu",(con)=>{
+    // console.log(con,'连线右键')
+    activeLineInfo.sourceId = con.sourceId
+    activeLineInfo.targetId = con.targetId
+    contextMenuShow.value = true
+    contextMenuList.value = globalConfig.contextMenuList.lineNode
+    // console.log('连线的信息',activeLineInfo)
+})
 //连线触发事件
 plumbInstance.bind("connection", (event) => {
-  console.log(event, "新的连线事件触发");
+//   console.log(event, "新的连线事件触发");
   // forceUpdate();
   let sourceNode = infoList.value.find((item) => item.id === event.sourceId);
-  console.log(sourceNode.to, event.targetId, "???");
+//   console.log(sourceNode.to, event.targetId, "???");
   if (sourceNode.to.findIndex((v) => v === event.targetId) === -1) {
     sourceNode.to.push(event.targetId);
   }
@@ -255,19 +320,110 @@ plumbInstance.bind("connection", (event) => {
     renderFlag.value = "new";
   });
   if (renderFlag.value === "new") {
-    console.log("新的页面刷新");
+    // console.log("新的页面刷新");
     renderFlag.value = "once";
     renderFun("new");
   }
-
-  console.log(infoList.value,'连线成功后的数据====')
+//   console.log(infoList.value,'连线成功后的数据====')
 });
+//连线触发之前
+plumbInstance.bind('beforeDrop',(info)=>{
+    // console.log(info,'连线之前')
+    let sourceInfo = infoList.value.find(item=>item.id === info.sourceId)
+    let targetInfo = infoList.value.find(item=>item.id === info.targetId)
+    // console.log(sourceInfo,'起始节点')
+    // console.log(targetInfo,'目标节点')
+    if(sourceInfo.isSource === false){
+        ElMessage({
+            type:'warning',
+            message:`${sourceInfo.label}节点不能作为连接起始点`
+        })
+        return false
+    }else{
+        if(targetInfo.isTarget === false){
+            ElMessage({
+            type:'warning',
+            message:`${targetInfo.label}节点不能作为连接终点`
+        })
+        return false
+        }else{
+            return true
+        }
+    }
+  })
+//画布的右键事件
 const openMenuFun = (event,nodeItem)=>{
-    console.log(event,nodeItem,'右键事件')
-    contextStyle.left = event.x-220+'px'
-    contextStyle.top = event.y-120+'px'
-    contextMenuShow.value = true
+    contextMenuShow.value = false
+    // console.log(event,nodeItem,'右键事件')
+    contextStyle.left = event.x-230+'px'
+    contextStyle.top = event.y-170+'px'
+    if(event.target.id){
+        contextMenuShow.value = true
+        if(event.target.id === 'canvasBox'){
+        // console.log('右键的画布')
+        contextMenuList.value = globalConfig.contextMenuList.canvasBox
+    }else{
+        // console.log(event.target.id,'节点')
+        activeNodeInfo = infoList.value.find(v=>v.id === event.target.id)
+        contextMenuList.value = globalConfig.contextMenuList.canvasNode
+    }
+    }else{
+        // console.log('点击的连线')
+    }
+
 }
+//画布的点击事件
+const canvasBoxClick = ()=>{
+    contextMenuShow.value = false
+}
+const menuClickFun = (item)=>{
+//   console.log(item,'节点信息')
+contextMenuShow.value = false
+doneType.value =  globalFun[item.value](plumbInstance,infoList,activeNodeInfo,activeLineInfo)
+switch(doneType.value){
+  case 'rename':
+    dialogVisible.value = true
+    dialogTitle.value = '重命名'
+    inputValue.value = activeNodeInfo.label
+  break
+  case 'deleteNode':
+    nextTick(()=>{
+    renderFun('new')
+})
+  break
+  case 'reset':
+  nextTick(()=>{
+    renderFun('new')
+})
+}
+
+}
+
+const closeDiaLog = ()=>{
+    dialogVisible.value = false
+    inputValue.value = ''
+}
+const okDiaLog = ()=>{
+    console.log(inputValue.value,'输入框的值')
+    switch(doneType.value){
+        case 'rename':
+            if(inputValue.value.length<1){
+                ElMessage({
+                    message:"值不能为空",
+                    type:"warning"
+                })
+                return
+            }else{
+                activeNodeInfo.label = inputValue.value
+            }
+    }
+    closeDiaLog()
+    nextTick(()=>{
+    renderFun()
+})
+
+}
+
 //获取默认的信息并进行默认配置
 infoList.value = lodash.cloneDeep(globalConfig.defaultList)
 infoList.value.map(item=>item = Object.assign(item,globalConfig.readyConfig))
@@ -329,12 +485,30 @@ onBeforeUnmount(()=>{
             left: 10px;
             top: 0px;
         }
+        .statusIcon{
+            position: absolute;
+            right: 10px;
+            top: 0px;
+        }
     }
 }
 .contextMenu{
     position: absolute;
     left:0;
     top: 0;
-    border: #000 1px solid;
+    border: #eee 1px solid;
+    // border-bottom: none;
+    box-shadow: #eee 1px 1px 1px 1px;
+    div{
+        width: 180px;
+        padding: 10px;
+        // border-bottom: 1px solid #000;
+        text-align: center;
+        background: #fff;
+        cursor: pointer;
+    }
+    div:hover{
+        background-color: #e6e6e9;
+    }
 }
 </style>
