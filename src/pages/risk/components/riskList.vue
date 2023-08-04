@@ -265,7 +265,7 @@ onMounted(() => {
     reqList();
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .modeBox {
     padding: 12px;
     height: 100%;

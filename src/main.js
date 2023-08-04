@@ -39,11 +39,20 @@ import './router/guardRouter'
 //vuex
 import store from './store/index'
 
+//vxe-table
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+function useTble (app){
+  app.use(VXETable)
+}
+
 //创建实例
-import { createApp } from 'vue'
+import { createApp} from 'vue'
 import request from './utils/requestUtils'
 import Main from './main.vue'
 const mainVue = createApp(Main)
+
+
 
 //注册模块
 mainVue.use(router)
@@ -57,6 +66,7 @@ mainVue.use(store)
 mainVue.use(RelationGraph)
 mainVue.use(Editor)
 mainVue.use(Toolbar)
+mainVue.use(useTble)
 mainVue.config.globalProperties.$axios = request;
 mainVue.config.globalProperties.$echarts = echarts
 mainVue.mount('.main')

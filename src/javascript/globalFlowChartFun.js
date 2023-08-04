@@ -7,11 +7,18 @@
  */
 //启动
 const run = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
-   console.log(infoList,'列表数据')
+   activeNodeInfo.status = 'success'
+   return 'run'
 }
 //中断
 const breakOff = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
-    console.log(infoList,'列表数据')
+    activeNodeInfo.status = 'error'
+    return 'breakOff'
+ }
+ //暂停
+const loading = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
+    activeNodeInfo.status = 'loading'
+    return 'loading'
  }
  //重命名
 const rename = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
@@ -44,18 +51,18 @@ const reset = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
  //下载图形
 const downLoad = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
     console.log(infoList,'列表数据')
- }
- //放大
-const big = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
-    console.log(infoList,'列表数据')
- }
- //缩小
-const small = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
-    console.log(infoList,'列表数据')
+    return 'downLoad'
  }
   //删除连线
 const deleteLine = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
     console.log(infoList,'列表数据')
+    infoList.value.forEach(item=>{
+         if(item.id === activeLineInfo.sourceId){
+             let index = item.to.findIndex(v=>v === activeLineInfo.targetId)
+             item.to.splice(index,1)
+         }
+    })
+    return 'deleteLine'
  }
  //修改文字
 // const changeText = (plumbInstance,infoList,activeNodeInfo,activeLineInfo)=>{
@@ -68,8 +75,7 @@ export default{
     deleteNode,
     reset,
     downLoad,
-    big,
-    small,
     deleteLine,
+    loading
     // changeText
 }

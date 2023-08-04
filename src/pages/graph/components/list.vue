@@ -70,6 +70,7 @@ const jump = function (flag) {
     font-size: 40px;
     color: #409eff;
     margin-left: 20px;
+    font-weight: 600;
   }
 }
 .box:hover {

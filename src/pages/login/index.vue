@@ -213,6 +213,7 @@ export default {
             userName:this.form.userName,
             name: this.form.name,
             password: this.form.password,
+            role:'code'
           };
           this.$axios.post(url, queryData).then((res) => {
             if (res.code === 200) {

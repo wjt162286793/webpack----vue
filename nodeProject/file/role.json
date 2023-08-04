@@ -1,0 +1,26 @@
+[
+{
+  "name":"normal",
+  "cname":"常规租户"
+},
+{
+    "name":"code",
+    "cname":"开发人员"
+},
+{
+    "name":"super",
+    "cname":"超级管理员"
+},
+{
+    "name":"teller",
+    "cname":"查询柜员"
+},
+{
+    "name":"riskUser",
+    "cname":"风险审查员"
+},
+{
+    "name":"tmporary",
+    "cname":"临时租户"
+}
+]

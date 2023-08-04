@@ -167,6 +167,59 @@ const riskRoutes = [
 
         }
     },
+        //查询风险资产信息
+        {
+            path:'/app/risk/reqInfo',
+            done:function(req,res){
+                let fileData = []
+                fs.readFile(path.join(__dirname,'../file/risk.json'),'utf8',(err,data)=>{
+                    if(err){
+                    }else{
+                        fileData = JSON.parse(data.toString())
+                        let postData = ''
+                        req.on('data',function(chunk){
+                            postData += chunk
+                        })
+                        req.on('end',function(){
+                            let reqData = JSON.parse(postData)
+                            let index = fileData.findIndex(v=>v.uuid === reqData.id)
+                            callBack(res,'Content-Type','application/json;charset=utf-8',200,fileData[index],'success')                           
+                        })
+                    }
+                })
+            }
+        },
+    //保存风险模型
+    {
+        path:'/app/risk/saveFlow',
+        done:function(req,res){
+            let fileData = []
+            fs.readFile(path.join(__dirname,'../file/risk.json'),'utf8',(err,data)=>{
+                if(err){
+                }else{
+                    fileData = JSON.parse(data.toString())
+                    let postData = ''
+                    req.on('data',function(chunk){
+                        postData += chunk
+                    })
+                    req.on('end',function(){
+                        let reqData = JSON.parse(postData)
+                        let index = fileData.findIndex(v=>v.uuid === reqData.id)
+                        fileData[index].flowList = reqData.flowList
+                        let saveFileText = JSON.stringify(fileData)
+                        fs.writeFile(path.join(__dirname,'../file/risk.json'),saveFileText,function(err){
+                            if(err){
+                                 return
+                            }else{
+                                callBack(res,'Content-Type','application/json;charset=utf-8',200,[],'success')
+                            }
+                        })
+                        
+                    })
+                }
+            })
+        }
+    }
 ]
 function callBack(res, type, headers, code, data, message) {
     res.setHeader(type, headers)

@@ -61,7 +61,7 @@ const defaultList = [
     },
     {
         label: '审核通过',
-        left: 200,
+        left: 600,
         top: 200,
         id: 'node2',
         isSource: true,
@@ -81,7 +81,7 @@ const defaultList = [
     },
     {
         label: '检查核定',
-        left: 200,
+        left: 600,
         top: 400,
         id: 'node4',
         isSource: true,
@@ -109,15 +109,7 @@ const contextMenuList = {
         {
             label:'下载图形',
             value:'downLoad'
-        },
-        {
-            label:'放大',
-            value:'big'
-        },
-        {
-            label:'缩小',
-            value:'small'
-        }       
+        }     
     ],
     canvasNode:[
         {
@@ -127,6 +119,10 @@ const contextMenuList = {
         {
             label:'中断',
             value:'breakOff'
+        },
+        {
+            label:'暂停',
+            value:'loading'
         },
         {
             label:'重命名',

@@ -628,6 +628,8 @@ const downLoad = ()=>{
 	// 添加a元素到DOM中，并触发点击事件以下载图片
 	document.body.appendChild(link);
 	link.click();
+  document.body.removeChild(img)
+  document.body.removeChild(link)
 }
 defineExpose({
 nodeList,

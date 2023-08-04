@@ -8,6 +8,10 @@
                 class="nodeItem">{{ nodeItem.label
                 }}</div>
             </draggable>
+            <div class="btnBox">
+            <el-button type="primary" @click="saveFlow">保存</el-button>
+            <el-button type="primary" @click="callBack">返回</el-button>
+            </div>
         </div>
         <div class="canvasBox" id="canvasBox" @contextmenu.prevent="openMenuFun($event,'canvasBox')" @click.prevent="canvasBoxClick">
             <div v-for="(canvasNodeItem, canvasNodeIndex) in infoList" :key="canvasNodeIndex" :id="canvasNodeItem.id" 
@@ -45,7 +49,10 @@
   </el-dialog>
 </template>
 <script setup>
+//函数库
 import lodash from "lodash";
+//图片保存插件
+import html2canvas from "@/javascript/html2canvas"
 //消息框
 import { ElMessage } from "element-plus";
 //uuid
@@ -97,6 +104,8 @@ let dialogTitle = ref('')
 let inputValue = ref('')
 //右键操作标识
 let doneType = ref('')
+// //缩放程度
+// let zoom = ref(0.5)
 
 //props传值
 const props = defineProps({
@@ -104,6 +113,9 @@ const props = defineProps({
     leftNodeList: Array,
     leftNodeOptionsList:Array
 })
+
+//自定义事件
+const emit = defineEmits(['saveFlow','callBack'])
 
 
 //鼠标开始拖拽左侧
@@ -395,10 +407,67 @@ switch(doneType.value){
   nextTick(()=>{
     renderFun('new')
 })
+  break
+  case 'downLoad':
+    let canvasBox = document.querySelector('#canvasBox')
+  html2canvas(canvasBox,{}).then((canvas)=>{
+    let imgUrl = canvas.toDataURL()
+    console.log(imgUrl,'图片地址')
+    	// 创建img元素，用于预览图片
+	const img = document.createElement('img')
+	img.src = imgUrl;
+	document.body.appendChild(img);
+	
+	// 创建a元素，用于下载图片
+	const link = document.createElement('a');
+    link.style.width = '0px'
+    link.style.height = '0px'
+    link.className = 'temporaryImg'
+	link.href = imgUrl;
+    //图片名称随机
+	link.download = `${uuidv4()}.png`;
+	
+	// 添加a元素到DOM中，并触发点击事件以下载图片
+	document.body.appendChild(link);
+	link.click();
+     nextTick(()=>{
+        document.body.removeChild(img)
+    document.body.removeChild(link)
+     })
+  })
+  break
+  case 'deleteLine':
+  nextTick(()=>{
+    renderFun('new')
+  })
+  break
+  case 'run':
+  nextTick(()=>{
+    renderFun('new')
+  })
+  break
+  case 'loading':
+  nextTick(()=>{
+    renderFun('new')
+  })
+  break
+  case 'breakOff':
+  nextTick(()=>{
+    renderFun('new')
+  })
+  break
 }
 
 }
 
+//保存数据
+const saveFlow = ()=>{
+emit("saveFlow",infoList.value)
+}
+//返回
+const callBack = ()=>{
+  emit("callBack")
+}
 const closeDiaLog = ()=>{
     dialogVisible.value = false
     inputValue.value = ''
@@ -424,15 +493,26 @@ const okDiaLog = ()=>{
 
 }
 
-//获取默认的信息并进行默认配置
-infoList.value = lodash.cloneDeep(globalConfig.defaultList)
-infoList.value.map(item=>item = Object.assign(item,globalConfig.readyConfig))
-
-onMounted(() => {
-    nextTick(() => {
+//获取节点信息并进行默认配置
+const getInfoList =(info)=>{
+  if(info){
+    infoList.value = info
+  }else{
+    infoList.value = lodash.cloneDeep(globalConfig.defaultList)
+  }
+  infoList.value.map(item=>item = Object.assign(item,globalConfig.readyConfig))
+      nextTick(() => {
         renderFun()
         renderFlag.value = 'render'
     })
+}
+
+//暴露组件方法
+defineExpose({
+  getInfoList
+})
+
+onMounted(() => {
 })
 onBeforeUnmount(()=>{
     infoList.value = []
@@ -442,13 +522,19 @@ onBeforeUnmount(()=>{
 <style lang="less" scoped>
 .contentBox {
     display: flex;
-    height: 600px;
+    height: 560px;
     position: relative;
 
     .leftMenu {
         width: 220px;
+        height: 700px;
         padding: 10px;
-
+        position: relative;
+        .btnBox{
+          position: absolute;
+          bottom: 0px;
+          left: 40px;
+        }
         // background: red;
         h3 {
             text-align: center;
