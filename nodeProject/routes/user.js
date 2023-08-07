@@ -180,7 +180,8 @@ const userRoutes = [
                         fileData.forEach(item => {
                             list.push({
                                 value: item.name,
-                                label: item.userName
+                                label: item.userName,
+                                role:item.role
                             })
                         })
                         callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, list, 'success')

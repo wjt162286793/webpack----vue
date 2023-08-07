@@ -319,7 +319,7 @@ onMounted(() => {
 .listContent {
   height: 100%;
   position: relative;
-  margin-bottom: 50px;
+  // margin-bottom: 50px;
   padding: 10px;
 
   .searchbox {

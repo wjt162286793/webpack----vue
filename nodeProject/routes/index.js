@@ -4,5 +4,6 @@ const { businessRoutes } = require('./business')
 const {publicListRoutes} = require('./publicList')
 const {publicFormRoutes} = require('./publicForm')
 const {riskRoutes} = require('./risk')
-const routes = [].concat(personRoutes).concat(userRoutes).concat(businessRoutes).concat(publicListRoutes).concat(publicFormRoutes).concat(riskRoutes)
+const {userRoleList} = require('./user_role')
+const routes = [].concat(personRoutes).concat(userRoutes).concat(businessRoutes).concat(publicListRoutes).concat(publicFormRoutes).concat(riskRoutes).concat(userRoleList)
 module.exports = routes
