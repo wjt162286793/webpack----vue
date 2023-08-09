@@ -23,4 +23,7 @@ import Config from './config.vue'
   .contentBox{
     height: 100%;
   }
+  ::v-deep(.el-tabs--border-card){
+    border-bottom: none !important;
+  }
 </style>

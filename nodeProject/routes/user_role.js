@@ -17,15 +17,35 @@ const userRoleList = [
                     })
                     req.on('end',()=>{
                      let reqData = JSON.parse(postData)
+                     let queryList = []
+                     let query = reqData.query
+                     let pageInfo = reqData.pageInfo
+                     for(let obj in query){
+                        if(query[obj].toString() && query[obj].length.toString().length>0){
+                            queryList.push([obj,query[obj]])
+                        }
+                     }
                      let list = []
-                     fileData.forEach(item=>{
-                        list.push({
+                     if(queryList.length>0){
+                        fileData.forEach(item=>{
+                            let flag = queryList.every(v=>item[v[0]].toString() === v[1].toString())
+                            if(flag){
+                                list.push(item)
+                            }
+                         })
+                     }else{
+                        list = fileData
+                     }
+                     let List = []
+                     list.forEach(item=>{
+                        List.push({
                             name:item.name,
                             role:item.role,
                             userName:item.userName
                         })
                      })
-                     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, list, 'success')
+                     let filterData = List.slice((pageInfo.currentPage-1)*pageInfo.pageSize,pageInfo.currentPage*pageInfo.pageSize)
+                     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, {list:filterData,total:List.length}, 'success')
                     })
                 }
             })
