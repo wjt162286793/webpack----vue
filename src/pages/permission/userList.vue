@@ -24,7 +24,7 @@
             <vxe-table :align="'left'" :data="tableData">
                 <vxe-column field="userName" title="用户中文名"></vxe-column>
                 <vxe-column field="name" title="用户账号"></vxe-column>
-                <vxe-column title="用户权限">
+                <vxe-column title="用户角色">
                     <template #default="{ row }">
                         <span>
                             {{ getRoleValue(row.role) }}
