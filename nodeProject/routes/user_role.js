@@ -73,7 +73,25 @@ const userRoleList = [
             })
 
         }
-}
+      },
+      {
+        path:'/app/userRole/updateRole',
+        done:(req,res)=>{
+            let postData = ''
+            req.on('data',function(chunk){
+                postData += chunk
+            })
+            req.on('end',function(){
+               let reqData = JSON.parse(postData)
+               let fileData = JSON.stringify(reqData.data)
+               fs.writeFile(path.join(__dirname,'../file/role.json'),fileData,(error)=>{
+                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, {}, 'success')
+               }
+               )
+            })
+
+        }
+      }
 ]
 
 function callBack(res, type, headers, code, data, message) {

@@ -1,19 +1,24 @@
 <template>
-  <div>
+  <div class="roleBox">
+    <p>*超级管理员拥有全部的权限,并且不可更改</p>
+    <vxe-button type="text" status="primary" content="保存" @click="changeList" class="saveBtn"></vxe-button>
     <vxe-table :align="'center'" :data="tableData">
-      <vxe-column field="roleName" title="角色名称" width="300">
+      <vxe-column field="cname" title="角色名称" width="300">
         <template #default="{ row }">
-          <span>{{ row.roleName.label }}</span>
+          <span>{{ row.cname }}</span>
         </template>
       </vxe-column>
       <vxe-column field="menuName" title="菜单名称" width="300">
         <template #default="{ row }">
           <div
-            class="columnBox"
+          class="doneBox"
             v-for="(item, index) in row.menuName"
             :key="index"
           >
-            {{ item.label }}
+          <vxe-checkbox v-model="item.flag" :content="item.label" :indeterminate="item.isAll" @change="changeCheck1(item,row)" :disabled="item.disabled"></vxe-checkbox>
+          <!-- <el-checkbox v-model="item.flag" :label="item.label" size="large" /> -->
+            <!-- {{ item.label }} -->
+
           </div>
         </template>
       </vxe-column>
@@ -25,7 +30,7 @@
             class="doneBox"
           >
             <div v-for="(val, ind) in item" :key="ind" class="doneTypeClass">
-              <el-checkbox v-model="val.flag" :label="val.label" size="large" />
+              <vxe-checkbox v-model="val.flag" :content="val.label" size="large" @change="changeCheck2(val,row)" :disabled="val.disabled"/>
             </div>
           </div>
         </template>
@@ -33,104 +38,83 @@
     </vxe-table>
   </div>
 </template>
-  
   <script setup>
-const tableData = ref([
-  {
-    roleName: {
-      label: "超级管理员",
-      name: "super",
-    },
-    menuName: [
-      {
-        label: "实体",
-        name: "entiry",
-        flag: true,
-      },
-      {
-        label: "业务领域",
-        name: "bussiness",
-        flag: true,
-      },
-      {
-        label: "任务",
-        name: "task",
-        flag: true,
-      },
-    ],
-    doneName: [
-      [
-        {
-          parent: "entiry",
-          name: "add",
-          label: "新增",
-          flag: true,
-        },
-        {
-          parent: "entiry",
-          name: "edit",
-          label: "编辑",
-          flag: true,
-        },
-        {
-          parent: "entiry",
-          name: "delete",
-          label: "删除",
-          flag: true,
-        },
-      ],
-      [
-        {
-          parent: "bussiness",
-          name: "add",
-          label: "新增",
-          flag: true,
-        },
-        {
-          parent: "bussiness",
-          name: "edit",
-          label: "编辑",
-          flag: true,
-        },
-        {
-          parent: "bussiness",
-          name: "delete",
-          label: "删除",
-          flag: true,
-        },
-      ],
-      [
-        {
-          parent: "task",
-          name: "add",
-          label: "新增",
-          flag: true,
-        },
-        {
-          parent: "task",
-          name: "edit",
-          label: "编辑",
-          flag: true,
-        },
-        {
-          parent: "task",
-          name: "delete",
-          label: "删除",
-          flag: true,
-        },
-      ],
-    ],
-  },
-]);
+import request from '@/utils/requestUtils';
+const tableData = ref([]);
+const changeCheck1 = (val,row)=>{
+ val.isAll = false
+ let index = row['doneName'].findIndex(item=>item[0].parent === val.name)
+ row['doneName'][index].map(v=>v.flag = val.flag)
+//  changeList()
+}
+const changeCheck2 = (val,row)=>{
+console.log(val,row,'???')
+let index = row['doneName'].findIndex(item=>item[0].parent === val.parent)
+let list =  row['doneName'][index]
+let parentIndex = row.menuName.findIndex(item=>item.name === val.parent)
+let parentItem = row.menuName[parentIndex]
+if(list.every(item=>item.flag === true)){
+     parentItem.flag = true
+     parentItem.isAll = false
+}else if(list.every(item=>item.flag === false)){
+     parentItem.flag = false
+     parentItem.isAll = false
+}else if(list.some(item=>item.flag === true)){
+     parentItem.flag = false
+     parentItem.isAll = true
+}
+// changeList()
+}
+const reqList = ()=>{
+  request.get('/app/userRole/roleList').then(res => {
+        if (res.code === 200) {
+           tableData.value = res.data
+        }
+    })
+}
+const changeList = ()=>{
+  request.post('/app/userRole/updateRole',{data:tableData.value}).then(res=>{
+    if(res.code === 200){
+      nextTick(()=>{
+            reqList()
+           })
+    }
+  })
+}
+reqList()
+onMounted(()=>{
+
+})
+onBeforeUnmount(()=>{
+  // changeList()
+})
+
 </script>
   <style scoped lang="less">
+.roleBox{
+  position: relative;
+  padding-top: 30px;
+  p{
+    color: #fd1030;
+    position: absolute;
+    top: 0px;
+    left: 10px;
+  }
+  .saveBtn{
+    position: absolute;
+    right: 10px;
+    top: 0px;
+  }
+}
 .columnBox {
   border: 1px solid #e6e8ec;
   border-top: none;
   padding: 10px;
 }
 .doneBox {
-  border-bottom: 1px solid #e6e8ec;
+  border: 1px solid #e6e8ec;
+  height: 40px;
+  line-height: 39px;
 }
 .doneTypeClass {
   margin-right: 20px;
