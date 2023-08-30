@@ -188,7 +188,7 @@ const reqList = () => {
 };
 const jumpEdit = (value) => {
   router.push({
-    name: "editBusiness",
+    name: "businessEdit",
     query: {
       id: value.id,
     },

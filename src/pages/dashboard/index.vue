@@ -140,7 +140,7 @@ const getBreadList = (routePath, allRouters) => {
   }
   
 };
-const leftMenuList = router.options.routes.find(
+const leftMenuList = router.getRoutes().find(
   (item) => item.name === "dashboard"
 ).children;
 //左侧菜单伸展
@@ -241,11 +241,13 @@ onMounted(() => {
   } else {
     menuActive.value = route.name;
   }
-  getBreadList(route.path, router.options.routes[3].children);
+  getBreadList(route.path, router.getRoutes().find(
+  (item) => item.name === "dashboard"
+).children);
   watch(
     () => route.path,
     (newVal, oldVal) => {
-      getBreadList(newVal, router.options.routes[3].children);
+      getBreadList(newVal, router.getRoutes().find(item=>item.name === 'dashboard').children);
       if (newVal === "/dashboard") {
         router.push({ path: "/dashboard/business" });
         menuActive.value = "business";

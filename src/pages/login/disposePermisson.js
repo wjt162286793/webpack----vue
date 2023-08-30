@@ -1,49 +1,8 @@
-import router from './index'
+import router from '@/router/index'
+import { asyncRoutes } from '@/router/asyncRoutes';
 import store from '@/store/index'
 import request from '@/utils/requestUtils';
 import { cloneDeep } from 'lodash';
-import { asyncRoutes } from './asyncRoutes'
-
-// let allAsyncRoutes = cloneDeep(asyncRoutes)
-// console.log(allAsyncRoutes,'全部深度路由拷贝')
-
-
-// allAsyncRoutes.forEach(item=>{
-//     // router.options.routes.push(item)
-//     router.addRoute(item)
-// })
-// console.log(router,'....')
-//导航守卫 token校验
-router.beforeEach((to, from, next) => {
-    let token = localStorage.getItem('token')
-    if (token) {
-        console.log('有token')
-        console.log(store.state.role.asyncRouteFinish,'???')
-        if(to.path === '/login'){
-            next()
-        }else{
-            if(store.state.role.asyncRouteFinish === true){
-                next()
-            }else{
-                if(!store.state.user.userInfo){
-                    next('/login')
-                }else{
-                    getRoleFun(store.state.user.userInfo,next,to) 
-                }
-                            
-            }
-        }
-    } else {
-        if (to.meta.noAuth) {
-            next()
-        } else {
-            console.log('没token')
-            next('/login')
-        }
-    }
-
-})
-
 
 let flatFun = (alllist)=>{
   let List = []
@@ -62,7 +21,7 @@ let flatFun = (alllist)=>{
   return List
 }
 
- let getRolePermission = (menuPermissionList,asyncRouteList,next,to)=>{
+export let getRolePermission = (menuPermissionList,asyncRouteList,next,to)=>{
  let allAsyncRoutesList = cloneDeep(asyncRouteList)
  console.log(menuPermissionList,'菜单权限')
  console.log(allAsyncRoutesList,'全部路由')
@@ -78,31 +37,18 @@ flatRouteList.forEach(Item=>{
     filterRoute.push(Item)
   }
 })
-// filterRoute.forEach(item=>{
-//       router.addRoute(item)
-//   })
-// console.log(router.getRoutes(),'得到的路由')
-let allAsyncRoutes = cloneDeep(asyncRoutes)
-console.log(allAsyncRoutes,'全部深度路由拷贝')
-
-
-allAsyncRoutes.forEach(item=>{
-    // router.options.routes.push(item)
-    router.addRoute(item)
-})
+filterRoute.forEach(item=>{
+      router.addRoute(item)
+  })
 console.log(router.getRoutes(),'得到的路由')
 store.dispatch('changeAsyncRouteFinish',true)
-
 if(next && to){
-    console.log(next,to,'next&&to')
-//   next({...to,replace:true})
-next(to.path)
-
+  next({...to,replace:true})
 }
 
 }
 
- let getRoleFun = (userInfo,next,to)=>{
+export let loginSuccessDone = (userInfo,next,to)=>{
          localStorage.setItem("userInfo", JSON.stringify(userInfo));
          localStorage.setItem("token", userInfo.token);
          store.dispatch("changeUserInfo", userInfo);
@@ -110,7 +56,6 @@ next(to.path)
         request.get('/app/userRole/roleList').then(res => {
             if (res.code === 200) {
                let roleList = res.data
-               console.log(userInfo,'.......用户数据')
                console.log(roleList,'权限数据')
                let userRole = roleList.find(item=>item.name === userInfo.role)
                let menuPermissionList = userRole['menuName']
@@ -120,7 +65,7 @@ next(to.path)
             }
         })
          console.log(store,'store的操作')
-        //       router.push({
-        //         path: "/dashboard",
-        // });
+              router.push({
+                path: "/dashboard",
+        });
 } 

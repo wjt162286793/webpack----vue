@@ -1,14 +1,15 @@
 import Vuex from 'vuex'
 
 import user from './modules/user'
-
+import role from './modules/role'
 const store = new Vuex.Store({
     state: {},
     mutations: {},
     actions: {},
     getters: {},
     modules: {
-        user
+        user,
+        role
     }
 })
 

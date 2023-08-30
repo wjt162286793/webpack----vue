@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import {loginSuccessDone} from './disposePermisson'
 export default {
   name: "login",
   data() {
@@ -180,9 +181,11 @@ export default {
           this.$axios.post("app/user/login", this.ruleForm).then((res) => {
             console.log(res, "登录返回结果");
             if (res.code === 200) {
+              // loginSuccessDone(res.data)
               localStorage.setItem("userInfo", JSON.stringify(res.data));
               localStorage.setItem("token", res.data.token);
               this.$store.dispatch("changeUserInfo", res.data);
+
               this.$router.push({
                 path: "/dashboard",
               });
