@@ -1,6 +1,6 @@
 const user = {
     state: {
-        userInfo: {}
+        userInfo: undefined
     },
     mutations: {
         CHANGE_USERINFO: function (state, info) {

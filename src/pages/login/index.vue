@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import store from '@/store';
 import {loginSuccessDone} from './disposePermisson'
 export default {
   name: "login",
@@ -235,11 +236,6 @@ export default {
     closeDialog() {
       this.dialogFormVisible = false;
       this.form = {userName:"", name: "", password: "", verifyPassword: "" };
-    },
-    //退出登录
-    logOut() {
-      localStorage.removeItem("token");
-      console.log(localStorage.getItem("token"), "token值");
     },
     //打开弹框
     dialogOpen(flag) {

@@ -3,7 +3,8 @@ export const asyncRoutes = [
         path: '/dashboard',
         name: 'dashboard',
         meta: {
-            name: '主页'
+            name: '主页',
+            index:0
         },
         component: () => import('pages/dashboard/index.vue'),
         children: [
@@ -205,7 +206,7 @@ export const asyncRoutes = [
                 children: [
                     {
                         path: '/dashboard/graph/list',
-                        name: 'list',
+                        name: 'graphList',
                         meta: {
                             name: '列表'
                         },

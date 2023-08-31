@@ -15,7 +15,7 @@
             v-for="(item, index) in row.menuName"
             :key="index"
           >
-          <vxe-checkbox v-model="item.flag" :content="item.label" :indeterminate="item.isAll" @change="changeCheck1(item,row)" :disabled="item.disabled"></vxe-checkbox>
+          <vxe-checkbox v-model="item.flag" :content="item.label" :indeterminate="item.indeterminate" @change="changeCheck1(item,row)" :disabled="item.disabled"></vxe-checkbox>
           <!-- <el-checkbox v-model="item.flag" :label="item.label" size="large" /> -->
             <!-- {{ item.label }} -->
 
@@ -42,7 +42,7 @@
 import request from '@/utils/requestUtils';
 const tableData = ref([]);
 const changeCheck1 = (val,row)=>{
- val.isAll = false
+ val.indeterminate = false
  let index = row['doneName'].findIndex(item=>item[0].parent === val.name)
  row['doneName'][index].map(v=>v.flag = val.flag)
 //  changeList()
@@ -55,13 +55,13 @@ let parentIndex = row.menuName.findIndex(item=>item.name === val.parent)
 let parentItem = row.menuName[parentIndex]
 if(list.every(item=>item.flag === true)){
      parentItem.flag = true
-     parentItem.isAll = false
+     parentItem.indeterminate = false
 }else if(list.every(item=>item.flag === false)){
      parentItem.flag = false
-     parentItem.isAll = false
+     parentItem.indeterminate = false
 }else if(list.some(item=>item.flag === true)){
      parentItem.flag = false
-     parentItem.isAll = true
+     parentItem.indeterminate = true
 }
 // changeList()
 }

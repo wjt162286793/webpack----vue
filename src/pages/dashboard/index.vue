@@ -94,6 +94,7 @@ import {
   Location,
   Setting,
 } from "@element-plus/icons-vue";
+import store from "@/store";
 const interInstance = getCurrentInstance();
 const dialogUserInfoVisible = ref(false)
 let menuActive = ref("dashboard");
@@ -140,6 +141,8 @@ const getBreadList = (routePath, allRouters) => {
   }
   
 };
+console.log(router.getRoutes(),'路由信息----')
+console.log(router,'路由')
 const leftMenuList = router.getRoutes().find(
   (item) => item.name === "dashboard"
 ).children;
@@ -188,6 +191,8 @@ const jump = (val) => {
 const outLogin = (val) => {
   localStorage.removeItem("token");
   router.push({ path: "/login" });
+  store.dispatch('changeAsyncRouteFinish',false);
+  console.log(store.state.role,'????退出后的操作')
 };
 const Iconto = (val) => {
   switch (val) {
@@ -235,9 +240,12 @@ const jumpMode = (name) => {
 //   },
 // };
 onMounted(() => {
+  console.log(route,'进入了')
   if (route.path === "/dashboard") {
-    router.push({ path: "/dashboard/business" });
-    menuActive.value = "business";
+    let defaultRoute =  store.state.role.filterAsyncRoutes.find(item=>item.name === 'dashboard').children[0].path
+       console.log(defaultRoute,'自动匹配子路由')
+        router.push({ path: defaultRoute });
+        menuActive.value = "business";
   } else {
     menuActive.value = route.name;
   }
@@ -249,7 +257,9 @@ onMounted(() => {
     (newVal, oldVal) => {
       getBreadList(newVal, router.getRoutes().find(item=>item.name === 'dashboard').children);
       if (newVal === "/dashboard") {
-        router.push({ path: "/dashboard/business" });
+       let defaultRoute =  store.state.role.filterAsyncRoutes.find(item=>item.name === 'dashboard').children[0].path
+       console.log(defaultRoute,'自动匹配子路由')
+        router.push({ path: defaultRoute });
         menuActive.value = "business";
       }
     }

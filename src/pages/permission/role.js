@@ -9,56 +9,56 @@ export const roleList = [
           label: "实体",
           name: "entiry",
           flag: true,
-          isAll:true,
+          indeterminate:true,
           disabled:true
         },
         {
           label: "业务领域",
-          name: "bussiness",
+          name: "business",
           flag: true,
-          isAll:false,
+          indeterminate:false,
           disabled:true
         },
         {
           label: "任务",
           name: "task",
           flag: true,
-          isAll:true,
+          indeterminate:true,
           disabled:true
         },
         {
             label: "价值流",
             name: "valueflow",
             flag: true,
-            isAll:false,
+            indeterminate:false,
             disabled:true
         },
         {
             label: "统计图表",
             name: "graph",
             flag: true,
-            isAll:false,
+            indeterminate:false,
             disabled:true
         },
         {
             label: "风险管理",
             name: "risk",
             flag: true,
-            isAll:false,
+            indeterminate:false,
             disabled:true
         },
         {
             label: "权限管理",
             name: "permission",
             flag: true,
-            isAll:false,
+            indeterminate:false,
             disabled:true
         },
         {
             label: "文本编辑",
             name: "editor",
             flag: true,
-            isAll:false,
+            indeterminate:false,
             disabled:true
         },
       ],
@@ -88,21 +88,21 @@ export const roleList = [
         ],
         [
           {
-            parent: "bussiness",
+            parent: "business",
             name: "add",
             label: "新增",
             flag: true,
             disabled:true
           },
           {
-            parent: "bussiness",
+            parent: "business",
             name: "edit",
             label: "编辑",
             flag: true,
             disabled:true
           },
           {
-            parent: "bussiness",
+            parent: "business",
             name: "delete",
             label: "删除",
             flag: true,
