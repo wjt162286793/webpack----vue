@@ -3,7 +3,8 @@ const role = {
        asyncRouteFinish:false, //动态路由添加完毕的标识
        rolePermission:{},  //角色的权限集合:
        menuPermissionList:[],  //菜单权限
-       filterAsyncRoutes:[]  //符合条件的异步路由
+       filterAsyncRoutes:[],  //符合条件的异步路由
+       flatRoutesName:[]  //符合条件路由的字段名
      },
      mutations:{
         CHANGE_ASYNCROUTEFINISH:(state,info)=>{
@@ -17,6 +18,9 @@ const role = {
         },
         CHANGE_FILTERASYNCROUTES:(state,info)=>{
             state.filterAsyncRoutes = info
+        },
+        CHANGE_FLATROUTESNAME:(state,info)=>{
+            state.flatRoutesName = info
         }
      },
      actions:{
@@ -31,6 +35,9 @@ const role = {
         },
         changeFilterAsyncRoutes({commit},data){
             commit('CHANGE_FILTERASYNCROUTES',data)
+        },
+        changeFlatRoutesName({commit},data){
+            commit('CHANGE_FLATROUTESNAME',data)
         }
      }
 }

@@ -199,7 +199,8 @@ export const asyncRoutes = [
                 path: '/dashboard/graph',
                 name: 'graph',
                 meta: {
-                    name: '统计图表'
+                    name: '统计图表',
+                    scoped:true
                 },
                 component: () => import('pages/graph/index.vue'),
                 redirect: '/dashboard/graph/list',

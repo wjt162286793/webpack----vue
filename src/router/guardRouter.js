@@ -17,8 +17,15 @@ router.beforeEach((to, from, next) => {
             next('/dashboard')
         }else{
             if(store.state.role.asyncRouteFinish === true){
-                console.log('路由已经动态添加完毕')
-                next()
+                console.log('路由已经动态添加完毕',to)
+                if(store.state.role.flatRoutesName.includes(to.name)){
+                    next()
+                }else{
+                //   next('/notfound')
+                alert('您指定的页面出现了错误,无法进行跳转')
+                next(from.path)
+                }
+           
             }else{
                 let userInfoJson = JSON.parse(localStorage.getItem('userInfo'))
                 if(!userInfoJson){
@@ -77,9 +84,14 @@ router.beforeEach((to, from, next) => {
  let getRolePermission = (menuPermissionList,asyncRouteList,next,to)=>{
     let allAsyncRoutesList = cloneDeep(asyncRouteList)
     
-    filterAllAsync(menuPermissionList,allAsyncRoutesList)
-    store.dispatch('changeFilterAsyncRoutes',allAsyncRoutesList)
-    allAsyncRoutesList.forEach(item=>{
+    let filterEndList = []
+    let flatRoutesName = []
+    filterAllAsync(menuPermissionList,allAsyncRoutesList,filterEndList,flatRoutesName)
+    console.log(filterEndList,'符合路由')
+    console.log(flatRoutesName,'符合字段值')
+    store.dispatch('changeFilterAsyncRoutes',filterEndList)
+    store.dispatch('changeFlatRoutesName',flatRoutesName)
+    filterEndList.forEach(item=>{
         router.addRoute(item)
     })
    store.dispatch('changeAsyncRouteFinish',true)
@@ -91,17 +103,24 @@ router.beforeEach((to, from, next) => {
    
    }
 
-function filterAllAsync(strList,routeList){
-    console.log(strList,routeList,'递归参数:字段数组和路由数组')
+function filterAllAsync(strList,routeList,filterEndList,flatRoutesName){
  routeList.forEach((item,index)=>{
     if(strList.findIndex(v=>v === item.name) !== -1){
-        console.log(item.name,'符合数据')
-        if(item.children && item.children.length>0){
-            console.log('内部额item',item)
-            filterAllAsync(strList,item.children)
+        flatRoutesName.push(item.name)
+        let newItem = cloneDeep(item)
+        filterEndList.push(newItem)
+        if(item.meta.scoped){
+            newItem.children = item.children
+            item.children.forEach(v=>{
+                flatRoutesName.push(v.name)
+            })
+            filterAllAsync(strList,item.children,newItem.children,flatRoutesName)
+        }else{
+            if(item.children && item.children.length>0){
+                newItem.children = []
+                filterAllAsync(strList,item.children,newItem.children,flatRoutesName)
+            }
         }
-    }else{
-        routeList.splice(index,1)
     }
  })
 }

@@ -27,14 +27,14 @@ const globalRoutes = [
             noAuth: true
         }
     },
-    // {
-    //     path: '*',
-    //     name: 'nofound',
-    //     meta: {
-    //         name: '不存在页面'
-    //     },
-    //     component: () => import('pages/nofound/index.vue')
-    // },
+    {
+        path: '/nofound',
+        name: 'nofound',
+        meta: {
+            name: '不存在页面'
+        },
+        component: () => import('pages/nofound/index.vue')
+    },
 ]
 
 const routes = new Array().concat(globalRoutes)
