@@ -30,7 +30,7 @@ import RelationGraph from 'relation-graph/vue3'
 
 //富文本编辑器
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import '@wangeditor/editor/dist/css/style.css' 
+import '@wangeditor/editor/dist/css/style.css'
 
 //路由
 import router from './router/index'
@@ -42,25 +42,25 @@ import store from './store/index'
 //vxe-table
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
-function useTble (app){
+function useTble(app) {
   app.use(VXETable)
 }
 
 //创建实例
-import { createApp} from 'vue'
+import { createApp } from 'vue'
 import request from './utils/requestUtils'
 import Main from './main.vue'
-const mainVue = createApp(Main)
+export const mainVue = createApp(Main)
 
 
 
 //注册模块
 mainVue.use(router)
 mainVue.use(ElementPlus, {
-    locale: zhCn,
+  locale: zhCn,
 })
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    mainVue.component(key, component)
+  mainVue.component(key, component)
 }
 mainVue.use(store)
 mainVue.use(RelationGraph)
@@ -74,24 +74,24 @@ mainVue.mount('.main')
 
 // 监控溢出报错 (error1)
 const debounce = (fn, delay) => {
-    let timer = null;
-    return function () {
-      let context = this;
-      let args = arguments;
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-        fn.apply(context, args);
-      }, delay);
-    }
+  let timer = null;
+  return function () {
+    let context = this;
+    let args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
   }
-  
-  const _ResizeObserver = window.ResizeObserver;
-  window.ResizeObserver = class ResizeObserver extends _ResizeObserver{
-    constructor(callback) {
-      callback = debounce(callback, 16);
-      super(callback);
-    }
+}
+
+const _ResizeObserver = window.ResizeObserver;
+window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
+  constructor(callback) {
+    callback = debounce(callback, 16);
+    super(callback);
   }
+}
 
 
 

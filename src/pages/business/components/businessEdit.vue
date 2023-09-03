@@ -117,25 +117,19 @@
         width="240"
         show-overflow-tooltip
       >
-     <template #default="scope">
-      <span>{{ filterModeType(scope) }}</span>
-     </template>
-    </el-table-column>
+        <template #default="scope">
+          <span>{{ filterModeType(scope) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column property="id" label="id" width="width" />
       <el-table-column label="操作" width="240">
         <template #default="scope">
-          <el-button
-            type="primary"
-            :icon="Edit"
-            circle
-            @click="openDrawer(scope)"
-          />
-          <el-button
-            type="danger"
-            :icon="Delete"
-            circle
-            @click="deleteRow(scope)"
-          />
+          <el-button type="primary" link @click="openDrawer(scope)"
+            >编辑</el-button
+          >
+          <el-button type="danger" link @click="deleteRow(scope)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -182,7 +176,7 @@ let ruleForm = reactive({
   dcs: "",
   type: null,
   status: 1,
-  mode:'business'
+  mode: "business",
 });
 const route = useRoute();
 const router = useRouter();
@@ -227,10 +221,12 @@ const rules = reactive({
     },
   ],
 });
-const filterModeType = (scope)=>{
-  console.log(word.typeOptions,scope.row.modeType,'???什么')
-  return word.typeOptions.find(item=>item.value === scope.row.modeType)['label']
-}
+const filterModeType = (scope) => {
+  console.log(word.typeOptions, scope.row.modeType, "???什么");
+  return word.typeOptions.find((item) => item.value === scope.row.modeType)[
+    "label"
+  ];
+};
 const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate((valid, fields) => {
@@ -270,7 +266,7 @@ const goBack = () => {
 const getLists = () => {
   request.get("/app/user/userAllList").then((res) => {
     if (res.code == 200) {
-      userList.value = res.data
+      userList.value = res.data;
     }
   });
   request.post("/app/publicApi/all", { mode: "entiry" }).then((res) => {
@@ -302,7 +298,7 @@ const getInfo = () => {
       ruleForm.status = res.data.status;
       ruleForm.id = res.data.id;
       ruleForm.modelList = res.data.modelList;
-      ruleForm.mode = res.data.mode
+      ruleForm.mode = res.data.mode;
     }
   });
 };

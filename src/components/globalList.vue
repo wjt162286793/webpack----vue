@@ -79,7 +79,9 @@
             :label="item.label"
           >
             <template #default="scope">
-              <p class="jumpIn" @click="jumpDetail(scope.row)">{{ scope.row[item.property] }}</p>
+              <p class="jumpIn" @click="jumpDetail(scope.row)">
+                {{ scope.row[item.property] }}
+              </p>
             </template>
           </el-table-column>
           <el-table-column
@@ -88,7 +90,7 @@
             :label="item.label"
           >
             <template #default="scope">
-              <p>{{ getMap(item.property,scope.row[item.property]) }}</p>
+              <p>{{ getMap(item.property, scope.row[item.property]) }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -97,7 +99,7 @@
             :label="item.label"
           >
             <template #default="scope">
-              <p>{{ getTimeRange(item.property,scope.row[item.property]) }}</p>
+              <p>{{ getTimeRange(item.property, scope.row[item.property]) }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -105,10 +107,12 @@
             :width="item.width"
             :label="item.label"
           >
-          <template #default="scope">
-              <p class="jumpOut" @click="jumpUrl(scope.row[item.property])">{{ scope.row[item.property] }}</p>
+            <template #default="scope">
+              <p class="jumpOut" @click="jumpUrl(scope.row[item.property])">
+                {{ scope.row[item.property] }}
+              </p>
             </template>
-        </el-table-column>
+          </el-table-column>
           <el-table-column v-else :width="item.width" :label="item.label">
             <template #default="scope">
               {{ scope.row[item.property] }}
@@ -118,25 +122,16 @@
         <el-table-column :width="240" label="操作" fixed="right">
           <template #default="scope">
             <!-- {{scope.row[item.property]}} -->
-            <el-button
-              type="primary"
-              :icon="Edit"
-              circle
-              @click="editRow(scope.row)"
-            />
-            <el-button
-              type="danger"
-              :icon="Delete"
-              circle
-              @click="deleteDialogOpen(scope.row)"
-            />
-            <el-button
-              v-if="!scope.row.isRisk"
-              type="warning"
-              :icon="WarnTriangleFilled"
-              circle
-              @click="openRisk(scope.row)"
-            />
+            <el-button type="primary" link @click="editRow(scope.row)">
+              编辑
+            </el-button>
+
+            <el-button type="danger" link @click="deleteDialogOpen(scope.row)"
+              >删除</el-button
+            >
+            <el-button type="warning" link @click="openRisk(scope.row)"
+              >标记风险</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -161,12 +156,8 @@
       </el-pagination>
     </div>
   </div>
-  <el-dialog
-    v-model="dialogDeleteVisible"
-    title="删除"
-    width="25%"
-  >
-    <span>{{deleteText}}</span>
+  <el-dialog v-model="dialogDeleteVisible" title="删除" width="25%">
+    <span>{{ deleteText }}</span>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="deleteRow">确定</el-button>
@@ -177,12 +168,12 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
-import lodash from 'lodash'
+import lodash from "lodash";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
-import CreatRisk from "@/components/creatRisk"
+import CreatRisk from "@/components/creatRisk";
 import request from "@/utils/requestUtils";
 import { useRouter, useRoute } from "vue-router";
-import words from '@/dictionaries/wordList.json'
+import words from "@/dictionaries/wordList.json";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   modeType: Object,
@@ -190,11 +181,11 @@ const props = defineProps({
 const router = useRouter();
 const route = useRoute();
 let multipleTableRef = ref(null);
-const creatRisk = ref(null)
+const creatRisk = ref(null);
 let templateData = reactive({});
-let dialogDeleteVisible = ref(false)
-let deleteText = ref('')
-let delRow = ref({})
+let dialogDeleteVisible = ref(false);
+let deleteText = ref("");
+let delRow = ref({});
 let reqTemplate = () => {
   request
     .post("/app/publicApi/template", { name: props.modeType.type })
@@ -209,31 +200,29 @@ const tableData = ref([]);
 const total = ref(0);
 let pageSize = ref(10);
 let currentPage = ref(1);
-const handleSelectionChange = (val) => {
-   
-};
-const reqListFun = ()=>{
-  let postData = {}
+const handleSelectionChange = (val) => {};
+const reqListFun = () => {
+  let postData = {};
   postData.searchData = templateData.searchData;
   postData.currentPage = currentPage.value;
   postData.pageSize = pageSize.value;
-  postData.modeType = props.modeType.type
-    request.post(`/app/publicApi/list`, postData).then((res) => {
+  postData.modeType = props.modeType.type;
+  request.post(`/app/publicApi/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
     }
   });
-}
-const openRisk = (record)=>{
-  creatRisk.value.openDialog(record)
-}
-const reqList = lodash.throttle(reqListFun,2000)
+};
+const openRisk = (record) => {
+  creatRisk.value.openDialog(record);
+};
+const reqList = lodash.throttle(reqListFun, 2000);
 //查询列表
 //外部跳转
-const jumpUrl = (url)=>{
-  window.open(`http://${url}`)
-}
+const jumpUrl = (url) => {
+  window.open(`http://${url}`);
+};
 //按钮事件
 const btnClick = (btnFlag) => {
   switch (btnFlag) {
@@ -250,67 +239,71 @@ const toAdd = () => {
   console.log(props.modeType.list);
   router.push({
     name: props.modeType.add,
-    query:{
-      type:'new',
-      mode:props.modeType.type
-    }
+    query: {
+      type: "new",
+      mode: props.modeType.type,
+    },
   });
 };
 //查看
-const jumpDetail = (row)=>{
-  console.log('查看')
-router.push({
-  name:props.modeType.detail,
-  query:{
-    uuid:row.uuid,
-    type:'detail',
-    mode:props.modeType.type
-  }
-})
-}
+const jumpDetail = (row) => {
+  console.log("查看");
+  router.push({
+    name: props.modeType.detail,
+    query: {
+      uuid: row.uuid,
+      type: "detail",
+      mode: props.modeType.type,
+    },
+  });
+};
 //修改
 const editRow = (row) => {
   router.push({
-  name:props.modeType.edit,
-  query:{
-    uuid:row.uuid,
-    type:'edit',
-    mode:props.modeType.type
-  }
-  })
-
+    name: props.modeType.edit,
+    query: {
+      uuid: row.uuid,
+      type: "edit",
+      mode: props.modeType.type,
+    },
+  });
 };
-function deleteDialogOpen(row){
-  delRow.value = row
-  deleteText.value = `确定要删除${row[props.modeType.type+'Name']}这条资产吗`
-  dialogDeleteVisible.value = true 
+function deleteDialogOpen(row) {
+  delRow.value = row;
+  deleteText.value = `确定要删除${row[props.modeType.type + "Name"]}这条资产吗`;
+  dialogDeleteVisible.value = true;
 }
 //删除
 const deleteRow = () => {
   console.log(delRow.value, "删除");
-  request.post(`/app/publicApi/delete`, {uuid:delRow.value.uuid,mode:props.modeType.type}).then((res) => {
-    if (res.code === 200) {
-      ElMessage({
-        type:'success',
-        message:'删除成功'
-      })
-      dialogDeleteVisible.value = false
-      reqList()
-    }
-  });
+  request
+    .post(`/app/publicApi/delete`, {
+      uuid: delRow.value.uuid,
+      mode: props.modeType.type,
+    })
+    .then((res) => {
+      if (res.code === 200) {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        dialogDeleteVisible.value = false;
+        reqList();
+      }
+    });
 };
 //从词表里获取对应值
-const getMap = (property,value) => {
-  let val = words[route.name][property][value]
+const getMap = (property, value) => {
+  let val = words[route.name][property][value];
   return val;
 };
-const getTimeRange = (property,value) => {
- let str = `${value[0]}  至  ${value[1]}`
- return str
-}
-const addRiskSuccess = ()=>{
-  reqList()
-}
+const getTimeRange = (property, value) => {
+  let str = `${value[0]}  至  ${value[1]}`;
+  return str;
+};
+const addRiskSuccess = () => {
+  reqList();
+};
 onMounted(() => {
   reqTemplate();
 });
@@ -347,7 +340,7 @@ onMounted(() => {
   color: #79bbff;
   cursor: pointer;
 }
-.jumpOut{
+.jumpOut {
   color: #79bbff;
   cursor: pointer;
 }

@@ -30,7 +30,9 @@
         />
       </el-select>
       <el-button type="primary" @click="reqList">查询</el-button>
-      <el-button type="primary" @click="jumpAdd">新增</el-button>
+      <el-button type="primary" @click="jumpAdd" v-btnRole="'newBusiness'"
+        >新增</el-button
+      >
     </div>
     <div class="table">
       <el-table :data="tableData" style="width: 100%" :border="true" stripe>
@@ -57,27 +59,22 @@
         </el-table-column> -->
         <el-table-column prop="uuid" label="业务领域编号" width="400" />
         <el-table-column prop="time" label="最后操作时间" width="240" />
-        <el-table-column label="操作" fixed="right" width="180">
+        <el-table-column label="操作" fixed="right" width="250">
           <template #default="scope">
-            <el-button
-              type="primary"
-              :icon="Edit"
-              circle
-              @click="jumpEdit(scope.row)"
-            />
-            <el-button
-              type="danger"
-              :icon="Delete"
-              circle
-              @click="deleteDialog(scope.row)"
-            />
+            <el-button type="primary" link @click="jumpEdit(scope.row)">
+              编辑
+            </el-button>
+            <el-button type="danger" link @click="deleteDialog(scope.row)">
+              删除
+            </el-button>
             <el-button
               v-if="!scope.row.isRisk"
               type="warning"
-              :icon="WarnTriangleFilled"
-              circle
+              link
               @click="openRisk(scope.row)"
-            />
+            >
+              标记风险
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,7 +112,7 @@
 </template>
 <script setup>
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
-import CreatRisk from "@/components/creatRisk"
+import CreatRisk from "@/components/creatRisk";
 import { useRouter } from "vue-router";
 import request from "@/utils/requestUtils";
 import dirct from "@/dictionaries/business.json";
@@ -128,7 +125,7 @@ const total = ref(0);
 // console.log(dirct, "值");
 const dialogVisible = ref(false);
 const activeRowid = ref(null);
-const creatRisk = ref(null)
+const creatRisk = ref(null);
 const form = reactive({
   name: "",
   region: "",
@@ -215,12 +212,12 @@ const cancel = () => {
   dialogVisible.value = false;
   reqList();
 };
-const openRisk = (record)=>{
-  creatRisk.value.openDialog(record)
-}
-const addRiskSuccess = ()=>{
-  reqList()
-}
+const openRisk = (record) => {
+  creatRisk.value.openDialog(record);
+};
+const addRiskSuccess = () => {
+  reqList();
+};
 reqList();
 </script>
 
