@@ -61,10 +61,20 @@
         <el-table-column prop="time" label="最后操作时间" width="240" />
         <el-table-column label="操作" fixed="right" width="250">
           <template #default="scope">
-            <el-button type="primary" link @click="jumpEdit(scope.row)">
+            <el-button
+              type="primary"
+              link
+              @click="jumpEdit(scope.row)"
+              v-btnRole="'businessEdit'"
+            >
               编辑
             </el-button>
-            <el-button type="danger" link @click="deleteDialog(scope.row)">
+            <el-button
+              type="danger"
+              link
+              @click="deleteDialog(scope.row)"
+              v-btnRole="'businessEdit'"
+            >
               删除
             </el-button>
             <el-button

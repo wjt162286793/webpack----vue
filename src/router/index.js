@@ -23,6 +23,7 @@ const globalRoutes = [
     {
         path: '/',
         component: () => import('pages/brochure/index.vue'),
+        name: 'direct',
         meta: {
             noAuth: true
         }

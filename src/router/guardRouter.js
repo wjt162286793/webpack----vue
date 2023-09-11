@@ -23,8 +23,10 @@ router.beforeEach((to, from, next) => {
                     next()
                 } else {
                     //   next('/notfound')
-                    alert('您指定的页面出现了错误,无法进行跳转')
-                    next(from.path)
+                    // alert('您指定的页面出现了错误,无法进行跳转')
+                    // next(from.path)
+                    console.log('进到这里面了...', store.state.role.flatRoutesName)
+                    next()
                 }
 
             } else {
@@ -32,6 +34,7 @@ router.beforeEach((to, from, next) => {
                 if (!userInfoJson) {
                     next('/login')
                 } else {
+
                     getRoleFun(userInfoJson, next, to)
                 }
 
