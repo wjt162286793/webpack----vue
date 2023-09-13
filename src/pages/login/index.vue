@@ -58,7 +58,11 @@
     </div>
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="550">
       <el-form :model="form" ref="dialogForm" :rules="dialogRules">
-        <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName">
+        <el-form-item
+          label="姓名"
+          :label-width="formLabelWidth"
+          prop="userName"
+        >
           <el-input v-model="form.userName" autocomplete="off" clearable />
         </el-form-item>
         <el-form-item label="账号" :label-width="formLabelWidth" prop="name">
@@ -104,16 +108,16 @@
 </template>
 
 <script>
-import store from '@/store';
-import {loginSuccessDone} from './disposePermisson'
+import store from "@/store";
+import { loginSuccessDone } from "./disposePermisson";
 export default {
   name: "login",
   data() {
     return {
       formSize: "default",
       ruleForm: {
-        name: "",
-        password: "",
+        name: "admin123",
+        password: "admin123",
       },
       rules: {
         name: [
@@ -126,13 +130,13 @@ export default {
         ],
       },
       dialogRules: {
-        userName:[
-        { required: true, message: "请输入账号", trigger: "blur" },
+        userName: [
+          { required: true, message: "请输入账号", trigger: "blur" },
           {
-                        pattern: /[\u4e00-\u9fa50-9]*$/,
-                        message: "只可以输入中文和数字",
-                        trigger: "blur"
-          }
+            pattern: /[\u4e00-\u9fa50-9]*$/,
+            message: "只可以输入中文和数字",
+            trigger: "blur",
+          },
         ],
         name: [
           { required: true, message: "请输入账号", trigger: "blur" },
@@ -154,7 +158,7 @@ export default {
       secondPassword: "",
       doneFlag: "register",
       form: {
-        userName:'',
+        userName: "",
         name: "",
         password: "",
         verifyPassword: "",
@@ -214,10 +218,10 @@ export default {
             return;
           }
           let queryData = {
-            userName:this.form.userName,
+            userName: this.form.userName,
             name: this.form.name,
             password: this.form.password,
-            role:'code'
+            role: "code",
           };
           this.$axios.post(url, queryData).then((res) => {
             if (res.code === 200) {
@@ -235,7 +239,7 @@ export default {
     //关闭弹框
     closeDialog() {
       this.dialogFormVisible = false;
-      this.form = {userName:"", name: "", password: "", verifyPassword: "" };
+      this.form = { userName: "", name: "", password: "", verifyPassword: "" };
     },
     //打开弹框
     dialogOpen(flag) {
@@ -290,14 +294,14 @@ export default {
       }
     }
   }
-  ::v-deep(.el-form-item__content)  {
+  ::v-deep(.el-form-item__content) {
     margin-left: 40px !important;
   }
-  ::v-deep(.el-input)  {
+  ::v-deep(.el-input) {
     width: 330px !important;
   }
 }
-::v-deep(.el-form-item__label)  {
+::v-deep(.el-form-item__label) {
   width: 100px !important;
 }
 </style>

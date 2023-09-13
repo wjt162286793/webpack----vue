@@ -22,6 +22,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 //echarts模块
 import echarts from './javascript/chart';
+// import "echarts-gl";
 
 //graph图谱
 import RelationGraph from 'relation-graph/vue3'

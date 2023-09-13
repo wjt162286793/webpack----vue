@@ -18,14 +18,6 @@ const nameList = [
   "住房",
   "教育",
 ];
-// const makeWord = (max, min) => {
-//   const nameLen = Math.ceil(Math.random() * max + min);
-//   const name = [];
-//   for (var i = 0; i < nameLen; i++) {
-//     name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
-//   }
-//   return name.join("");
-// };
 const genData = (count) => {
   // prettier-ignore
   const legendData = [];
@@ -37,17 +29,6 @@ const genData = (count) => {
       value: Math.round(Math.random() * 100),
     });
   });
-  // for (var i = 0; i < count; i++) {
-  //   var name =
-  //     Math.random() > 0.65
-  //       ? makeWord(4, 1) + "·" + makeWord(3, 0)
-  //       : makeWord(2, 1);
-  //   legendData.push(name);
-  //   seriesData.push({
-  //     name: name,
-  //     value: Math.round(Math.random() * 100000),
-  //   });
-  // }
   return {
     legendData: legendData,
     seriesData: seriesData,
@@ -62,6 +43,7 @@ const chartFun = () => {
       text: "投资&消费收益比重",
       subtext: "纯属虚构",
       left: "center",
+      top: 50,
     },
     color: [
       "#91cc75",
@@ -83,7 +65,7 @@ const chartFun = () => {
       type: "scroll",
       orient: "vertical",
       right: 10,
-      top: 20,
+      top: 200,
       bottom: 20,
       data: data.legendData,
     },
@@ -116,7 +98,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 #chart {
-  width: 1200px;
+  width: 1400px;
   height: 600px;
 }
 </style>

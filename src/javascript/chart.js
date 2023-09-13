@@ -4,6 +4,10 @@ import * as echarts from "echarts/core";
 /** 引入柱状图and折线图图表，图表后缀都为 Chart  */
 import { BarChart, LineChart } from "echarts/charts";
 
+// import { CanvasRenderer } from 'echarts/renderers';
+import { Lines3DChart } from 'echarts-gl/charts';
+import { Geo3DComponent } from 'echarts-gl/components';
+
 // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
 import {
     TitleComponent,
@@ -31,6 +35,8 @@ echarts.use([
     UniversalTransition,
     CanvasRenderer,
     LineChart,
+    Geo3DComponent,
+    Lines3DChart,
 ]);
 
 // 导出
