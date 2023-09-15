@@ -70,7 +70,8 @@
             :label="item.label"
           >
             <template #default="scope">
-              <p class="jumpIn">{{ scope.row[item.property] }}</p>
+              <!-- <p class="jumpIn">{{ scope.row[item.property] }}</p> -->
+              <el-button link type="primary">{{ scope.row[item.property] }}</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -79,9 +80,10 @@
             :label="item.label"
           >
             <template #default="scope">
-              <p class="jumpIn" @click="jumpDetail(scope.row)">
+              <!-- <p class="jumpIn" @click="jumpDetail(scope.row)">
                 {{ scope.row[item.property] }}
-              </p>
+              </p> -->
+              <el-button link type="primary" @click="jumpDetail(scope.row)">{{ scope.row[item.property] }}</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -175,6 +177,7 @@ import request from "@/utils/requestUtils";
 import { useRouter, useRoute } from "vue-router";
 import words from "@/dictionaries/wordList.json";
 import { ElMessage } from "element-plus";
+import store from "@/store";
 const props = defineProps({
   modeType: Object,
 });
@@ -248,6 +251,7 @@ const toAdd = () => {
 //查看
 const jumpDetail = (row) => {
   console.log("查看");
+  console.log(store.state,'路由')
   router.push({
     name: props.modeType.detail,
     query: {

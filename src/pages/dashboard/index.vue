@@ -62,26 +62,29 @@
     </div>
     <img src="@/assets/svg/菜单.svg" alt="" @click="unfold" class="menuIcon" />
   </div>
-  <el-dialog v-model="dialogUserInfoVisible" title="用户信息">
-    <el-form :model="form">
-      <el-form-item label="Promotion name" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="Zones" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="Please select a zone">
-          <el-option label="Zone No.1" value="shanghai" />
-          <el-option label="Zone No.2" value="beijing" />
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
-          Confirm
-        </el-button>
-      </span>
-    </template>
+  <el-dialog v-model="dialogUserInfoVisible" title="用户信息" width="600px">
+    <div class="rowList">
+      <el-row class="row">
+        <el-col :span="8"> <h4>用户名</h4> </el-col>
+        <el-col :span="16">{{ userInfo.userName }}</el-col>
+      </el-row>
+      <el-row class="row">
+        <el-col :span="8"> <h4>账号</h4></el-col>
+        <el-col :span="16">{{ userInfo.name }}</el-col>
+      </el-row>
+      <el-row class="row">
+        <el-col :span="8"><h4>用户权限</h4></el-col>
+        <el-col :span="16">{{ userInfo.role }}</el-col>
+      </el-row>
+      <el-row class="row">
+        <el-col :span="8"><h4 style="line-height: 60px;">主题色设置</h4></el-col>
+        <el-col :span="16">
+           <ul style="display: flex;">
+            <li v-for="(item,index) in themeList" :style="getLiStyle(item)" @click="changeTheme(item)"></li>
+           </ul>
+        </el-col>
+      </el-row>
+    </div>
   </el-dialog>
 </template>
 
@@ -97,6 +100,9 @@ import {
 import store from "@/store";
 const interInstance = getCurrentInstance();
 const dialogUserInfoVisible = ref(false)
+const userInfo = ref(null)
+let theme = ref(null)
+theme.value = document.body.dataset.theme
 let menuActive = ref("dashboard");
 //全量路由
 let router = useRouter();
@@ -155,14 +161,6 @@ const headerMenuList = reactive([
     value:"full"
   },
   {
-    name: "邮件",
-    value: "email",
-  },
-  {
-    name: "主题色",
-    value: "color",
-  },
-  {
     name: "github",
     value: "github",
   },
@@ -206,7 +204,9 @@ const Iconto = (val) => {
     screenfull.toggle()
       break;
     case "user":
-
+    dialogUserInfoVisible.value = true
+    userInfo.value = store.state.user.userInfo
+    break
   }
 };
 const breadJump = (breadName) => {
@@ -225,20 +225,44 @@ const handleMenuSelect = (menuVal) => {
 const jumpMode = (name) => {
   router.push({ name: name });
 };
-// export default {
-//   name: "dashboard",
-//   created() {
-//     console.log(this.$store.state.user.userInfo, "vuex");
-//     this.userInfo = this.$store.state.user.userInfo;
-//   },
-//   methods: {
-//     createVueFile() {
-//       this.$axios.get("app/user/createVue").then((res) => {
-//         console.log(res);
-//       });
-//     },
-//   },
-// };
+let themeList = ref([
+  {
+    color:'#409eff',
+    theme:'blue'
+  },
+  {
+    color:'#ba7de4',
+    theme:'purple'
+  },
+  {
+    color:'#72a15a',
+    theme:'green'
+  },
+  {
+    color:'#a72513',
+    theme:'red'
+  },
+  {
+    color:'#534668',
+    theme:'deepPurple'
+  },
+  {
+    color:'#13088a',
+    theme:'deepBlue'
+  },
+])
+const changeTheme = (item)=>{
+  document.body.dataset.theme = item.theme
+  theme.value = item.theme
+  localStorage.setItem('theme',item.theme)
+}
+const getLiStyle = (item)=>{
+  return{
+    background:item.color,
+    width:item.theme === theme.value?'40px':'30px',
+    height:item.theme === theme.value?'40px':'30px',
+    margin:'10px',cursor:'pointer'}
+}
 onMounted(() => {
   console.log(route,'进入了')
   if (route.path === "/dashboard") {
@@ -365,5 +389,16 @@ onMounted(() => {
   height: 20px;
   cursor: pointer;
   margin-right: 20px;
+}
+.rowList{
+  padding: 16px;
+  .row{
+    margin-bottom: 40px;
+    h4{
+    font-weight: 600;
+    font-size: 16px;
+  }
+  }
+
 }
 </style>

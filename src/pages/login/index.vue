@@ -44,13 +44,6 @@
               <el-button @click="dialogOpen('change')" class="btn">
                 修改密码
               </el-button>
-              <el-checkbox
-                style="margin-left: 15px"
-                v-model="autoLogin"
-                label="自动登录"
-                @change="changeCheck"
-                size="large"
-              />
             </div>
           </el-form-item>
         </el-form>

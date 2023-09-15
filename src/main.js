@@ -7,12 +7,18 @@
 // import 'element-plus/theme-chalk/dark/css-vars.css'
 // const htmlNode = document.querySelector('html')
 // htmlNode.className = 'dark'
-document.body.dataset.theme = 'blue'
+
 
 import './style/global.css'
 import './style/reset.css'
-import './style/theme.css'
+// import './style/theme.css'
 import './style/elmentPlus-theme.css'
+import './style/theme/blue.css'
+import './style/theme/deepBlue.css'
+import './style/theme/deepPurple.css'
+import './style/theme/green.css'
+import './style/theme/purple.css'
+import './style/theme/red.css'
 
 //element-plus模块
 import ElementPlus from 'element-plus'

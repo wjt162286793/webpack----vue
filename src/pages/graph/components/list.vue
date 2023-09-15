@@ -2,19 +2,19 @@
   <el-row>
     <el-col :span="8">
       <div class="box" @click="jump('financeStatic')">
-        <img src="@/assets/img/财务统计.png" alt="" />
+        <!-- <img src="@/assets/img/财务统计.png" alt="" /> -->
         <h4>财务统计</h4>
       </div>
     </el-col>
     <el-col :span="8">
       <div class="box" @click="jump('personStatic')">
-        <img src="@/assets/img/组织结构.png" alt="" />
+        <!-- <img src="@/assets/img/组织结构.png" alt="" /> -->
         <h4>组织结构</h4>
       </div>
     </el-col>
     <el-col :span="8">
       <div class="box" @click="jump('entiryStatic')">
-        <img src="@/assets/img/实体分布.png" alt="" />
+        <!-- <img src="@/assets/img/实体分布.png" alt="" /> -->
         <h4>实体分布</h4>
       </div>
     </el-col>
@@ -22,19 +22,19 @@
   <el-row>
     <el-col :span="8">
       <div class="box" @click="jump('dataStatic')">
-        <img src="@/assets/img/数据统计.png" alt="" />
+        <!-- <img src="@/assets/img/数据统计.png" alt="" /> -->
         <h4>数据统计</h4>
       </div>
     </el-col>
     <el-col :span="8">
       <div class="box" @click="jump('commutationStatic')">
-        <img src="@/assets/img/通信记录.png" alt="" />
+        <!-- <img src="@/assets/img/通信记录.png" alt="" /> -->
         <h4>通信记录</h4>
       </div>
     </el-col>
     <el-col :span="8">
       <div class="box" @click="jump('materialStorage')">
-        <img src="@/assets/img/物资仓库.png" alt="" />
+        <!-- <img src="@/assets/img/物资仓库.png" alt="" /> -->
         <h4>物资仓库</h4>
       </div>
     </el-col>
@@ -68,7 +68,7 @@ const jump = function (flag) {
   }
   h4 {
     font-size: 40px;
-    color: #409eff;
+    color: var(--text-color2);
     margin-left: 20px;
     font-weight: 600;
   }

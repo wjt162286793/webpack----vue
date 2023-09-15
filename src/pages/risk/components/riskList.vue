@@ -127,7 +127,7 @@
             <h5>风险定位:</h5>
           </el-col>
           <el-col :span="10">
-            <el-tag type="success">{{
+            <el-tag type="success" effect="plain">{{
               getriskPostion(activeRecord.riskPosition)
             }}</el-tag>
           </el-col>
@@ -143,13 +143,13 @@
             <h5>风险等级:</h5>
           </el-col>
           <el-col :span="10">
-            <el-tag>{{ getLevel(activeRecord.riskLevel) }}</el-tag>
+            <el-tag effect="plain">{{ getLevel(activeRecord.riskLevel) }}</el-tag>
           </el-col>
           <el-col :span="2">
             <h5>资产状态:</h5>
           </el-col>
           <el-col :span="10">
-            <el-tag type="warning">{{
+            <el-tag type="warning" effect="plain">{{
               getInfoStatus(activeRecord.status)
             }}</el-tag>
           </el-col>
@@ -157,7 +157,7 @@
             <h5>监控粒度:</h5>
           </el-col>
           <el-col :span="10">
-            <el-tag>{{ getSize(activeRecord.controlSize) }}</el-tag>
+            <el-tag effect="plain">{{ getSize(activeRecord.controlSize) }}</el-tag>
           </el-col>
           <el-col :span="2">
             <h5>监控时间:</h5>
@@ -177,6 +177,7 @@
           </el-col>
           <el-col :span="10">
             <el-tag
+              effect="plain"
               v-for="(m, n) in activeRecord.inform"
               :key="n"
               style="margin-right: 10px"

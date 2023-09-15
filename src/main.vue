@@ -5,7 +5,13 @@
 </template>
 
 <script setup>
-document.body.dataset.theme = "blue";
+if(localStorage.getItem('theme')){
+  document.body.dataset.theme = localStorage.getItem('theme')
+}else{
+  document.body.dataset.theme = 'purple'
+  localStorage.setItem('theme','blue')
+}
+
 import * as echarts from "echarts";
 import { provide } from "vue";
 provide("echarts", echarts);

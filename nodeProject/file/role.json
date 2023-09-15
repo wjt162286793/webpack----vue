@@ -80,6 +80,14 @@
                 },
                 {
                     "parent": "entiry",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": true,
+                    "routeName": "entiryDetail"
+                },
+                {
+                    "parent": "entiry",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -160,6 +168,14 @@
                 },
                 {
                     "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": true,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -197,6 +213,14 @@
                     "flag": true,
                     "disabled": true,
                     "routeName": "valueflowList"
+                },
+                {
+                    "parent": "valueflow",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": true,
+                    "routeName": "valueflowDetail"
                 },
                 {
                     "parent": "valueflow",
@@ -373,6 +397,14 @@
                 },
                 {
                     "parent": "entiry",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "entiryDetail"
+                },
+                {
+                    "parent": "entiry",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -453,6 +485,14 @@
                 },
                 {
                     "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -490,6 +530,14 @@
                     "flag": true,
                     "disabled": false,
                     "routeName": "valueflowList"
+                },
+                {
+                    "parent": "valueflow",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "valueflowDetail"
                 },
                 {
                     "parent": "valueflow",
@@ -666,6 +714,14 @@
                 },
                 {
                     "parent": "entiry",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "entiryDetail"
+                },
+                {
+                    "parent": "entiry",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -746,6 +802,22 @@
                 },
                 {
                     "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -783,6 +855,14 @@
                     "flag": true,
                     "disabled": false,
                     "routeName": "valueflowList"
+                },
+                {
+                    "parent": "valueflow",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "valueflowDetail"
                 },
                 {
                     "parent": "valueflow",
@@ -959,6 +1039,14 @@
                 },
                 {
                     "parent": "entiry",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": false,
+                    "disabled": false,
+                    "routeName": "entiryDetail"
+                },
+                {
+                    "parent": "entiry",
                     "name": "add",
                     "label": "新增",
                     "flag": false,
@@ -1039,6 +1127,14 @@
                 },
                 {
                     "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": false,
+                    "disabled": false,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
                     "name": "add",
                     "label": "新增",
                     "flag": false,
@@ -1076,6 +1172,14 @@
                     "flag": false,
                     "disabled": false,
                     "routeName": "valueflowList"
+                },
+                {
+                    "parent": "valueflow",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": false,
+                    "disabled": false,
+                    "routeName": "valueflowDetail"
                 },
                 {
                     "parent": "valueflow",
@@ -1252,6 +1356,14 @@
                 },
                 {
                     "parent": "entiry",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "entiryDetail"
+                },
+                {
+                    "parent": "entiry",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -1332,6 +1444,14 @@
                 },
                 {
                     "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -1369,6 +1489,14 @@
                     "flag": true,
                     "disabled": false,
                     "routeName": "valueflowList"
+                },
+                {
+                    "parent": "valueflow",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "valueflowDetail"
                 },
                 {
                     "parent": "valueflow",
@@ -1545,6 +1673,14 @@
                 },
                 {
                     "parent": "entiry",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "entiryDetail"
+                },
+                {
+                    "parent": "entiry",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -1625,6 +1761,14 @@
                 },
                 {
                     "parent": "task",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "taskDetail"
+                },
+                {
+                    "parent": "task",
                     "name": "add",
                     "label": "新增",
                     "flag": true,
@@ -1662,6 +1806,14 @@
                     "flag": true,
                     "disabled": false,
                     "routeName": "valueflowList"
+                },
+                {
+                    "parent": "valueflow",
+                    "name": "detail",
+                    "label": "查看",
+                    "flag": true,
+                    "disabled": false,
+                    "routeName": "valueflowDetail"
                 },
                 {
                     "parent": "valueflow",
