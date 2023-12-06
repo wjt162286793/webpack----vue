@@ -9,6 +9,7 @@ let allAsyncRoutes = cloneDeep(asyncRoutes)
 
 //导航守卫 token校验
 router.beforeEach((to, from, next) => {
+    //有token,我是没有推送到暂存区的
     let token = localStorage.getItem('token')
     if (token) {
         console.log('有token')
