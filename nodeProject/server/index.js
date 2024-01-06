@@ -2,7 +2,7 @@
 const http = require('http')
 const routes = require('../routes/index')
 const url = require("url")
-const port = 3000
+const port = 8082
 
 const server = function () {
     const serve = http.createServer((req, res) => {

@@ -1,0 +1,21 @@
+{
+  "name": "nodeproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodeStart": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "moment": "^2.30.1",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1",
+    "url": "^0.11.3",
+    "util": "^0.12.5",
+    "uuid": "^9.0.1"
+  }
+}

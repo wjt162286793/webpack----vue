@@ -6,7 +6,6 @@ const url = require('url')
 const util = require('util')
 const { v4: uuidv4 } = require('uuid')
 const moment = require('moment')
-const { ElSelect } = require('element-plus')
 const publicListRoutes = [
     {
         //请求列表模板
@@ -232,54 +231,54 @@ const publicListRoutes = [
         }
     },
     {
-        path:'/app/publicApi/delete',
-        done:(req,res)=>{
+        path: '/app/publicApi/delete',
+        done: (req, res) => {
             let postData = ''
             let reqData = ''
-            req.on('data',function(chunk){
+            req.on('data', function (chunk) {
                 postData += chunk
             })
-            req.on('end',function(){
-            reqData = JSON.parse(postData)
-            fs.readFile(path.join(__dirname,`../file/publicList/${reqData.mode}.json`),'utf8',(err,data)=>{
-                if(err){
-                    console.log(err,'错误')
-                }else{
-                     let fileData = JSON.parse(data.toString())
-                    let index = fileData.findIndex(item => item.uuid === reqData.uuid)
-                    fileData.splice(index,1)
-                    let list = JSON.stringify(fileData)
-                    fs.writeFile(path.join(__dirname,`../file/publicList/${reqData.mode}.json`),list,(ERR)=>{
-                        if(ERR){
+            req.on('end', function () {
+                reqData = JSON.parse(postData)
+                fs.readFile(path.join(__dirname, `../file/publicList/${reqData.mode}.json`), 'utf8', (err, data) => {
+                    if (err) {
+                        console.log(err, '错误')
+                    } else {
+                        let fileData = JSON.parse(data.toString())
+                        let index = fileData.findIndex(item => item.uuid === reqData.uuid)
+                        fileData.splice(index, 1)
+                        let list = JSON.stringify(fileData)
+                        fs.writeFile(path.join(__dirname, `../file/publicList/${reqData.mode}.json`), list, (ERR) => {
+                            if (ERR) {
 
-                        }
-                        else{
-                        callBack(res,'Content-Type', 'application/json; charset=utf-8', 200, {}, 'success')
-                        }
-                    })
-                }
-            })
+                            }
+                            else {
+                                callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, {}, 'success')
+                            }
+                        })
+                    }
+                })
 
             })
         }
     },
     {
-        path:'/app/publicApi/all',
-        done:(req,res)=>{
+        path: '/app/publicApi/all',
+        done: (req, res) => {
             let postData = ''
             let reqData = ''
-            req.on('data',(chunk)=>{
-               postData+=chunk
+            req.on('data', (chunk) => {
+                postData += chunk
             })
-            req.on('end',()=>{
+            req.on('end', () => {
                 reqData = JSON.parse(postData)
-                console.log(reqData,'模板的数据')
-                fs.readFile(path.join(__dirname,`../file/publicList/${reqData.mode}.json`),'utf8',(err,data)=>{
-                    if(err){
-                      console.log(err,'报错')
-                    }else{
+                console.log(reqData, '模板的数据')
+                fs.readFile(path.join(__dirname, `../file/publicList/${reqData.mode}.json`), 'utf8', (err, data) => {
+                    if (err) {
+                        console.log(err, '报错')
+                    } else {
                         let fileData = JSON.parse(data.toString())
-                        callBack(res,'Content-Type', 'application/json; charset=utf-8', 200, fileData, 'success')
+                        callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, fileData, 'success')
                     }
                 })
             })

@@ -167,7 +167,7 @@ const baseConfig = {
         open: true,
         proxy: {
             '/newApi': {
-                target: 'http://82.157.193.128:8080/',
+                target: 'http://82.157.193.128:8082/',
                 ws: false,
                 changeOrigin: true,
                 pathRewrite: {
@@ -175,7 +175,7 @@ const baseConfig = {
                 }
             },
             '/api': {
-                target: 'http://localhost:3000/',
+                target: 'http://localhost:8082/',
                 ws: false,
                 changeOrigin: true,
                 pathRewrite: {
