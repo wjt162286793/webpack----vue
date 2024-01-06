@@ -9,7 +9,9 @@
     "build": "webpack",
     "dev": "webpack serve --open",
     "node": "nodemon nodeProject/app.js",
-    "devServe": "concurrently  \"nodemon nodeProject/app.js\" \" webpack serve --open\" "
+    "devServe": "concurrently  \"nodemon nodeProject/app.js\" \" webpack serve --open\" ",
+    "devLocalServe": "cross-env envname=dev_local apiurl=api concurrently \"webpack\" \"webpack serve --open\"",
+    "devOnlineServe": "cross-env envname=dev_online apiurl=newApi concurrently \"webpack\" \"webpack serve --open\""
   },
   "author": "",
   "license": "ISC",
@@ -24,9 +26,11 @@
     "axios": "^1.3.5",
     "build": "^0.1.4",
     "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "csv-loader": "^3.0.5",
     "d3": "^7.8.4",
+    "dotenv-webpack": "^8.0.1",
     "echarts": "^5.4.3",
     "echarts-gl": "^2.0.9",
     "element-plus": "^2.3.3",
@@ -66,6 +70,7 @@
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
     "babel-loader": "^9.1.2",
+    "dotenv": "^16.3.1",
     "html-loader": "^4.2.0",
     "less-loader": "^6.2.0",
     "source-map-loader": "^4.0.1",
@@ -75,6 +80,7 @@
     "vue-style-loader": "^4.1.3",
     "vue-template-compiler": "^2.7.14",
     "webpack": "^5.78.0",
-    "webpack-dev-server": "^4.13.2"
+    "webpack-dev-server": "^4.13.2",
+    "webpack-merge": "^5.10.0"
   }
 }

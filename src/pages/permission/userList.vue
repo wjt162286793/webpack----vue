@@ -128,11 +128,11 @@
 </template>
 <script setup>
 import request from "@/utils/requestUtils";
-
+import { envname } from "@/javascript/envname";
 //角色列表
 const roleList = ref([]);
 const reqRoleList = () => {
-  request.get("/app/userRole/roleList").then((res) => {
+  request.get(`${envname.apiUrl}/app/userRole/roleList`).then((res) => {
     if (res.code === 200) {
       roleList.value = res.data;
       roleList.value.unshift({
@@ -166,12 +166,14 @@ const pageInfo = reactive({
 const total = ref(8);
 const tableData = ref([]);
 const reqList = () => {
-  request.post("/app/userRole/userlist", { query, pageInfo }).then((res) => {
-    if (res.code === 200) {
-      tableData.value = res.data.list;
-      total.value = res.data.total;
-    }
-  });
+  request
+    .post(`${envname.apiUrl}/app/userRole/userlist`, { query, pageInfo })
+    .then((res) => {
+      if (res.code === 200) {
+        tableData.value = res.data.list;
+        total.value = res.data.total;
+      }
+    });
 };
 
 const rowInfo = ref({});
@@ -182,7 +184,9 @@ const openDia = (row) => {
 };
 const saveRole = () => {
   request
-    .post("/app/userRole/updateUserRole", { data: rowInfo.value })
+    .post(`${envname.apiUrl}/app/userRole/updateUserRole`, {
+      data: rowInfo.value,
+    })
     .then((res) => {
       if (res.code === 200) {
         visiable.value = false;

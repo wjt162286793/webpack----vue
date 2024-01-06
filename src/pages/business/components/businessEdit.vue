@@ -157,6 +157,7 @@
 </template>
 
 <script setup>
+import { envname } from "@/javascript/envname";
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
@@ -232,20 +233,22 @@ const submitForm = (formEl) => {
   formEl.validate((valid, fields) => {
     if (valid) {
       console.log(ruleForm, "结果");
-      request.post("/app/business/change", ruleForm).then((res) => {
-        if (res.code === 200) {
-          ElMessage({
-            message: "修改成功",
-            type: "success",
-          });
-          goBack();
-        } else if (res.code === 201) {
-          ElMessage({
-            message: res.message,
-            type: "warning",
-          });
-        }
-      });
+      request
+        .post(`${envname.apiUrl}/app/business/change`, ruleForm)
+        .then((res) => {
+          if (res.code === 200) {
+            ElMessage({
+              message: "修改成功",
+              type: "success",
+            });
+            goBack();
+          } else if (res.code === 201) {
+            ElMessage({
+              message: res.message,
+              type: "warning",
+            });
+          }
+        });
     } else {
       console.log("error submit!", fields);
     }
@@ -264,43 +267,47 @@ const goBack = () => {
 };
 
 const getLists = () => {
-  request.get("/app/user/userAllList").then((res) => {
+  request.get(`${envname.apiUrl}/app/user/userAllList`).then((res) => {
     if (res.code == 200) {
       userList.value = res.data;
     }
   });
-  request.post("/app/publicApi/all", { mode: "entiry" }).then((res) => {
-    if (res.code == 200) {
-      res.data.forEach((item) => {
-        entiryList.value.push({
-          label: item.entiryCnName,
-          value: item.uuid,
+  request
+    .post(`${envname.apiUrl}/app/publicApi/all`, { mode: "entiry" })
+    .then((res) => {
+      if (res.code == 200) {
+        res.data.forEach((item) => {
+          entiryList.value.push({
+            label: item.entiryCnName,
+            value: item.uuid,
+          });
         });
-      });
-    }
-  });
+      }
+    });
 };
 
 const getInfo = () => {
-  request.post("/app/business/Info", { id: route.query.id }).then((res) => {
-    // console.log(res, "获取到资产具体信息");
-    // ruleForm = res.data;
-    // console.log(ruleForm, "具体信息");
-    if (res.message === "success") {
-      // ruleForm = cloneDeep(res.data)
-      ruleForm.name = res.data.name;
-      ruleForm.cname = res.data.cname;
-      ruleForm.user = res.data.user;
-      ruleForm.region = res.data.region;
-      ruleForm.entiry = res.data.entiry;
-      ruleForm.dsc = res.data.dsc;
-      ruleForm.type = res.data.type;
-      ruleForm.status = res.data.status;
-      ruleForm.id = res.data.id;
-      ruleForm.modelList = res.data.modelList;
-      ruleForm.mode = res.data.mode;
-    }
-  });
+  request
+    .post(`${envname.apiUrl}/app/business/Info`, { id: route.query.id })
+    .then((res) => {
+      // console.log(res, "获取到资产具体信息");
+      // ruleForm = res.data;
+      // console.log(ruleForm, "具体信息");
+      if (res.message === "success") {
+        // ruleForm = cloneDeep(res.data)
+        ruleForm.name = res.data.name;
+        ruleForm.cname = res.data.cname;
+        ruleForm.user = res.data.user;
+        ruleForm.region = res.data.region;
+        ruleForm.entiry = res.data.entiry;
+        ruleForm.dsc = res.data.dsc;
+        ruleForm.type = res.data.type;
+        ruleForm.status = res.data.status;
+        ruleForm.id = res.data.id;
+        ruleForm.modelList = res.data.modelList;
+        ruleForm.mode = res.data.mode;
+      }
+    });
 };
 
 const handleSelectionChange = (val) => {

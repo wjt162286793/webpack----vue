@@ -71,7 +71,9 @@
           >
             <template #default="scope">
               <!-- <p class="jumpIn">{{ scope.row[item.property] }}</p> -->
-              <el-button link type="primary">{{ scope.row[item.property] }}</el-button>
+              <el-button link type="primary">{{
+                scope.row[item.property]
+              }}</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -83,7 +85,9 @@
               <!-- <p class="jumpIn" @click="jumpDetail(scope.row)">
                 {{ scope.row[item.property] }}
               </p> -->
-              <el-button link type="primary" @click="jumpDetail(scope.row)">{{ scope.row[item.property] }}</el-button>
+              <el-button link type="primary" @click="jumpDetail(scope.row)">{{
+                scope.row[item.property]
+              }}</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -170,6 +174,7 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
+import { envname } from "@/javascript/envname";
 import lodash from "lodash";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
@@ -191,7 +196,9 @@ let deleteText = ref("");
 let delRow = ref({});
 let reqTemplate = () => {
   request
-    .post("/app/publicApi/template", { name: props.modeType.type })
+    .post(`${envname.apiUrl}/app/publicApi/template`, {
+      name: props.modeType.type,
+    })
     .then((res) => {
       templateData.searchTemplate = res.data.searchTemplate;
       templateData.searchData = res.data.searchData;
@@ -210,7 +217,7 @@ const reqListFun = () => {
   postData.currentPage = currentPage.value;
   postData.pageSize = pageSize.value;
   postData.modeType = props.modeType.type;
-  request.post(`/app/publicApi/list`, postData).then((res) => {
+  request.post(`${envname.apiUrl}/app/publicApi/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
@@ -251,7 +258,7 @@ const toAdd = () => {
 //查看
 const jumpDetail = (row) => {
   console.log("查看");
-  console.log(store.state,'路由')
+  console.log(store.state, "路由");
   router.push({
     name: props.modeType.detail,
     query: {
@@ -281,7 +288,7 @@ function deleteDialogOpen(row) {
 const deleteRow = () => {
   console.log(delRow.value, "删除");
   request
-    .post(`/app/publicApi/delete`, {
+    .post(`${envname.apiUrl}/app/publicApi/delete`, {
       uuid: delRow.value.uuid,
       mode: props.modeType.type,
     })

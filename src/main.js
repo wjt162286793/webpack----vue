@@ -7,8 +7,6 @@
 // import 'element-plus/theme-chalk/dark/css-vars.css'
 // const htmlNode = document.querySelector('html')
 // htmlNode.className = 'dark'
-
-
 import './style/global.css'
 import './style/reset.css'
 // import './style/theme.css'

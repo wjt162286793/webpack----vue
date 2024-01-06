@@ -1,7 +1,13 @@
 <template>
   <div class="roleBox">
     <p>*超级管理员拥有全部的权限,并且不可更改</p>
-    <vxe-button type="text" status="primary" content="保存" @click="changeList" class="saveBtn"></vxe-button>
+    <vxe-button
+      type="text"
+      status="primary"
+      content="保存"
+      @click="changeList"
+      class="saveBtn"
+    ></vxe-button>
     <vxe-table :align="'center'" :data="tableData">
       <vxe-column field="cname" title="角色名称" width="300">
         <template #default="{ row }">
@@ -11,14 +17,19 @@
       <vxe-column field="menuName" title="菜单名称" width="300">
         <template #default="{ row }">
           <div
-          class="doneBox"
+            class="doneBox"
             v-for="(item, index) in row.menuName"
             :key="index"
           >
-          <vxe-checkbox v-model="item.flag" :content="item.label" :indeterminate="item.indeterminate" @change="changeCheck1(item,row)" :disabled="item.disabled"></vxe-checkbox>
-          <!-- <el-checkbox v-model="item.flag" :label="item.label" size="large" /> -->
+            <vxe-checkbox
+              v-model="item.flag"
+              :content="item.label"
+              :indeterminate="item.indeterminate"
+              @change="changeCheck1(item, row)"
+              :disabled="item.disabled"
+            ></vxe-checkbox>
+            <!-- <el-checkbox v-model="item.flag" :label="item.label" size="large" /> -->
             <!-- {{ item.label }} -->
-
           </div>
         </template>
       </vxe-column>
@@ -30,7 +41,13 @@
             class="doneBox"
           >
             <div v-for="(val, ind) in item" :key="ind" class="doneTypeClass">
-              <vxe-checkbox v-model="val.flag" :content="val.label" size="large" @change="changeCheck2(val,row)" :disabled="val.disabled"/>
+              <vxe-checkbox
+                v-model="val.flag"
+                :content="val.label"
+                size="large"
+                @change="changeCheck2(val, row)"
+                :disabled="val.disabled"
+              />
             </div>
           </div>
         </template>
@@ -39,68 +56,72 @@
   </div>
 </template>
   <script setup>
-import request from '@/utils/requestUtils';
+import { envname } from "@/javascript/envname";
+import request from "@/utils/requestUtils";
 const tableData = ref([]);
-const changeCheck1 = (val,row)=>{
- val.indeterminate = false
- let index = row['doneName'].findIndex(item=>item[0].parent === val.name)
- row['doneName'][index].map(v=>v.flag = val.flag)
-//  changeList()
-}
-const changeCheck2 = (val,row)=>{
-console.log(val,row,'???')
-let index = row['doneName'].findIndex(item=>item[0].parent === val.parent)
-let list =  row['doneName'][index]
-let parentIndex = row.menuName.findIndex(item=>item.name === val.parent)
-let parentItem = row.menuName[parentIndex]
-if(list.every(item=>item.flag === true)){
-     parentItem.flag = true
-     parentItem.indeterminate = false
-}else if(list.every(item=>item.flag === false)){
-     parentItem.flag = false
-     parentItem.indeterminate = false
-}else if(list.some(item=>item.flag === true)){
-     parentItem.flag = false
-     parentItem.indeterminate = true
-}
-// changeList()
-}
-const reqList = ()=>{
-  request.get('/app/userRole/roleList').then(res => {
-        if (res.code === 200) {
-           tableData.value = res.data
-        }
-    })
-}
-const changeList = ()=>{
-  request.post('/app/userRole/updateRole',{data:tableData.value}).then(res=>{
-    if(res.code === 200){
-      nextTick(()=>{
-            reqList()
-           })
-    }
-  })
-}
-reqList()
-onMounted(()=>{
-
-})
-onBeforeUnmount(()=>{
+const changeCheck1 = (val, row) => {
+  val.indeterminate = false;
+  let index = row["doneName"].findIndex((item) => item[0].parent === val.name);
+  row["doneName"][index].map((v) => (v.flag = val.flag));
+  //  changeList()
+};
+const changeCheck2 = (val, row) => {
+  console.log(val, row, "???");
+  let index = row["doneName"].findIndex(
+    (item) => item[0].parent === val.parent
+  );
+  let list = row["doneName"][index];
+  let parentIndex = row.menuName.findIndex((item) => item.name === val.parent);
+  let parentItem = row.menuName[parentIndex];
+  if (list.every((item) => item.flag === true)) {
+    parentItem.flag = true;
+    parentItem.indeterminate = false;
+  } else if (list.every((item) => item.flag === false)) {
+    parentItem.flag = false;
+    parentItem.indeterminate = false;
+  } else if (list.some((item) => item.flag === true)) {
+    parentItem.flag = false;
+    parentItem.indeterminate = true;
+  }
   // changeList()
-})
-
+};
+const reqList = () => {
+  request.get(`${envname.apiUrl}/app/userRole/roleList`).then((res) => {
+    if (res.code === 200) {
+      tableData.value = res.data;
+    }
+  });
+};
+const changeList = () => {
+  request
+    .post(`${envname.apiUrl}/app/userRole/updateRole`, {
+      data: tableData.value,
+    })
+    .then((res) => {
+      if (res.code === 200) {
+        nextTick(() => {
+          reqList();
+        });
+      }
+    });
+};
+reqList();
+onMounted(() => {});
+onBeforeUnmount(() => {
+  // changeList()
+});
 </script>
   <style scoped lang="less">
-.roleBox{
+.roleBox {
   position: relative;
   padding-top: 30px;
-  p{
+  p {
     color: #fd1030;
     position: absolute;
     top: 0px;
     left: 10px;
   }
-  .saveBtn{
+  .saveBtn {
     position: absolute;
     right: 10px;
     top: 0px;

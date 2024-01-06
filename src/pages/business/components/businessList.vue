@@ -33,6 +33,8 @@
       <el-button type="primary" @click="jumpAdd" v-btnRole="'newBusiness'"
         >新增</el-button
       >
+      <el-button @click="test1">测试1</el-button>
+      <el-button @click="test2">测试2</el-button>
     </div>
     <div class="table">
       <el-table :data="tableData" style="width: 100%" :border="true" stripe>
@@ -121,6 +123,7 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
+import { envname } from "@/javascript/envname";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
 import { useRouter } from "vue-router";
@@ -186,7 +189,7 @@ const reqList = () => {
     pageSize,
     currentPage: currentPage.value,
   };
-  request.post("/app/business/list", postData).then((res) => {
+  request.post(`${envname.apiUrl}/app/business/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
@@ -207,7 +210,7 @@ const deleteDialog = (row) => {
 };
 const sure = () => {
   request
-    .post("/app/business/delete", { id: activeRowid.value })
+    .post(`${envname.apiUrl}/app/business/delete`, { id: activeRowid.value })
     .then((res) => {
       if (res.message === "success") {
         ElMessage({
@@ -227,6 +230,16 @@ const openRisk = (record) => {
 };
 const addRiskSuccess = () => {
   reqList();
+};
+const test1 = () => {
+  request.get(`/api/app/person/list`).then((res) => {
+    console.log(res, "结果");
+  });
+};
+const test2 = () => {
+  request.get(`/newApi/app/person/list`).then((res) => {
+    console.log(res, "结果");
+  });
 };
 reqList();
 </script>

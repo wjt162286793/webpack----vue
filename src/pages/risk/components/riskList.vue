@@ -143,7 +143,9 @@
             <h5>风险等级:</h5>
           </el-col>
           <el-col :span="10">
-            <el-tag effect="plain">{{ getLevel(activeRecord.riskLevel) }}</el-tag>
+            <el-tag effect="plain">{{
+              getLevel(activeRecord.riskLevel)
+            }}</el-tag>
           </el-col>
           <el-col :span="2">
             <h5>资产状态:</h5>
@@ -157,7 +159,9 @@
             <h5>监控粒度:</h5>
           </el-col>
           <el-col :span="10">
-            <el-tag effect="plain">{{ getSize(activeRecord.controlSize) }}</el-tag>
+            <el-tag effect="plain">{{
+              getSize(activeRecord.controlSize)
+            }}</el-tag>
           </el-col>
           <el-col :span="2">
             <h5>监控时间:</h5>
@@ -224,6 +228,7 @@
 </template>
   
 <script setup>
+import { envname } from "@/javascript/envname";
 import { View, SetUp } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
 import wordList from "@/dictionaries/wordList.json";
@@ -274,7 +279,7 @@ const reqList = () => {
     pageSize: pageSize,
     currentPage: currentPage.value,
   };
-  request.post("/app/risk/list", postData).then((res) => {
+  request.post(`${envname.apiUrl}/app/risk/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;

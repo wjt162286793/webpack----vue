@@ -5,11 +5,11 @@
 </template>
 
 <script setup>
-if(localStorage.getItem('theme')){
-  document.body.dataset.theme = localStorage.getItem('theme')
-}else{
-  document.body.dataset.theme = 'purple'
-  localStorage.setItem('theme','blue')
+if (localStorage.getItem("theme")) {
+  document.body.dataset.theme = localStorage.getItem("theme");
+} else {
+  document.body.dataset.theme = "purple";
+  localStorage.setItem("theme", "blue");
 }
 
 import * as echarts from "echarts";

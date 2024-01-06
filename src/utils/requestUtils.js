@@ -3,7 +3,7 @@ import axios from 'axios'
 
 //创建axios实例
 const request = axios.create({
-    baseUrl: "/app",
+    baseUrl: "",
     timeout: '6000',
 })
 let token = localStorage.getItem('token')

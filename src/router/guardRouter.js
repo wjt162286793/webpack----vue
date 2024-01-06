@@ -4,6 +4,7 @@ import request from '@/utils/requestUtils';
 import { cloneDeep } from 'lodash';
 import { asyncRoutes } from './asyncRoutes'
 import { mainVue } from '@/main'
+import { envname } from "@/javascript/envname";
 
 let allAsyncRoutes = cloneDeep(asyncRoutes)
 
@@ -59,7 +60,7 @@ let getRoleFun = (userInfo, next, to) => {
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
     localStorage.setItem("token", userInfo.token);
     store.dispatch("changeUserInfo", userInfo);
-    request.get('/app/userRole/roleList').then(res => {
+    request.get(`${envname.apiUrl}/app/userRole/roleList`).then(res => {
         if (res.code === 200) {
             let roleList = res.data
             let userRole = roleList.find(item => item.name === userInfo.role)
@@ -96,8 +97,6 @@ let getRolePermission = (menuPermissionList, asyncRouteList, next, to) => {
     store.dispatch('changeFilterAsyncRoutes', filterEndList)
     store.dispatch('changeFlatRoutesName', flatRoutesName)
     mainVue.directive('btnRole', (el, binding) => {
-        console.log(el, '元素------', binding
-        )
         if (!flatRoutesName.includes(binding.value)) {
             el.style.display = 'none'
         }

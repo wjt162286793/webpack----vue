@@ -200,9 +200,9 @@ export default {
     done() {
       let url = "";
       if (this.doneFlag === "register") {
-        url = `/app/register/query`;
+        url = `${envname.apiUrl}/app/register/query`;
       } else if (this.doneFlag === "change") {
-        url = `/app/user/updatePassword`;
+        url = `${envname.apiUrl}/app/user/updatePassword`;
       }
       this.$refs.dialogForm.validate((valid, fields) => {
         if (valid) {

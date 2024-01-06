@@ -105,10 +105,10 @@
         width="240"
         show-overflow-tooltip
       >
-     <template #default="scope">
-      <span>{{ filterModeType(scope) }}</span>
-     </template>
-    </el-table-column>
+        <template #default="scope">
+          <span>{{ filterModeType(scope) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column property="id" label="id" width="width" />
       <el-table-column label="操作" width="240">
         <template #default="scope">
@@ -151,6 +151,7 @@
 </template>
 
 <script setup>
+import { envname } from "@/javascript/envname";
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
@@ -170,7 +171,7 @@ const ruleForm = reactive({
   type: null,
   status: 1,
   modelList: [],
-  mode:'business'
+  mode: "business",
 });
 const route = useRoute();
 const router = useRouter();
@@ -228,45 +229,51 @@ const submitForm = (formEl) => {
   formEl.validate((valid, fields) => {
     if (valid) {
       // console.log(ruleForm, "结果");
-      request.post("app/business/new", ruleForm).then((res) => {
-        if (res.code === 200) {
-          ElMessage({
-            message: "新建成功",
-            type: "success",
-          });
-          goBack();
-        } else if (res.code === 201) {
-          ElMessage({
-            message: res.message,
-            type: "warning",
-          });
-        }
-      });
+      request
+        .post(`${envname.apiUrl}/app/business/new`, ruleForm)
+        .then((res) => {
+          if (res.code === 200) {
+            ElMessage({
+              message: "新建成功",
+              type: "success",
+            });
+            goBack();
+          } else if (res.code === 201) {
+            ElMessage({
+              message: res.message,
+              type: "warning",
+            });
+          }
+        });
     } else {
       console.log("error submit!", fields);
     }
   });
 };
-const filterModeType = (scope)=>{
-  console.log(word.typeOptions,scope.row.modeType,'???什么')
-  return word.typeOptions.find(item=>item.value === scope.row.modeType)['label']
-}
+const filterModeType = (scope) => {
+  console.log(word.typeOptions, scope.row.modeType, "???什么");
+  return word.typeOptions.find((item) => item.value === scope.row.modeType)[
+    "label"
+  ];
+};
 const getLists = () => {
-  request.get("/app/user/userAllList").then((res) => {
+  request.get(`${envname.apiUrl}/app/user/userAllList`).then((res) => {
     if (res.code == 200) {
-      userList.value = res.data
+      userList.value = res.data;
     }
   });
-  request.post("/app/publicApi/all", { mode: "entiry" }).then((res) => {
-    if (res.code == 200) {
-      res.data.forEach((item) => {
-        entiryList.value.push({
-          label: item.entiryCnName,
-          value: item.uuid,
+  request
+    .post(`${envname.apiUrl}/app/publicApi/all`, { mode: "entiry" })
+    .then((res) => {
+      if (res.code == 200) {
+        res.data.forEach((item) => {
+          entiryList.value.push({
+            label: item.entiryCnName,
+            value: item.uuid,
+          });
         });
-      });
-    }
-  });
+      }
+    });
 };
 const resetForm = (formEl) => {
   if (!formEl) return;
