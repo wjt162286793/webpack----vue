@@ -33,6 +33,9 @@ module.exports = (env) => {
         case 'dev_online':
             activeConfig = dev_onlineConfig
             break
+        case 'prod':
+            activeConfig = prodConfig
+            break
         default:
             console.error('Invalid environment:', local);
             process.exit(1);

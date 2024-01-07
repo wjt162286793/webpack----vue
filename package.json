@@ -6,12 +6,12 @@
   "scripts": {
     "start": "concurrently  \"nodemon nodeProject/app.js\" \" webpack serve --open\" ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
+    "build": "cross-env envname=prod apiurl=newApi webpack ",
     "dev": "webpack serve --open",
     "node": "nodemon nodeProject/app.js",
     "devServe": "concurrently  \"nodemon nodeProject/app.js\" \" webpack serve --open\" ",
-    "devLocalServe": "cross-env envname=dev_local apiurl=api concurrently \"webpack\" \"webpack serve --open\"",
-    "devOnlineServe": "cross-env envname=dev_online apiurl=newApi concurrently \"webpack\" \"webpack serve --open\""
+    "devLocalServe": "cross-env envname=dev_local apiurl=api  concurrently \"webpack\" \"webpack serve --open\"",
+    "devOnlineServe": "cross-env envname=dev_online apiurl=newApi ./src/envType.js concurrently \"webpack\" \"webpack serve --open\""
   },
   "author": "",
   "license": "ISC",

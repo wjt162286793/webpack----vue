@@ -151,7 +151,6 @@
 </template>
 
 <script setup>
-import { envname } from "@/javascript/envname";
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
@@ -229,22 +228,20 @@ const submitForm = (formEl) => {
   formEl.validate((valid, fields) => {
     if (valid) {
       // console.log(ruleForm, "结果");
-      request
-        .post(`${envname.apiUrl}/app/business/new`, ruleForm)
-        .then((res) => {
-          if (res.code === 200) {
-            ElMessage({
-              message: "新建成功",
-              type: "success",
-            });
-            goBack();
-          } else if (res.code === 201) {
-            ElMessage({
-              message: res.message,
-              type: "warning",
-            });
-          }
-        });
+      request.post(`/app/business/new`, ruleForm).then((res) => {
+        if (res.code === 200) {
+          ElMessage({
+            message: "新建成功",
+            type: "success",
+          });
+          goBack();
+        } else if (res.code === 201) {
+          ElMessage({
+            message: res.message,
+            type: "warning",
+          });
+        }
+      });
     } else {
       console.log("error submit!", fields);
     }
@@ -257,23 +254,21 @@ const filterModeType = (scope) => {
   ];
 };
 const getLists = () => {
-  request.get(`${envname.apiUrl}/app/user/userAllList`).then((res) => {
+  request.get(`/app/user/userAllList`).then((res) => {
     if (res.code == 200) {
       userList.value = res.data;
     }
   });
-  request
-    .post(`${envname.apiUrl}/app/publicApi/all`, { mode: "entiry" })
-    .then((res) => {
-      if (res.code == 200) {
-        res.data.forEach((item) => {
-          entiryList.value.push({
-            label: item.entiryCnName,
-            value: item.uuid,
-          });
+  request.post(`/app/publicApi/all`, { mode: "entiry" }).then((res) => {
+    if (res.code == 200) {
+      res.data.forEach((item) => {
+        entiryList.value.push({
+          label: item.entiryCnName,
+          value: item.uuid,
         });
-      }
-    });
+      });
+    }
+  });
 };
 const resetForm = (formEl) => {
   if (!formEl) return;

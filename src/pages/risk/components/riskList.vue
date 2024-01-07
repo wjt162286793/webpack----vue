@@ -228,7 +228,6 @@
 </template>
   
 <script setup>
-import { envname } from "@/javascript/envname";
 import { View, SetUp } from "@element-plus/icons-vue";
 import request from "@/utils/requestUtils";
 import wordList from "@/dictionaries/wordList.json";
@@ -279,7 +278,7 @@ const reqList = () => {
     pageSize: pageSize,
     currentPage: currentPage.value,
   };
-  request.post(`${envname.apiUrl}/app/risk/list`, postData).then((res) => {
+  request.post(`/app/risk/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;

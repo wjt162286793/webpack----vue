@@ -15,7 +15,7 @@ const baseConfig = {
         //文件名,使用hash算法生成文件名
         filename: '[name].[contenthash].js',
         //构建后文件的存放目录
-        path: path.resolve(__dirname, 'assetProject'),
+        path: path.resolve(__dirname, '../assetProject'),
         publicPath: '/',
     },
     //代码源文件映射,方便调试

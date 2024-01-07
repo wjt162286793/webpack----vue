@@ -5,7 +5,6 @@ const querystring = require('querystring');
 const url = require('url');
 const util = require('util');
 const { v4: uuidv4 } = require('uuid');
-
 const userRoutes = [
     {
         //用户注册
@@ -38,7 +37,7 @@ const userRoutes = [
                             //匹配到相同账号名
                             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该账号已被注册')
                             return
-                        } else if(list.findIndex(item => reqData.userName == item.userName) != -1){
+                        } else if (list.findIndex(item => reqData.userName == item.userName) != -1) {
                             callBack(res, 'Content-Type', 'application/json; charset=utf-8', 201, [], '该用户名已被使用')
                             return
                         }
@@ -181,7 +180,7 @@ const userRoutes = [
                             list.push({
                                 value: item.name,
                                 label: item.userName,
-                                role:item.role
+                                role: item.role
                             })
                         })
                         callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, list, 'success')

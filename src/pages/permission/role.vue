@@ -56,7 +56,6 @@
   </div>
 </template>
   <script setup>
-import { envname } from "@/javascript/envname";
 import request from "@/utils/requestUtils";
 const tableData = ref([]);
 const changeCheck1 = (val, row) => {
@@ -86,7 +85,7 @@ const changeCheck2 = (val, row) => {
   // changeList()
 };
 const reqList = () => {
-  request.get(`${envname.apiUrl}/app/userRole/roleList`).then((res) => {
+  request.get(`/app/userRole/roleList`).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data;
     }
@@ -94,7 +93,7 @@ const reqList = () => {
 };
 const changeList = () => {
   request
-    .post(`${envname.apiUrl}/app/userRole/updateRole`, {
+    .post(`/app/userRole/updateRole`, {
       data: tableData.value,
     })
     .then((res) => {

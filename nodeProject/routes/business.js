@@ -5,7 +5,7 @@ const querystring = require('querystring');
 const url = require('url');
 const util = require('util');
 const { v4: uuidv4 } = require('uuid');
-const moment  = require('moment')
+const moment = require('moment')
 const businessRoutes = [
     {
         //新建业务领域
@@ -17,6 +17,7 @@ const businessRoutes = [
                 if (err) {
                     console.log(err, '读取报错')
                 } else {
+                    console.log(data, '???')
                     oldData = JSON.parse(data.toString())
                     console.log(oldData, '当前文件数据');
                 }
@@ -39,14 +40,14 @@ const businessRoutes = [
                         } else {
                             //未匹配到相同相同账号名
                             reqData.uuid = uuidv4()
-                            let time  = moment().format('YYYY-MM-DD hh:mm:ss')
+                            let time = moment().format('YYYY-MM-DD hh:mm:ss')
                             reqData.time = time
                             list.push(reqData)
                         }
                     } else {
                         //数据本身为空
                         reqData.uuid = uuidv4()
-                        let time  = moment().format('YYYY-MM-DD hh:mm:ss')
+                        let time = moment().format('YYYY-MM-DD hh:mm:ss')
                         reqData.time = time
                         list.push(reqData)
                     }
@@ -87,37 +88,37 @@ const businessRoutes = [
                 req.on('end', function () {
                     let reqData = JSON.parse(postData)
                     let queryData = reqData.queryData
-                    let {pageSize,currentPage} = reqData
+                    let { pageSize, currentPage } = reqData
                     // console.log(reqData,'请求数据')
                     // console.log(fileData,'文件数据')
                     let arr = []
-                    for(let val in queryData){
-                        console.log(val,'每一项的键')
-                        console.log(queryData[val],'每一项的值')
-                        if(queryData[val].toString()&&queryData[val].toString().length>0){
-                            arr.push([val,queryData[val]])
+                    for (let val in queryData) {
+                        console.log(val, '每一项的键')
+                        console.log(queryData[val], '每一项的值')
+                        if (queryData[val].toString() && queryData[val].toString().length > 0) {
+                            arr.push([val, queryData[val]])
                         }
                     }
-                    console.log(arr,'符合的数据')
+                    console.log(arr, '符合的数据')
                     let list = []
-                    if(arr.length === 0){
+                    if (arr.length === 0) {
                         list = fileData
-                    }else{
+                    } else {
                         list = []
-                        fileData.forEach(item=>{
-                           let flag = arr.every(n=>
-                            item[n[0]].toString() === n[1].toString()
-                           )
-                           if(flag){
-                            list.push(item)
-                           }
+                        fileData.forEach(item => {
+                            let flag = arr.every(n =>
+                                item[n[0]].toString() === n[1].toString()
+                            )
+                            if (flag) {
+                                list.push(item)
+                            }
                         })
                     }
-                    let filterData = list.slice((currentPage-1)*pageSize,currentPage*pageSize)
-                    console.log((currentPage-1)+(currentPage-1)*pageSize,currentPage*pageSize,'截取值')
+                    let filterData = list.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+                    console.log((currentPage - 1) + (currentPage - 1) * pageSize, currentPage * pageSize, '截取值')
                     let resData = {
                         total: list.length,
-                        list:filterData
+                        list: filterData
                     }
                     callBack(res, 'Content-Type', 'application/json; charset=utf-8', 200, resData, 'success')
                 })
@@ -179,7 +180,7 @@ const businessRoutes = [
                 //请求结束
                 req.on('end', function () {
                     reqData = JSON.parse(postData)
-                    let time  = moment().format('YYYY-MM-DD hh:mm:ss')
+                    let time = moment().format('YYYY-MM-DD hh:mm:ss')
                     reqData.time = time
                     console.log(reqData, '请求数据')
                     let Index = fileData.findIndex(v => v.id == reqData.id)

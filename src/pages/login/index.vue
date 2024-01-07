@@ -176,7 +176,7 @@ export default {
       this.$refs.ruleFormRef.validate((valid, fields) => {
         if (valid) {
           console.log(this.ruleForm, "登录信息");
-          this.$axios.post("app/user/login", this.ruleForm).then((res) => {
+          this.$axios.post(`/app/user/login`, this.ruleForm).then((res) => {
             console.log(res, "登录返回结果");
             if (res.code === 200) {
               // loginSuccessDone(res.data)
@@ -200,9 +200,9 @@ export default {
     done() {
       let url = "";
       if (this.doneFlag === "register") {
-        url = `${envname.apiUrl}/app/register/query`;
+        url = `/app/register/query`;
       } else if (this.doneFlag === "change") {
-        url = `${envname.apiUrl}/app/user/updatePassword`;
+        url = `/app/user/updatePassword`;
       }
       this.$refs.dialogForm.validate((valid, fields) => {
         if (valid) {

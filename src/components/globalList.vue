@@ -174,7 +174,6 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
-import { envname } from "@/javascript/envname";
 import lodash from "lodash";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
@@ -196,7 +195,7 @@ let deleteText = ref("");
 let delRow = ref({});
 let reqTemplate = () => {
   request
-    .post(`${envname.apiUrl}/app/publicApi/template`, {
+    .post(`/app/publicApi/template`, {
       name: props.modeType.type,
     })
     .then((res) => {
@@ -217,7 +216,7 @@ const reqListFun = () => {
   postData.currentPage = currentPage.value;
   postData.pageSize = pageSize.value;
   postData.modeType = props.modeType.type;
-  request.post(`${envname.apiUrl}/app/publicApi/list`, postData).then((res) => {
+  request.post(`/app/publicApi/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
@@ -288,7 +287,7 @@ function deleteDialogOpen(row) {
 const deleteRow = () => {
   console.log(delRow.value, "删除");
   request
-    .post(`${envname.apiUrl}/app/publicApi/delete`, {
+    .post(`/app/publicApi/delete`, {
       uuid: delRow.value.uuid,
       mode: props.modeType.type,
     })

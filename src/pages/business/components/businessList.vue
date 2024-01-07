@@ -123,7 +123,6 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
-import { envname } from "@/javascript/envname";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
 import { useRouter } from "vue-router";
@@ -189,7 +188,7 @@ const reqList = () => {
     pageSize,
     currentPage: currentPage.value,
   };
-  request.post(`${envname.apiUrl}/app/business/list`, postData).then((res) => {
+  request.post(`/app/business/list`, postData).then((res) => {
     if (res.code === 200) {
       tableData.value = res.data.list;
       total.value = res.data.total;
@@ -210,7 +209,7 @@ const deleteDialog = (row) => {
 };
 const sure = () => {
   request
-    .post(`${envname.apiUrl}/app/business/delete`, { id: activeRowid.value })
+    .post(`/app/business/delete`, { id: activeRowid.value })
     .then((res) => {
       if (res.message === "success") {
         ElMessage({

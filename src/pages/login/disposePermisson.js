@@ -3,7 +3,7 @@ import { asyncRoutes } from '@/router/asyncRoutes';
 import store from '@/store/index'
 import request from '@/utils/requestUtils';
 import { cloneDeep } from 'lodash';
-import { envname } from "@/javascript/envname";
+;
 let flatFun = (alllist) => {
   let List = []
   alllist.forEach((item, index) => {
@@ -53,7 +53,7 @@ export let loginSuccessDone = (userInfo, next, to) => {
   localStorage.setItem("token", userInfo.token);
   store.dispatch("changeUserInfo", userInfo);
   //  getRolePermission()
-  request.get(`${envname.apiUrl}/app/userRole/roleList`).then(res => {
+  request.get(`/app/userRole/roleList`).then(res => {
     if (res.code === 200) {
       let roleList = res.data
       console.log(roleList, '权限数据')

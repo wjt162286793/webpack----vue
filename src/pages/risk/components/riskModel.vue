@@ -9,7 +9,6 @@
 </template>
      
 <script setup>
-import { envname } from "@/javascript/envname";
 import globalFlowChart from "@/components/globalFlowChart.vue";
 import { leftNodeList, leftNodeOptionsList } from "../data";
 import request from "@/utils/requestUtils";
@@ -22,7 +21,7 @@ const saveFlow = (info) => {
   console.log(info, "保存的值");
   console.log(route.query.id, "保存id");
   request
-    .post(`${envname.apiUrl}/app/risk/saveFlow`, {
+    .post(`/app/risk/saveFlow`, {
       id: route.query.id,
       flowList: info,
     })
@@ -41,15 +40,13 @@ const callBack = () => {
 };
 
 const reqInfo = () => {
-  request
-    .post(`${envname.apiUrl}/app/risk/reqInfo`, { id: route.query.id })
-    .then((res) => {
-      if (res.code === 200) {
-        console.log(res, "请求结果");
-        console.log(globalFlowChartRef.value, "----++++");
-        globalFlowChartRef.value.getInfoList(res.data.flowList);
-      }
-    });
+  request.post(`/app/risk/reqInfo`, { id: route.query.id }).then((res) => {
+    if (res.code === 200) {
+      console.log(res, "请求结果");
+      console.log(globalFlowChartRef.value, "----++++");
+      globalFlowChartRef.value.getInfoList(res.data.flowList);
+    }
+  });
 };
 
 onMounted(() => {

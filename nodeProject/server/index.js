@@ -6,6 +6,7 @@ const port = 8082
 
 const server = function () {
     const serve = http.createServer((req, res) => {
+        res.header('Access-Control-Allow-Origin', '*');
         let reqUrl = url.parse(req.url).pathname;
         let routeFilter = routes.find(item => item.path === reqUrl)
         if (routeFilter) {

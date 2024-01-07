@@ -158,7 +158,6 @@
   </el-dialog>
 </template>
 <script setup>
-import { envname } from "@/javascript/envname";
 import store from "@/store/index.js";
 import { Location, Tools, Tickets } from "@element-plus/icons-vue";
 import riskOptions from "@/dictionaries/risk.json";
@@ -265,7 +264,7 @@ const openDialog = (record) => {
   ruleForm0.value.name =
     recordInfo.value.name || recordInfo.value[`${recordInfo.value.mode}Name`];
   console.log(recordInfo.value, "资产信息");
-  request.get(`${envname.apiUrl}/app/user/userAllList`).then((res) => {
+  request.get(`/app/user/userAllList`).then((res) => {
     if (res.code == 200) {
       userList.value = res.data;
     }
@@ -328,7 +327,7 @@ const riskSure = () => {
       queryData = Object.assign(queryData, ruleForm1.value);
       queryData = Object.assign(queryData, ruleForm2.value);
       console.log(queryData, "最终的提交值");
-      request.post(`${envname.apiUrl}/app/risk/new`, queryData).then((res) => {
+      request.post(`/app/risk/new`, queryData).then((res) => {
         if (res.code == 200) {
           ElMessage({
             message: "新增成功",

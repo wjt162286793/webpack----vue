@@ -300,7 +300,6 @@
   </div>
 </template>
 <script setup>
-import { envname } from "@/javascript/envname";
 import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { nextTick, onMounted, reactive } from "vue";
@@ -317,7 +316,7 @@ let dialogFlowChart = ref(false);
 let globalFlow = ref(null);
 const reqTemplate = () => {
   request
-    .post(`${envname.apiUrl}/app/publicForm/template`, {
+    .post(`/app/publicForm/template`, {
       type: route.query.mode,
     })
     .then((res) => {
@@ -359,7 +358,7 @@ const reqFormData = () => {
     uuid: route.query.uuid,
     mode: route.query.mode,
   };
-  request.post(`${envname.apiUrl}/app/publicApi/detail`, query).then((res) => {
+  request.post(`/app/publicApi/detail`, query).then((res) => {
     if (res.code === 200) {
       for (let val in res.data) {
         formData[val] = res.data[val];
@@ -373,7 +372,7 @@ const setDisableDate = (time) => {
 
 const requestOPtions = (item) => {
   if (item.requestMethod === "get") {
-    request.get(`${envname.apiUrl}/app${item.requestName}`).then((res) => {
+    request.get(`/app${item.requestName}`).then((res) => {
       if (res.code === 200) {
         item.options = res.data;
       } else {
@@ -385,24 +384,22 @@ const requestOPtions = (item) => {
     });
   } else {
     console.log(item, "???---探索");
-    request
-      .post(`${envname.apiUrl}/app${item.requestName}`, item.query)
-      .then((res) => {
-        if (res.code === 200) {
-          res.data.forEach((v) => {
-            console.log(v);
-            item.options.push({
-              label: v[`${item.query["mode"]}CnName`],
-              value: v.uuid,
-            });
+    request.post(`/app${item.requestName}`, item.query).then((res) => {
+      if (res.code === 200) {
+        res.data.forEach((v) => {
+          console.log(v);
+          item.options.push({
+            label: v[`${item.query["mode"]}CnName`],
+            value: v.uuid,
           });
-        } else {
-          ElMessage({
-            message: res.message,
-            type: "warning",
-          });
-        }
-      });
+        });
+      } else {
+        ElMessage({
+          message: res.message,
+          type: "warning",
+        });
+      }
+    });
   }
 };
 const requestFile = (a, b) => {
@@ -414,22 +411,20 @@ const add = (ruleFormRef) => {
   if (!ruleFormRef) return;
   ruleFormRef.validate((valid, fields) => {
     if (valid) {
-      request
-        .post(`${envname.apiUrl}/app/publicApi/add`, formData)
-        .then((res) => {
-          if (res.code === 200) {
-            ElMessage({
-              message: res.message,
-              type: "success",
-            });
-            jumpToList();
-          } else {
-            ElMessage({
-              message: res.message,
-              type: "warning",
-            });
-          }
-        });
+      request.post(`/app/publicApi/add`, formData).then((res) => {
+        if (res.code === 200) {
+          ElMessage({
+            message: res.message,
+            type: "success",
+          });
+          jumpToList();
+        } else {
+          ElMessage({
+            message: res.message,
+            type: "warning",
+          });
+        }
+      });
     } else {
     }
   });
@@ -439,22 +434,20 @@ const edit = (ruleFormRef) => {
   if (!ruleFormRef) return;
   ruleFormRef.validate((valid, fields) => {
     if (valid) {
-      request
-        .post(`${envname.apiUrl}/app/publicApi/edit`, formData)
-        .then((res) => {
-          if (res.code === 200) {
-            ElMessage({
-              message: res.message,
-              type: "success",
-            });
-            jumpToList();
-          } else {
-            ElMessage({
-              message: res.message,
-              type: "warning",
-            });
-          }
-        });
+      request.post(`/app/publicApi/edit`, formData).then((res) => {
+        if (res.code === 200) {
+          ElMessage({
+            message: res.message,
+            type: "success",
+          });
+          jumpToList();
+        } else {
+          ElMessage({
+            message: res.message,
+            type: "warning",
+          });
+        }
+      });
     } else {
     }
   });
