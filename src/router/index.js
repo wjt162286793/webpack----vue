@@ -1,5 +1,5 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-
+// import { createRouter, createWebHashHistory } from 'vue-router'
+import * as VueRouter from "vue-router"
 const globalRoutes = [
     {
         path: '/brochure',
@@ -39,9 +39,9 @@ const globalRoutes = [
 ]
 
 const routes = new Array().concat(globalRoutes)
-const router = createRouter({
+const router = VueRouter.createRouter({
     routes,
-    history: createWebHashHistory()
+    history: VueRouter.createWebHashHistory()
 })
 
 export default router

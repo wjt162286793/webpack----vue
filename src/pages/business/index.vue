@@ -4,9 +4,10 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+// import { useRouter, useRoute } from "vue-router";
+import * as VueRouter from "vue-router"
+const route = VueRouter.useRoute();
+const router = VueRouter.useRouter();
 if (route.name === "business") {
   router.push({
     name: "businessList",

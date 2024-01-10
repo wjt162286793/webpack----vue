@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently  \"nodemon nodeProject/app.js\" \" webpack serve --open\" ",
+    "start": "cross-env envname=dev_local apiurl=api concurrently  \"nodemon nodeProject/app.js\" \" webpack serve --open\" ",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env envname=prod apiurl=newApi webpack ",
     "dev": "webpack serve --open",
@@ -70,6 +70,7 @@
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
     "babel-loader": "^9.1.2",
+    "compression-webpack-plugin": "^10.0.0",
     "dotenv": "^16.3.1",
     "html-loader": "^4.2.0",
     "less-loader": "^6.2.0",

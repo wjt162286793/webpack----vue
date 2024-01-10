@@ -1,2 +1,2 @@
 
-        export const envname = {"envname":"prod","apiUrl":"newApi"}
+        export const envname = {"envname":"dev_local","apiUrl":"api"}

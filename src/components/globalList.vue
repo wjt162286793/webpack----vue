@@ -178,15 +178,16 @@ import lodash from "lodash";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
 import request from "@/utils/requestUtils";
-import { useRouter, useRoute } from "vue-router";
+import * as VueRouter from "vue-router"
+// import { useRouter, useRoute } from "vue-router";
 import words from "@/dictionaries/wordList.json";
 import { ElMessage } from "element-plus";
 import store from "@/store";
 const props = defineProps({
   modeType: Object,
 });
-const router = useRouter();
-const route = useRoute();
+const router = VueRouter.useRouter();
+const route = VueRouter.useRoute();
 let multipleTableRef = ref(null);
 const creatRisk = ref(null);
 let templateData = reactive({});

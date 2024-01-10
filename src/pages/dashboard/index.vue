@@ -89,7 +89,8 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+import * as VueRouter from "vue-router"
+// import { useRouter, useRoute } from "vue-router";
 import screenfull from 'screenfull'
 import {
   Document,
@@ -105,9 +106,9 @@ let theme = ref(null)
 theme.value = document.body.dataset.theme
 let menuActive = ref("dashboard");
 //全量路由
-let router = useRouter();
+let router = VueRouter.useRouter();
 //当前路由
-let route = useRoute();
+let route = VueRouter.useRoute();
 //面包屑列表
 let breadList = reactive([
   {

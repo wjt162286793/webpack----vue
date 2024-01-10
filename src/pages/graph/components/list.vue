@@ -42,9 +42,10 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
+import * as VueRouter from "vue-router"
+// import { useRouter, useRoute } from "vue-router";
+const router = VueRouter.useRouter();
+const route = VueRouter.useRoute();
 const jump = function (flag) {
   router.push({
     name: flag,

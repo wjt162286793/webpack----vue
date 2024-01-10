@@ -20,7 +20,7 @@ import './style/theme/purple.css'
 import './style/theme/red.css'
 
 //element-plus模块
-import ElementPlus from 'element-plus'
+const ElementPlus = require('element-plus')
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -30,7 +30,7 @@ import echarts from './javascript/chart';
 // import "echarts-gl";
 
 //graph图谱
-import RelationGraph from 'relation-graph/vue3'
+const RelationGraph = require('relation-graph/vue3')
 
 //vue3TreeOrg关系图库
 
@@ -46,19 +46,18 @@ import './router/guardRouter'
 import store from './store/index'
 
 //vxe-table
-import VXETable from 'vxe-table'
+const VXETable = require('vxe-table')
 import 'vxe-table/lib/style.css'
 function useTble(app) {
   app.use(VXETable)
 }
 
 //创建实例
-import { createApp } from 'vue'
 import request from './utils/requestUtils'
 import Main from './main.vue'
-export const mainVue = createApp(Main)
-
-
+// export const mainVue = createApp(Main)
+const Vue = require('vue')
+export const mainVue = Vue.createApp(Main)
 
 //注册模块
 mainVue.use(router)

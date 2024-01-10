@@ -1,4 +1,4 @@
-import Vuex from 'vuex'
+const Vuex = require('vuex')
 
 import user from './modules/user'
 import role from './modules/role'

@@ -125,11 +125,12 @@
 <script setup>
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
+import * as VueRouter from "vue-router"
 import request from "@/utils/requestUtils";
 import dirct from "@/dictionaries/business.json";
 import { ElMessage } from "element-plus";
-const router = useRouter();
+const router = VueRouter.useRouter();
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const tableData = ref([]);

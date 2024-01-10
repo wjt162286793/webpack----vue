@@ -91,7 +91,7 @@
 </template>
 <script setup>
 //引入jsPlumb
-import { jsPlumb } from "jsplumb";
+import JSPlUMB from 'jsplumb'
 import { VueDraggableNext } from "vue-draggable-next";
 import { ElMessage } from "element-plus";
 import lodash from "lodash";
@@ -530,7 +530,7 @@ const getStyle = function (item) {
   };
 };
 //初始化jsplumb实例
-let plumbInit = jsPlumb.getInstance();
+let plumbInit = JSPlUMB.jsPlumb.getInstance();
 
 //点击连线事件
 plumbInit.bind("click", (conn, originalEvent) => {

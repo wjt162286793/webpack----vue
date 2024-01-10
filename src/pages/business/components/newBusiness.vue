@@ -151,7 +151,8 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+import * as VueRouter from "vue-router"
+// import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
 import Visual from "./visual.vue";
@@ -172,8 +173,8 @@ const ruleForm = reactive({
   modelList: [],
   mode: "business",
 });
-const route = useRoute();
-const router = useRouter();
+const route = VueRouter.useRoute();
+const router = VueRouter.useRouter();
 const ruleFormRef = ref(null);
 let VisualCom = ref(null);
 let drawerTitle = ref("新建模型方案");

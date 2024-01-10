@@ -66,9 +66,9 @@ import globalFun from '@/javascript/globalFlowChartFun'
 //使用可拖拽组件
 const draggable = VueDraggableNext;
 //引入jsplumb插件
-import { jsPlumb } from 'jsplumb'
+import JSPlUMB from 'jsplumb'
 //实例化插件
-let plumbInstance = jsPlumb.getInstance()
+let plumbInstance = JSPlUMB.jsPlumb.getInstance()
 //定义数据(全局的核心数据)
 let infoList = ref([])
 //画布节点初始化

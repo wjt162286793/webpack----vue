@@ -300,13 +300,14 @@
   </div>
 </template>
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+import * as VueRouter from "vue-router"
+// import { useRouter, useRoute } from "vue-router";
 import request from "@/utils/requestUtils";
 import { nextTick, onMounted, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import GlobalFlow from "@/components/globalFlow.vue";
-const router = useRouter();
-const route = useRoute();
+const router = VueRouter.useRouter();
+const route = VueRouter.useRoute();
 let templateList = ref([]);
 let formData = reactive({});
 let rules = reactive({});

@@ -157,7 +157,8 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+// import { useRouter, useRoute } from "vue-router";
+
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash";
@@ -167,6 +168,7 @@ import { Delete, Edit } from "@element-plus/icons-vue";
 import datas from "../data.json";
 import word from "@/dictionaries/business.json";
 import { onMounted } from "vue";
+import * as VueRouter from "vue-router"
 let ruleForm = reactive({
   name: "",
   cname: "",
@@ -178,8 +180,8 @@ let ruleForm = reactive({
   status: 1,
   mode: "business",
 });
-const route = useRoute();
-const router = useRouter();
+const route = VueRouter.useRoute();
+const router = VueRouter.useRouter();
 const ruleFormRef = ref(null);
 let VisualCom = ref(null);
 const openFlag = ref("new");

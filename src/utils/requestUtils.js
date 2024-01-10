@@ -1,5 +1,5 @@
 
-import axios from 'axios'
+const axios = require('axios')
 import { envname } from '@/javascript/envname'
 
 //创建axios实例
