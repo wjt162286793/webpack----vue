@@ -91,17 +91,17 @@
 </template>
 <script setup>
 //引入jsPlumb
-const JSPlUMB = require('jsplumb')
+const JSPlUMB = require("jsplumb");
 import { VueDraggableNext } from "vue-draggable-next";
 import { ElMessage } from "element-plus";
-const _ = require('lodash')
+const _ = require("lodash");
 import { v4 as uuidv4 } from "uuid";
 import { reactive } from "vue";
 import word from "@/dictionaries/business.json";
 import RightForm from "./rightForm";
 //名称和规范
-console.log(typeOptions,'下拉框类型')
-let typeOptions = word.typeOptions
+console.log(typeOptions, "下拉框类型");
+let typeOptions = word.typeOptions;
 let scenario_name = ref("");
 let mode_type = ref("");
 let doneFlag = ref("new");
@@ -412,7 +412,7 @@ const refreshPlumbPostionInfo = () => {
   if (plumbBox) {
     let positionInfo = plumbBox.getBoundingClientRect();
     plumbBoxPositionInfo = positionInfo;
-    console.log(plumbBoxPositionInfo,'画布信息')
+    console.log(plumbBoxPositionInfo, "画布信息");
   }
 };
 //渲染节点
@@ -453,7 +453,7 @@ const renderNode = (flag) => {
     plumbInit.ready(() => {
       renderList.forEach((item) => {
         // plumbInit.connect(item,jsPlumbConnectOptions);
-        console.log(item,'渲染参数===')
+        console.log(item, "渲染参数===");
         plumbInit.connect(item);
       });
       info.value.forEach((item) => {
@@ -685,8 +685,14 @@ defineExpose({
 }
 
 .plumbNode {
-  float: left;
-  line-height: 45px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  left: 80px;
+  bottom: -3px;
 }
 .activePlumbNode {
   float: left;

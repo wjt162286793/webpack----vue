@@ -17,7 +17,7 @@ import './style/theme/green.css'
 import './style/theme/purple.css'
 import './style/theme/red.css'
 
-console.log(process.env,'环境变量-----')
+console.log(process.env, '环境变量-----')
 
 
 //echarts模块
@@ -25,7 +25,7 @@ import echarts from './javascript/chart';
 // import "echarts-gl";
 
 //graph图谱
-const RelationGraph = require('relation-graph/vue3')
+import RelationGraph from 'relation-graph/vue3'
 
 //vue3TreeOrg关系图库
 
@@ -56,12 +56,12 @@ mainVue.config.globalProperties.$echarts = echarts
 //element-plus样式和组件引入
 import 'element-plus/dist/index.css'
 // 图标和组件需要分开引入
-import {componentList,iconList} from '@/javascript/elementPlus'
-componentList.forEach(item=>{
-    mainVue.component(item.name,item.element)
+import { componentList, iconList } from '@/javascript/elementPlus'
+componentList.forEach(item => {
+  mainVue.component(item.name, item.element)
 })
-iconList.forEach(item=>{
-    mainVue.component(item.name,item.element)
+iconList.forEach(item => {
+  mainVue.component(item.name, item.element)
 })
 
 //vxe-table的组件引用
