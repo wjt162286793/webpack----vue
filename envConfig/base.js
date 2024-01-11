@@ -5,8 +5,9 @@ const yaml = require('yamljs');
 const json5 = require('json5');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader')
-const CompressionPlugin = require('compression-webpack-plugin');
-console.log(process.env.envname,'??什么值')
+const Components = require('unplugin-vue-components/webpack')['default']
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
+const webpack = require('webpack')
 
 const baseConfig = {
     //入口文件,也可以配置多入口,具体看文档
@@ -129,9 +130,6 @@ const baseConfig = {
             },
             hash: true,
             template: process.env.envname === 'prod'?'./public/index.html':'./public/dev.html',
-            // templateParameters: {
-            //     ENV_NAME: process.env.envname,
-            //   },
              inject: 'body',
         }),
         //vue的插件
@@ -141,13 +139,14 @@ const baseConfig = {
             // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
             imports: ['vue', 'vue-router'],
         }),
-        new CompressionPlugin({
-            algorithm: 'gzip', // 使用gzip算法进行压缩
-            test: /\.(js|css)$/, // 需要压缩的文件类型
-            threshold: 10240, // 文件大小大于10KB才会被压缩
-            minRatio: 0.8, // 压缩比例达到0.8才会被压缩
-            deleteOriginalAssets: false, // 是否删除原始文件
-          }),
+        //element-plus按需引入
+        Components({
+            resolvers: [ElementPlusResolver()],
+        }),
+        //配置全局环境变量
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(process.env)
+          })
     ],
 
     //依赖包的抽取,减少大量的冗余代码,可以去看看

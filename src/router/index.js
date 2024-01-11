@@ -1,4 +1,3 @@
-// import { createRouter, createWebHashHistory } from 'vue-router'
 import * as VueRouter from "vue-router"
 const globalRoutes = [
     {
@@ -8,7 +7,7 @@ const globalRoutes = [
             name: '导览',
             noAuth: true
         },
-        component: () => import('pages/brochure/index.vue')
+        component: () => import(/* webpackChunkName:'brochure'*/ 'pages/brochure/index.vue')
 
     },
     {
@@ -18,7 +17,7 @@ const globalRoutes = [
             name: '登录',
             noAuth: true
         },
-        component: () => import('pages/login/index.vue')
+        component: () => import(/* webpackChunkName:'login'*/ 'pages/login/index.vue')
     },
     {
         path: '/',
@@ -34,7 +33,7 @@ const globalRoutes = [
         meta: {
             name: '不存在页面'
         },
-        component: () => import('pages/nofound/index.vue')
+        component: () => import(/* webpackChunkName:'nofound'*/ 'pages/nofound/index.vue')
     },
 ]
 

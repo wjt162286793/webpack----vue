@@ -1,10 +1,11 @@
 
 const axios = require('axios')
-import { envname } from '@/javascript/envname'
+
+const API_URL = process.env.apiurl
 
 //创建axios实例
 const request = axios.create({
-    baseUrl: `/${envname.apiUrl}`,
+    baseUrl: `/${API_URL}`,
     timeout: '6000',
 })
 let token = localStorage.getItem('token')

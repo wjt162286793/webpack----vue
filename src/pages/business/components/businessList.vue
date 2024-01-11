@@ -33,8 +33,6 @@
       <el-button type="primary" @click="jumpAdd" v-btnRole="'newBusiness'"
         >新增</el-button
       >
-      <el-button @click="test1">测试1</el-button>
-      <el-button @click="test2">测试2</el-button>
     </div>
     <div class="table">
       <el-table :data="tableData" style="width: 100%" :border="true" stripe>
@@ -123,10 +121,9 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
+import * as VueRouter from "vue-router"
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
-// import { useRouter } from "vue-router";
-import * as VueRouter from "vue-router"
 import request from "@/utils/requestUtils";
 import dirct from "@/dictionaries/business.json";
 import { ElMessage } from "element-plus";
@@ -230,16 +227,6 @@ const openRisk = (record) => {
 };
 const addRiskSuccess = () => {
   reqList();
-};
-const test1 = () => {
-  request.get(`/api/app/person/list`).then((res) => {
-    console.log(res, "结果");
-  });
-};
-const test2 = () => {
-  request.get(`/newApi/app/person/list`).then((res) => {
-    console.log(res, "结果");
-  });
 };
 reqList();
 </script>

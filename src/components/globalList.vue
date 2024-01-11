@@ -174,12 +174,11 @@
   <CreatRisk ref="creatRisk" @addRiskSuccess="addRiskSuccess"></CreatRisk>
 </template>
 <script setup>
+import * as VueRouter from "vue-router"
 import lodash from "lodash";
 import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
 import CreatRisk from "@/components/creatRisk";
 import request from "@/utils/requestUtils";
-import * as VueRouter from "vue-router"
-// import { useRouter, useRoute } from "vue-router";
 import words from "@/dictionaries/wordList.json";
 import { ElMessage } from "element-plus";
 import store from "@/store";

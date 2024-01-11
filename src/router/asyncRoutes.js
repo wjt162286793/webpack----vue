@@ -6,7 +6,7 @@ export const asyncRoutes = [
             name: '主页',
             index:0
         },
-        component: () => import('pages/dashboard/index.vue'),
+        component: () => import(/* webpackChunkName:'dashboard'*/ 'pages/dashboard/index.vue'),
         children: [
             {
                 path: '/dashboard/business',
@@ -14,7 +14,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '业务领域'
                 },
-                component: () => import('pages/business/index.vue'),
+                component: () => import(/* webpackChunkName:'business'*/ 'pages/business/index.vue'),
                 children: [
                     {
                         path: '/dashboard/business/businessList',
@@ -22,7 +22,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '列表'
                         },
-                        component: () => import('pages/business/components/businessList.vue')
+                        component: () => import(/* webpackChunkName:'businessList'*/ 'pages/business/components/businessList.vue')
                     },
                     {
                         path: '/dashboard/business/newBusiness',
@@ -30,7 +30,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '新增'
                         },
-                        component: () => import('pages/business/components/newBusiness.vue')
+                        component: () => import(/* webpackChunkName:'newBusiness'*/ 'pages/business/components/newBusiness.vue')
                     },
                     {
                         path: '/dashboard/business/businessEdit',
@@ -38,7 +38,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '编辑'
                         },
-                        component: () => import('pages/business/components/businessEdit.vue')
+                        component: () => import(/* webpackChunkName:'businessEdit'*/ 'pages/business/components/businessEdit.vue')
                     },
                 ]
             },
@@ -48,7 +48,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '实体'
                 },
-                component: () => import('pages/entiry/index.vue'),
+                component: () => import(/* webpackChunkName:'entiry'*/ 'pages/entiry/index.vue'),
                 children: [
                     {
                         path: '/dashboard/entiry/entiryList',
@@ -56,7 +56,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '列表'
                         },
-                        component: () => import('pages/entiry/components/entiryList.vue')
+                        component: () => import(/* webpackChunkName:'entiryList'*/ 'pages/entiry/components/entiryList.vue')
                     },
                     {
                         path: '/dashboard/entiry/entiryAdd',
@@ -64,7 +64,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '新增'
                         },
-                        component: () => import('pages/entiry/components/entiryAdd.vue')
+                        component: () => import(/* webpackChunkName:'entiryAdd'*/ 'pages/entiry/components/entiryAdd.vue')
                     },
                     {
                         path: '/dashboard/entiry/entiryEdit',
@@ -72,7 +72,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '编辑'
                         },
-                        component: () => import('pages/entiry/components/entiryEdit.vue')
+                        component: () => import(/* webpackChunkName:'entiryEdit'*/ 'pages/entiry/components/entiryEdit.vue')
                     },
                     {
                         path: '/dashboard/entiry/entiryDetail',
@@ -80,7 +80,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '查看'
                         },
-                        component: () => import('pages/entiry/components/entiryDetail.vue')
+                        component: () => import(/* webpackChunkName:'entiryDetail'*/ 'pages/entiry/components/entiryDetail.vue')
                     }
                 ]
             },
@@ -90,7 +90,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '价值流'
                 },
-                component: () => import('pages/valueflow/index.vue'),
+                component: () => import(/* webpackChunkName:'valueflow'*/ 'pages/valueflow/index.vue'),
                 children: [
                     {
                         path: '/dashboard/valueflow/valueflowList',
@@ -98,7 +98,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '列表'
                         },
-                        component: () => import('pages/valueflow/components/valueflowList.vue')
+                        component: () => import(/* webpackChunkName:'valueflowList'*/ 'pages/valueflow/components/valueflowList.vue')
                     },
                     {
                         path: '/dashboard/valueflow/valueflowAdd',
@@ -106,7 +106,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '新增'
                         },
-                        component: () => import('pages/valueflow/components/valueflowAdd.vue')
+                        component: () => import(/* webpackChunkName:'valueflowAdd'*/ 'pages/valueflow/components/valueflowAdd.vue')
                     },
                     {
                         path: '/dashboard/valueflow/valueflowEdit',
@@ -114,7 +114,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '编辑'
                         },
-                        component: () => import('pages/valueflow/components/valueflowEdit.vue')
+                        component: () => import(/* webpackChunkName:'valueflowEdit'*/ 'pages/valueflow/components/valueflowEdit.vue')
                     },
                     {
                         path: '/dashboard/valueflow/valueflowDetail',
@@ -122,7 +122,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '查看'
                         },
-                        component: () => import('pages/valueflow/components/valueflowDetail.vue')
+                        component: () => import(/* webpackChunkName:'valueflowDetail'*/ 'pages/valueflow/components/valueflowDetail.vue')
                     }
                 ]
             },
@@ -132,7 +132,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '任务管理'
                 },
-                component: () => import('pages/task/index.vue'),
+                component: () => import(/* webpackChunkName:'task'*/ 'pages/task/index.vue'),
                 children: [
                     {
                         path: '/dashboard/task/taskList',
@@ -140,7 +140,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '列表'
                         },
-                        component: () => import('pages/task/components/taskList.vue')
+                        component: () => import(/* webpackChunkName:'taskList'*/ 'pages/task/components/taskList.vue')
                     },
                     {
                         path: '/dashboard/task/taskAdd',
@@ -148,7 +148,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '新增'
                         },
-                        component: () => import('pages/task/components/taskAdd.vue')
+                        component: () => import(/* webpackChunkName:'taskAdd'*/ 'pages/task/components/taskAdd.vue')
                     },
                     {
                         path: '/dashboard/task/taskEdit',
@@ -156,7 +156,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '编辑'
                         },
-                        component: () => import('pages/task/components/taskEdit.vue')
+                        component: () => import(/* webpackChunkName:'taskEdit'*/ 'pages/task/components/taskEdit.vue')
                     },
                     {
                         path: '/dashboard/task/taskDetail',
@@ -164,7 +164,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '查看'
                         },
-                        component: () => import('pages/task/components/taskDetail.vue')
+                        component: () => import(/* webpackChunkName:'taskDetail'*/ 'pages/task/components/taskDetail.vue')
                     }
                 ]
             },
@@ -174,7 +174,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '风险管理'
                 },
-                component: () => import('pages/risk/index.vue'),
+                component: () => import(/* webpackChunkName:'risk'*/ 'pages/risk/index.vue'),
                 redirect:'/dashboard/risk/riskList',
                 children: [
                     {
@@ -183,7 +183,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '列表'
                         },
-                        component: () => import('pages/risk/components/riskList.vue')
+                        component: () => import(/* webpackChunkName:'riskList'*/ 'pages/risk/components/riskList.vue')
                     },
                     {
                         path: '/dashboard/risk/riskModel',
@@ -191,7 +191,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '模型'
                         },
-                        component: () => import('pages/risk/components/riskModel.vue')
+                        component: () => import(/* webpackChunkName:'riskModel'*/ 'pages/risk/components/riskModel.vue')
                     }                 
                 ]
             },            
@@ -202,7 +202,7 @@ export const asyncRoutes = [
                     name: '统计图表',
                     scoped:true
                 },
-                component: () => import('pages/graph/index.vue'),
+                component: () => import(/* webpackChunkName:'graph'*/ 'pages/graph/index.vue'),
                 redirect: '/dashboard/graph/list',
                 children: [
                     {
@@ -211,7 +211,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '列表'
                         },
-                        component: () => import('pages/graph/components/list.vue'),
+                        component: () => import(/* webpackChunkName:'graphList'*/ 'pages/graph/components/list.vue'),
                     },
                     {
                         path: '/dashboard/graph/financeStatic',
@@ -219,7 +219,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '财务统计'
                         },
-                        component: () => import('pages/graph/components/finance.vue'),
+                        component: () => import(/* webpackChunkName:'financeStatic'*/ 'pages/graph/components/finance.vue'),
                     },
                     {
                         path: '/dashboard/graph/personStatic',
@@ -227,7 +227,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '组织结构'
                         },
-                        component: () => import('pages/graph/components/person.vue'),
+                        component: () => import(/* webpackChunkName:'personStatic'*/ 'pages/graph/components/person.vue'),
                     },
                     {
                         path: '/dashboard/graph/entiryStatic',
@@ -235,7 +235,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '实体分布'
                         },
-                        component: () => import('pages/graph/components/entiry.vue'),
+                        component: () => import(/* webpackChunkName:'entiryStatic'*/ 'pages/graph/components/entiry.vue'),
                     },
                     {
                         path: '/dashboard/graph/dataStatic',
@@ -243,7 +243,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '数据统计'
                         },
-                        component: () => import('pages/graph/components/data.vue'),
+                        component: () => import(/* webpackChunkName:'dataStatic'*/ 'pages/graph/components/data.vue'),
                     },
                     {
                         path: '/dashboard/graph/commutationStatic',
@@ -251,7 +251,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '通信统计'
                         },
-                        component: () => import('pages/graph/components/commutation.vue'),
+                        component: () => import(/* webpackChunkName:'commutationStatic'*/ 'pages/graph/components/commutation.vue'),
                     },
                     {
                         path: '/dashboard/graph/materialStorage',
@@ -259,7 +259,7 @@ export const asyncRoutes = [
                         meta: {
                             name: '物资仓库'
                         },
-                        component: () => import('pages/graph/components/material.vue'),
+                        component: () => import(/* webpackChunkName:'materialStorage'*/ 'pages/graph/components/material.vue'),
                     },
                 ]
             },
@@ -269,7 +269,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '权限管理'
                 },
-                component: () => import('pages/permission/index.vue')
+                component: () => import(/* webpackChunkName:'permission'*/ 'pages/permission/index.vue')
             },
             {
                 path: '/dashboard/editor',
@@ -277,7 +277,7 @@ export const asyncRoutes = [
                 meta: {
                     name: '文本编辑'
                 },
-                component: () => import('pages/editor/index.vue')
+                component: () => import(/* webpackChunkName:'editor'*/ 'pages/editor/index.vue')
             },
         ]
     },

@@ -90,16 +90,8 @@
 
 <script setup>
 import * as VueRouter from "vue-router"
-// import { useRouter, useRoute } from "vue-router";
 import screenfull from 'screenfull'
-import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
-} from "@element-plus/icons-vue";
 import store from "@/store";
-const interInstance = getCurrentInstance();
 const dialogUserInfoVisible = ref(false)
 const userInfo = ref(null)
 let theme = ref(null)

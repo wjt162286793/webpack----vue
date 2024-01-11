@@ -3,7 +3,6 @@ const baseConfig = require('./envConfig/base')
 const dev_localConfig = require('./envConfig/dev_local')
 const dev_onlineConfig = require('./envConfig/dev_online')
 const prodConfig = require('./envConfig/prod')
-const webpack = require('webpack')
 const fs = require('fs')
 const path = require('path')
 module.exports = (env) => {
@@ -12,19 +11,19 @@ module.exports = (env) => {
     console.log(process.env.apiUrl, '前置代理路径')
     let local = process.env.envname || 'dev_local'
     let activeConfig = null
-    if (process.env.envname) {
-        let envData = JSON.stringify({
-            envname: process.env.envname,
-            apiUrl: process.env.apiUrl
-        })
-        fs.writeFile(path.join(__dirname, './src/javascript/envname.js'), `
-        export const envname = ${envData}`, (error) => {
-            if (error) {
-                console.error('写入变量文件报错', error)
-            }
+    // if (process.env.envname) {
+    //     let envData = JSON.stringify({
+    //         envname: process.env.envname,
+    //         apiUrl: process.env.apiUrl
+    //     })
+    //     fs.writeFile(path.join(__dirname, './src/javascript/envname.js'), `
+    //     export const envname = ${envData}`, (error) => {
+    //         if (error) {
+    //             console.error('写入变量文件报错', error)
+    //         }
 
-        })
-    }
+    //     })
+    // }
 
     switch (local) {
         case 'dev_local':
@@ -45,11 +44,5 @@ module.exports = (env) => {
     let config = merge(baseConfig, activeConfig, {
         // 这里可以添加一些额外的配置项
     });
-    // config.plugins.push(
-    //     new webpack.DefinePlugin({
-    //         MYENVNAME: JSON.stringify(env && env.envname ? env.envname : 'dev_local'),
-    //         // 添加其他环境变量...
-    //     })
-    // )
     return config;
 }

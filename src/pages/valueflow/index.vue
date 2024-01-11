@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-// import { useRouter, useRoute } from "vue-router";
 import * as VueRouter from "vue-router"
 const route = VueRouter.useRoute();
 const router = VueRouter.useRouter();
