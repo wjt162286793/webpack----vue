@@ -160,7 +160,6 @@
 import * as VueRouter from "vue-router"
 import request from "@/utils/requestUtils";
 import { ElMessage } from "element-plus";
-import { cloneDeep } from "lodash";
 import Visual from "./visual.vue";
 import { v4 as uuidv4 } from "uuid";
 import { Delete, Edit } from "@element-plus/icons-vue";
@@ -288,7 +287,6 @@ const getInfo = () => {
     // ruleForm = res.data;
     // console.log(ruleForm, "具体信息");
     if (res.message === "success") {
-      // ruleForm = cloneDeep(res.data)
       ruleForm.name = res.data.name;
       ruleForm.cname = res.data.cname;
       ruleForm.user = res.data.user;

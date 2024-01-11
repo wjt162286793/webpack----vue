@@ -2,7 +2,7 @@ import router from '@/router/index'
 import { asyncRoutes } from '@/router/asyncRoutes';
 import store from '@/store/index'
 import request from '@/utils/requestUtils';
-import { cloneDeep } from 'lodash';
+const _ = require('lodash')
 ;
 let flatFun = (alllist) => {
   let List = []
@@ -22,7 +22,7 @@ let flatFun = (alllist) => {
 }
 
 export let getRolePermission = (menuPermissionList, asyncRouteList, next, to) => {
-  let allAsyncRoutesList = cloneDeep(asyncRouteList)
+  let allAsyncRoutesList = _.cloneDeep(asyncRouteList)
   console.log(menuPermissionList, '菜单权限')
   console.log(allAsyncRoutesList, '全部路由')
 

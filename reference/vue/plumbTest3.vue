@@ -43,7 +43,6 @@
   import { jsPlumb } from 'jsplumb'
   import { VueDraggableNext } from 'vue-draggable-next'
   import { ElMessage } from 'element-plus';
-  import lodash from 'lodash'
   const draggable = VueDraggableNext
   let plumbBox = null
   let plumbBoxPositionInfo = reactive({})
@@ -297,11 +296,9 @@
       //渲染函数
       plumbInit.ready(() => {
         renderList.forEach((item) => {
-          // plumbInit.connect(item,jsPlumbConnectOptions);
           plumbInit.connect(item)
         });
         info.value.forEach((item) => {
-          // plumbInit.makeSource(item.name,lodash.merge(jsplumbSourceOptions,{}))
           makeFun(item)
         });
   

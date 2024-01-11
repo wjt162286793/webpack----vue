@@ -175,8 +175,7 @@
 </template>
 <script setup>
 import * as VueRouter from "vue-router"
-import lodash from "lodash";
-import { Delete, Edit, WarnTriangleFilled } from "@element-plus/icons-vue";
+const _ = require('lodash')
 import CreatRisk from "@/components/creatRisk";
 import request from "@/utils/requestUtils";
 import words from "@/dictionaries/wordList.json";
@@ -226,7 +225,7 @@ const reqListFun = () => {
 const openRisk = (record) => {
   creatRisk.value.openDialog(record);
 };
-const reqList = lodash.throttle(reqListFun, 2000);
+const reqList = _.throttle(reqListFun, 2000);
 //查询列表
 //外部跳转
 const jumpUrl = (url) => {

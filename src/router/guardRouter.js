@@ -1,12 +1,12 @@
 import router from './index'
 import store from '@/store/index'
 import request from '@/utils/requestUtils';
-import { cloneDeep } from 'lodash';
+const _ = require('lodash')
 import { asyncRoutes } from './asyncRoutes'
 import { mainVue } from '@/main'
     ;
 
-let allAsyncRoutes = cloneDeep(asyncRoutes)
+let allAsyncRoutes = _.cloneDeep(asyncRoutes)
 
 //导航守卫 token校验
 router.beforeEach((to, from, next) => {
@@ -87,7 +87,7 @@ let getRoleFun = (userInfo, next, to) => {
 
 //根据权限字段数组和全量路由做匹配,重新组织router数据,并且进行跳转
 let getRolePermission = (menuPermissionList, asyncRouteList, next, to) => {
-    let allAsyncRoutesList = cloneDeep(asyncRouteList)
+    let allAsyncRoutesList = _.cloneDeep(asyncRouteList)
 
     let filterEndList = []
     let flatRoutesName = []
@@ -117,7 +117,7 @@ function filterAllAsync(strList, routeList, filterEndList, flatRoutesName) {
     routeList.forEach((item, index) => {
         if (strList.findIndex(v => v === item.name) !== -1) {
             flatRoutesName.push(item.name)
-            let newItem = cloneDeep(item)
+            let newItem = _.cloneDeep(item)
             filterEndList.push(newItem)
             if (item.meta.scoped) {
                 newItem.children = item.children

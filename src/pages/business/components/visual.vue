@@ -91,10 +91,10 @@
 </template>
 <script setup>
 //引入jsPlumb
-import JSPlUMB from 'jsplumb'
+const JSPlUMB = require('jsplumb')
 import { VueDraggableNext } from "vue-draggable-next";
 import { ElMessage } from "element-plus";
-import lodash from "lodash";
+const _ = require('lodash')
 import { v4 as uuidv4 } from "uuid";
 import { reactive } from "vue";
 import word from "@/dictionaries/business.json";

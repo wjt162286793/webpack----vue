@@ -50,9 +50,10 @@
 </template>
 <script setup>
 //函数库
-import lodash from "lodash";
+const _ = require('lodash')
+
 //图片保存插件
-import html2canvas from "@/javascript/html2canvas"
+const html2canvas = require('html2canvas')
 //消息框
 import { ElMessage } from "element-plus";
 //uuid
@@ -63,10 +64,11 @@ import { VueDraggableNext } from "vue-draggable-next";
 import globalConfig from '@/javascript/globalFlowChartConfig'
 //引入画布的一些事件
 import globalFun from '@/javascript/globalFlowChartFun'
+
 //使用可拖拽组件
 const draggable = VueDraggableNext;
 //引入jsplumb插件
-import JSPlUMB from 'jsplumb'
+const JSPlUMB = require('jsplumb')
 //实例化插件
 let plumbInstance = JSPlUMB.jsPlumb.getInstance()
 //定义数据(全局的核心数据)
@@ -498,7 +500,7 @@ const getInfoList =(info)=>{
   if(info){
     infoList.value = info
   }else{
-    infoList.value = lodash.cloneDeep(globalConfig.defaultList)
+    infoList.value = _.cloneDeep(globalConfig.defaultList)
   }
   infoList.value.map(item=>item = Object.assign(item,globalConfig.readyConfig))
       nextTick(() => {

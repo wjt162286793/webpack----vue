@@ -33,7 +33,10 @@ const prodConfig = {
         'vue':'Vue',
         'axios':'axios',
         'vue-router':'VueRouter',
-        'vuex':'Vuex'
+        'vuex':'Vuex',
+        'lodash':'_',
+        'html2canvas':'html2canvas',
+        'jsplumb':'JSPlUMB'
     },
     devtool: false
 }
