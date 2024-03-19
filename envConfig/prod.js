@@ -10,7 +10,7 @@ const prodConfig = {
       test: /\.(js|css)$/, // 需要压缩的文件类型
       threshold: 10240, // 文件大小大于10KB才会被压缩
       minRatio: 0.8, // 压缩比例达到0.8才会被压缩
-      deleteOriginalAssets: false, // 是否删除原始文件
+      deleteOriginalAssets: false, // 是否删除原始文件 
     }),
     new BundleAnalyzerPlugin()
   ],
